@@ -138,10 +138,10 @@ async def set_switch(app_id: str, app_secret: str, device_id: str, sensor_name: 
 
 
 class ImouCli:
-    """CLI class"""
+    """CLI class."""
 
     def __init__(self):
-        """initialize"""
+        """Initialize."""
         self.app_id = None
         self.app_secret = None
         self.device_id = None

@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        python-versions: [3.8]
+        python-versions: [3.9]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -51,16 +51,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
 
-      - name: build documentation
-        run: |
-          poetry install -E doc
-          poetry run mkdocs build
+      #- name: build documentation
+      #  run: |
+      #    poetry install -E doc
+      #    poetry run mkdocs build
 
-      - name: publish documentation
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          publish_dir: ./site
+      #- name: publish documentation
+      #  uses: peaceiris/actions-gh-pages@v3
+      #  with:
+      #    personal_token: ${{ secrets.PERSONAL_TOKEN }}
+      #    publish_dir: ./site
 
       - name: Build wheels and source tarball
         run: >-
