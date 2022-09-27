@@ -1,0 +1,1 @@
+::: imouapi.device_entity

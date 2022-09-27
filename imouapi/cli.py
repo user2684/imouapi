@@ -6,12 +6,9 @@ import sys
 
 import aiohttp
 
-from imouapi.binary_sensor import ImouBinarySensor
-from imouapi.device import ImouDevice
-from imouapi.device_discover import ImouDiscoverService
+from imouapi.device import ImouDevice, ImouDiscoverService
+from imouapi.device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
 from imouapi.exceptions import ImouException
-from imouapi.sensor import ImouSensor
-from imouapi.switch import ImouSwitch
 
 # configure logging
 loggingconfig = {

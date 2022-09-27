@@ -1,4 +1,4 @@
-"""Library Exceptions."""
+"""Library exceptions."""
 import sys
 import traceback
 

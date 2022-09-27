@@ -1,4 +1,4 @@
-"""Interact with IMOU API."""
+"""Low-level API for interacting with Imou devices."""
 import hashlib
 import logging
 import random
