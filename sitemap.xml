@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://user2684.github.io/imouapi/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://user2684.github.io/imouapi/api/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://user2684.github.io/imouapi/changelog/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://user2684.github.io/imouapi/contributing/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://user2684.github.io/imouapi/installation/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://user2684.github.io/imouapi/usage/</loc>
+         <lastmod>2022-09-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
