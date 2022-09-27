@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "imouapi"
-version = "0.1.0"
+version = "0.1.1"
 homepage = "https://github.com/user2684/imouapi"
 description = "Skeleton project created by Cookiecutter PyPackage."
 authors = ["user2684 <ampedee@gmail.com>"]
