@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
+from imouapi.const import API_URL, DEFAULT_TIMEOUT
 from imouapi.exceptions import (
     APIError,
     ConnectionFailed,
@@ -25,10 +26,11 @@ class ImouAPIClient:
 
     def __init__(
         self,
-        base_url: str,
         app_id: str,
         app_secret: str,
-        websession: ClientSession = None,
+        websession: ClientSession,
+        base_url: str = None,
+        timeout: int = None,
     ) -> None:
         """
         Initialize the instance.
@@ -39,16 +41,15 @@ class ImouAPIClient:
             app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             websession: aiohttp client session
         """
-        if websession is None:
-            websession = ClientSession()
         self.log_http_requests = True
         self._websession = websession
-        self._base_url = base_url
+        self._base_url = base_url if base_url is not None else API_URL
         self._app_secret = app_secret
         self._app_id = app_id
         self._access_token = None
         self._access_token_expire_time = None
         self._connected = False
+        self._timeout = timeout if timeout is not None else DEFAULT_TIMEOUT
         _LOGGER.debug("Initialized. Endpoint URL: %s", self._base_url)
 
     async def async_connect(self) -> bool:
@@ -121,7 +122,7 @@ class ImouAPIClient:
 
         # send the request to the API endpoint
         try:
-            response = await self._websession.request("POST", url, json=body)
+            response = await self._websession.request("POST", url, json=body, timeout=self._timeout)
         except Exception as exception:
             raise ConnectionFailed(f"{exception}") from exception
 

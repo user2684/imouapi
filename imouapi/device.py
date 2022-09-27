@@ -4,12 +4,9 @@ import logging
 import aiohttp
 
 from imouapi.api import ImouAPIClient
-from imouapi.binary_sensor import ImouBinarySensor
-from imouapi.const import API_URL, BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS, SUPPORTED_SWITCHES
-from imouapi.entity import ImouEntity
+from imouapi.const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS, SUPPORTED_SWITCHES
+from imouapi.device_entity import ImouBinarySensor, ImouEntity, ImouSensor, ImouSwitch
 from imouapi.exceptions import InvalidResponse
-from imouapi.sensor import ImouSensor
-from imouapi.switch import ImouSwitch
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -23,6 +20,8 @@ class ImouDevice:
         app_secret: str,
         device_id: str,
         websession: aiohttp.ClientSession,
+        base_url: str = None,
+        timeout: int = None,
     ) -> None:
         """
         Initialize the instance.
@@ -32,11 +31,15 @@ class ImouDevice:
             app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             device_id: device id
             websession: aiohttp client session
+            base_url: API base url (optional)
+            timeout: request timeout in seconds (optional)
         """
         # initialize the properties
         self._app_id = app_id
         self._app_secret = app_secret
         self._websession = websession
+        self._timeout = timeout
+        self._base_url = base_url
         self._device_id = device_id
         self._catalog = "N.A."
         self._firmware = "N.A."
@@ -50,7 +53,7 @@ class ImouDevice:
         self._sensor_instances: dict[str, list] = {"switch": [], "sensor": [], "binary_sensor": []}
         self._last_alarm = "N.A."
         # setup the API client
-        self.api_client = ImouAPIClient(API_URL, app_id, app_secret, websession)
+        self.api_client = ImouAPIClient(app_id, app_secret, websession, base_url, timeout)
         # other status variables
         self._initialized = False
         self._connected = False
@@ -62,7 +65,7 @@ class ImouDevice:
 
     def get_name(self) -> str:
         """Get device name."""
-        if self._given_name is not None:
+        if self._given_name != "":
             return self._given_name
         return self._name
 
@@ -260,6 +263,8 @@ class ImouDiscoverService:
         app_id: str,
         app_secret: str,
         websession: aiohttp.ClientSession,
+        base_url: str = None,
+        timeout: int = None,
     ) -> None:
         """
         Initialize the instance.
@@ -268,14 +273,18 @@ class ImouDiscoverService:
             app_id: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             websession: aiohttp client session
+            base_url: API base url (optional)
+            timeout: request timeout in seconds (optional)
         """
         # initialize the properties
         self._app_id = app_id
         self._app_secret = app_secret
         self._websession = websession
+        self._base_url = base_url
+        self._timeout = timeout
         self._connected = False
         # setup the API client
-        self.api_client = ImouAPIClient(API_URL, app_id, app_secret, websession)
+        self.api_client = ImouAPIClient(app_id, app_secret, websession, base_url, timeout)
 
     async def async_connect(self) -> bool:
         """Connect to the API."""

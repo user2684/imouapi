@@ -3,6 +3,9 @@
 # default url to connect to
 API_URL = "https://openapi.easy4ip.com/openapi"
 
+# default connection timeout
+DEFAULT_TIMEOUT = 10
+
 # Imou capabilities and their description (https://open.imoulife.com/book/en/faq/ability.html)
 IMOU_CAPABILITIES = {
     "WLAN": "Support access to wireless local area network",

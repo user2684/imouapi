@@ -34,9 +34,12 @@ A command line interface is provided for testing and troubleshooting purposes.
 ```
 Usage: python -m imouapi.cli [OPTIONS] COMMAND <ARGUMENTS>
 
-Options (mandatory):
-  --app-id <app_id>                                      Imou Cloud App ID
-  --app-secret <app_secret>                              Imou Cloud App Secret
+Options:
+  --app-id <app_id>                                      Imou Cloud App ID (mandatory)
+  --app-secret <app_secret>                              Imou Cloud App Secret (mandatory)
+  --logging <info|debug>                                 The logging level
+  --base-url <base_url>                                  Set a custom base url for the API
+  --timeout <timeout>                                    Set a custom timeout for API calls
 
 Commmands:
   discover                                               Discover registered devices
@@ -44,7 +47,7 @@ Commmands:
   get_sensor <device_id> <sensor_name>                   Get the state of a sensor
   get_binary_sensor <device_id> <sensor_name>            Get the state of a binary sensor
   get_switch <device_id> <sensor_name>                   Get the state of a switch
-  set_switch <device_id> <sensor_name> [on|off|toggle]  Set the state of a switch
+  set_switch <device_id> <sensor_name> [on|off|toggle]   Set the state of a switch
 ```
 
 ## Exception Handling
