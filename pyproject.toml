@@ -70,9 +70,9 @@ dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version"
 doc = [
     "mkdocs",
     "mkdocs-include-markdown-plugin",
-    #"mkdocs-material",
+    "mkdocs-material",
     "mkdocstrings",
-    #"mkdocs-material-extension",
+    "mkdocs-material-extension",
     "mkdocs-autorefs"
     ]
 
