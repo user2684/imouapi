@@ -10,48 +10,47 @@ nav:
   - Modules: api.md
   - Contributing: contributing.md
   - Changelog: changelog.md
-#theme:
-#  name: readthedocs
-#  language: en
-  #logo: assets/logo.png
-#  palette:
-#    scheme: preference
-#    primary: indigo
-#    accent: indigo
-#  features:
-#    - navigation.indexes
-#    - navigation.instant
-#    - navigation.tabs.sticky
-#markdown_extensions:
+theme:
+  name: material
+  language: en
+  logo: assets/logo.png
+  palette:
+    scheme: preference
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.indexes
+    - navigation.instant
+    - navigation.tabs.sticky
+markdown_extensions:
 #  - pymdownx.emoji:
 #      emoji_index: !!python/name:materialx.emoji.twemoji
 #      emoji_generator: !!python/name:materialx.emoji.to_svg
-#  - pymdownx.critic
-#  - pymdownx.caret
-#  - pymdownx.mark
-#  - pymdownx.tilde
- # - pymdownx.tabbed
- # - attr_list
- # - pymdownx.arithmatex:
-  #    generic: true
-  #- pymdownx.highlight:
-  #    linenums: false
-  #- pymdownx.superfences
- # - pymdownx.inlinehilite
- # - pymdownx.details
- # - admonition
-#  - toc:
-#      baselevel: 2
-#      permalink: true
-#      slugify: !!python/name:pymdownx.slugs.uslugify
-#  - meta
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.tabbed
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      linenums: false
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - admonition
+  - toc:
+      baselevel: 2
+      permalink: true
+      slugify: !!python/name:pymdownx.slugs.uslugify
+  - meta
 plugins:
   - include-markdown
   - search:
       lang: en
   - mkdocstrings:
-      watch:
-        - imouapi
+      #default_handler: python
 extra:
   social:
     - icon: fontawesome/brands/twitter

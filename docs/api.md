@@ -1,1 +1,1 @@
-::: imouapi
+::: imouapi.api.ImouAPIClient

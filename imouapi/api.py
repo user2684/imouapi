@@ -34,10 +34,10 @@ class ImouAPIClient:
         Initialize the instance.
 
         Parameters:
-            `base_url`: base url for API calls (e.g. https://openapi.easy4ip.com/openapi)
-            `app_id`: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
-            `app_secret`: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
-            `websession`: aiohttp client session
+            base_url: base url for API calls (e.g. https://openapi.easy4ip.com/openapi)
+            app_id: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
+            app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
+            websession: aiohttp client session
         """
         if websession is None:
             websession = ClientSession()
