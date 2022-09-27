@@ -1122,13 +1122,13 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 
 [extras]
 dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version"]
-doc = ["mkdocs", "mkdocs-include-markdown-plugin", "mkdocs-autorefs"]
+doc = ["mkdocs", "mkdocs-include-markdown-plugin", "mkdocs-material", "mkdocs-autorefs"]
 test = ["pytest", "black", "isort", "mypy", "flake8", "flake8-docstrings", "pytest-cov"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0"
-content-hash = "3336ae1877b31682e382aee1aed74b657d615933aa598f9351390c0e4c2aaa35"
+content-hash = "ac55cc2a0b433b5a38ac7365dd37c1d97167d90b5bbc847db1ac4503e38bcd36"
 
 [metadata.files]
 aiohttp = [
