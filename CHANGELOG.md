@@ -1,9 +1,9 @@
 # Changelog
 
-## 0.1.0 (2022-09-26)
+## [0.1.0] (2022-09-26)
+### Added
+- First commit
 
-* First commit
-
-## 0.1.1 (2022-09-27)
-
-* First development release
+## [0.1.1] (2022-09-27)
+### Added
+- First development release
