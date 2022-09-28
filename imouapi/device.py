@@ -1,4 +1,4 @@
-"""Discover and represent a Imou devices."""
+"""High level API to discover and interacting with Imou devices and their sensors."""
 import logging
 
 import aiohttp

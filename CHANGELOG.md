@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4] (2022-09-28)
+### Added
+- Github workflow to publish on PyPI
+### Changed
+- Updated documentation
+
 ## [0.1.3] (2022-09-27)
 ### Changed
 - API base URL and API timeout are not optional parameters and can be provided by the user
