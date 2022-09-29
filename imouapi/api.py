@@ -2,6 +2,7 @@
 import hashlib
 import logging
 import random
+import re
 import secrets
 import time
 from datetime import datetime, timedelta
@@ -41,16 +42,39 @@ class ImouAPIClient:
             app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             websession: aiohttp client session
         """
-        self.log_http_requests = True
-        self._websession = websession
         self._base_url = base_url if base_url is not None else API_URL
-        self._app_secret = app_secret
         self._app_id = app_id
+        self._app_secret = app_secret
+        self._websession = websession
+
         self._access_token = None
         self._access_token_expire_time = None
+        self._log_http_requests_enabled = False
+        self._redact_log_message_enabled = True
         self._connected = False
         self._timeout = timeout if timeout is not None else DEFAULT_TIMEOUT
         _LOGGER.debug("Initialized. Endpoint URL: %s", self._base_url)
+
+    def _redact_log_message(self, data: str) -> str:
+        """Redact log messages to remove sensitive information"""
+        if not self._redact_log_message_enabled:
+            return data
+        for keyword in ("appId", "sign", "token", "accessToken", "playToken", "thumbUrl", "picUrl"):
+            for tick in ('\"', "'"):
+                data = re.sub(
+                    f"{tick}{keyword}{tick}:\\s*{tick}[^{tick}]+{tick}",
+                    f"{tick}{keyword}{tick}: {tick}XXXXXXXXX{tick}",
+                    data,
+                )
+        return data
+
+    def log_http_requests(self, value: bool) -> None:
+        """Set to true if you want in debug logs also HTTP requests and responses"""
+        self._log_http_requests_enabled = value
+
+    def redact_log_message(self, value: bool) -> None:
+        """Set to true if you want debug logs redacted from sensitive data"""
+        self._redact_log_message_enabled = value
 
     async def async_connect(self) -> bool:
         """Authenticate against the API and retrieve an access token."""
@@ -65,7 +89,7 @@ class ImouAPIClient:
         # store the access token
         self._access_token = data["accessToken"]
         self._access_token_expire_time = data["expireTime"]
-        _LOGGER.debug("Retrieved access token: %s", self._access_token)
+        _LOGGER.debug("Retrieved access token")
         self._connected = True
         _LOGGER.debug("Connected succesfully")
         return True
@@ -117,8 +141,8 @@ class ImouAPIClient:
             "params": payload,
             "id": request_id,
         }
-        if self.log_http_requests:
-            _LOGGER.debug("[HTTP_REQUEST] %s: %s", url, body)
+        if self._log_http_requests_enabled:
+            _LOGGER.debug("[HTTP_REQUEST] %s: %s", url, self._redact_log_message(str(body)))
 
         # send the request to the API endpoint
         try:
@@ -128,8 +152,10 @@ class ImouAPIClient:
 
         # parse the response and look for errors
         response_status = response.status
-        if self.log_http_requests:
-            _LOGGER.debug("[HTTP_RESPONSE] %s: %s", response_status, await response.text())
+        if self._log_http_requests_enabled:
+            _LOGGER.debug(
+                "[HTTP_RESPONSE] %s: %s", response_status, self._redact_log_message(str(await response.text()))
+            )
         if response_status != 200:
             raise APIError(f"status code {response.status}")
         try:

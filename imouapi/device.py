@@ -302,7 +302,7 @@ class ImouDiscoverService:
         devices_data = await self.api_client.async_api_deviceBaseList()
         if "deviceList" not in devices_data or "count" not in devices_data:
             raise InvalidResponse(f"deviceList or count not found in {devices_data}")
-        _LOGGER.info("Discovered %d registered devices", devices_data["count"])
+        _LOGGER.debug("Discovered %d registered devices", devices_data["count"])
         # extract the device id for each device
         devices = {}
         for device_data in devices_data["deviceList"]:
@@ -315,7 +315,7 @@ class ImouDiscoverService:
             )
             await device.async_connect()
             await device.async_initialize()
-            _LOGGER.info("   - %s", device.to_string())
+            _LOGGER.debug("   - %s", device.to_string())
             devices[f"{device.get_name()}"] = device
         # return a dict with device name -> device instance
         return devices

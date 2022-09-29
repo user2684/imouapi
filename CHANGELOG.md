@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.5] (2022-09-28)
+### Added
+- ImouAPIClient.log_http_requests() for enabling http request/response logging (off by default)
+- If http logging is enabled, log messages are redacted from sensitive information
+- ImouAPIClient.redact_log_message() for enabling log redaction (on by default)
+### Changed
+- Moved info logs into debug level
+- By default, with debug level, no more logging HTTP requests and responses
+
 ## [0.1.4] (2022-09-28)
 ### Added
 - Github workflow to publish on PyPI
