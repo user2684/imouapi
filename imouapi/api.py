@@ -56,7 +56,7 @@ class ImouAPIClient:
         _LOGGER.debug("Initialized. Endpoint URL: %s", self._base_url)
 
     def _redact_log_message(self, data: str) -> str:
-        """Redact log messages to remove sensitive information"""
+        """Redact log messages to remove sensitive information."""
         if not self._redact_log_message_enabled:
             return data
         for keyword in ("appId", "sign", "token", "accessToken", "playToken", "thumbUrl", "picUrl"):
@@ -69,11 +69,11 @@ class ImouAPIClient:
         return data
 
     def log_http_requests(self, value: bool) -> None:
-        """Set to true if you want in debug logs also HTTP requests and responses"""
+        """Set to true if you want in debug logs also HTTP requests and responses."""
         self._log_http_requests_enabled = value
 
     def redact_log_message(self, value: bool) -> None:
-        """Set to true if you want debug logs redacted from sensitive data"""
+        """Set to true if you want debug logs redacted from sensitive data."""
         self._redact_log_message_enabled = value
 
     async def async_connect(self) -> bool:
