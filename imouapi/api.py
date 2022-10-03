@@ -9,10 +9,11 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
-from imouapi.const import API_URL, DEFAULT_TIMEOUT
+from imouapi.const import API_URL, DEFAULT_TIMEOUT, MAX_RETRIES
 from imouapi.exceptions import (
     APIError,
     ConnectionFailed,
+    ImouException,
     InvalidConfiguration,
     InvalidResponse,
     NotAuthorized,
@@ -25,34 +26,28 @@ _LOGGER = logging.getLogger(__package__)
 class ImouAPIClient:
     """Interact with IMOU API."""
 
-    def __init__(
-        self,
-        app_id: str,
-        app_secret: str,
-        websession: ClientSession,
-        base_url: str = None,
-        timeout: int = None,
-    ) -> None:
+    def __init__(self, app_id: str, app_secret: str, session: ClientSession) -> None:
         """
         Initialize the instance.
 
         Parameters:
-            base_url: base url for API calls (e.g. https://openapi.easy4ip.com/openapi)
             app_id: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
             app_secret: appID from https://open.imoulife.com/consoleNew/myApp/appInfo
-            websession: aiohttp client session
+            session: aiohttp client session
         """
-        self._base_url = base_url if base_url is not None else API_URL
         self._app_id = app_id
         self._app_secret = app_secret
-        self._websession = websession
+        self._session = session
+
+        self._base_url = API_URL
+        self._timeout = DEFAULT_TIMEOUT
+        self._log_http_requests_enabled = False
+        self._redact_log_message_enabled = True
 
         self._access_token = None
         self._access_token_expire_time = None
-        self._log_http_requests_enabled = False
-        self._redact_log_message_enabled = True
         self._connected = False
-        self._timeout = timeout if timeout is not None else DEFAULT_TIMEOUT
+        self._retries = 1
         _LOGGER.debug("Initialized. Endpoint URL: %s", self._base_url)
 
     def _redact_log_message(self, data: str) -> str:
@@ -68,11 +63,25 @@ class ImouAPIClient:
                 )
         return data
 
-    def log_http_requests(self, value: bool) -> None:
+    def set_base_url(self, value: str) -> None:
+        """Set a custom base url for the API."""
+        self._base_url = value
+        _LOGGER.debug("Set endpoint URL to %s", self._base_url)
+
+    def set_timeout(self, value: int) -> None:
+        """Set a custom timeout."""
+        self._timeout = value
+        _LOGGER.debug("Set timeout to %s", self._base_url)
+
+    def set_session(self, value: ClientSession) -> None:
+        """Set an aiohttp client session."""
+        self._session = value
+
+    def set_log_http_requests(self, value: bool) -> None:
         """Set to true if you want in debug logs also HTTP requests and responses."""
         self._log_http_requests_enabled = value
 
-    def redact_log_message(self, value: bool) -> None:
+    def set_redact_log_messages(self, value: bool) -> None:
         """Set to true if you want debug logs redacted from sensitive data."""
         self._redact_log_message_enabled = value
 
@@ -91,7 +100,6 @@ class ImouAPIClient:
         self._access_token_expire_time = data["expireTime"]
         _LOGGER.debug("Retrieved access token")
         self._connected = True
-        _LOGGER.debug("Connected succesfully")
         return True
 
     async def async_disconnect(self) -> bool:
@@ -102,19 +110,30 @@ class ImouAPIClient:
         _LOGGER.debug("Disconnected")
         return True
 
-    def is_connected(self) -> bool:
-        """Return true if already connected."""
-        return self._connected
-
     async def async_reconnect(self) -> bool:
         """Reconnect to the API."""
         await self.async_disconnect()
         return await self.async_connect()
 
-    async def _async_call_api(self, api: str, payload: dict, is_connect_request: bool = False) -> dict:
+    def is_connected(self) -> bool:
+        """Return true if already connected."""
+        return self._connected
+
+    async def _async_call_api(self, api: str, payload: dict, is_connect_request: bool = False) -> dict:  # noqa: C901
         """Submit request to the HTTP API endpoint."""
-        # if this is not a connect request, check if we are already connected
+        # connect if not connected
         if not is_connect_request:
+            while not self.is_connected():
+                _LOGGER.debug("Connection attempt %d/%d", self._retries, MAX_RETRIES)
+                # if noo many attempts, give up
+                if self._retries >= MAX_RETRIES:
+                    _LOGGER.error("Too many unsuccesful connection attempts")
+                    break
+                try:
+                    await self.async_connect()
+                except ImouException as exception:
+                    _LOGGER.error(exception.to_string())
+                self._retries = self._retries + 1
             if not self.is_connected():
                 raise NotConnected()
 
@@ -146,7 +165,7 @@ class ImouAPIClient:
 
         # send the request to the API endpoint
         try:
-            response = await self._websession.request("POST", url, json=body, timeout=self._timeout)
+            response = await self._session.request("POST", url, json=body, timeout=self._timeout)
         except Exception as exception:
             raise ConnectionFailed(f"{exception}") from exception
 

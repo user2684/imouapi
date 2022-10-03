@@ -1,8 +1,22 @@
 # Changelog
 
+## [0.2.0] (2022-10-03)
+### Added
+- `get_sensor_by_name()` and `get_all_sensors()` added to `ImouDevice` class
+### Changed
+- `ImouDiscoverService` and `ImouDevice` now take an instance of `ImouAPIClient` to initialize
+- In `ImouDiscoverService` and `ImouDevice`, moved `base_url` and `timeout` from constructor to function `set_base_url()` and `set_timeout()`
+- There is no more concept of supported switches, all of those discovered, are made available and can be controlled
+- Sensors' icons moved out of the this library since not applicable in this context
+- `ImouDevice` `get_sensors()` renamed in `get_sensors_by_platform()`
+- If connection failes, multiple retries are done
+- Partial refactoring of the code
+### Removed
+- `async_connect()` from both `ImouDevice` and `ImouDiscoverService`. Connection takes place at the first API call
+
 ## [0.1.5] (2022-09-28)
 ### Added
-- ImouAPIClient.log_http_requests() for enabling http request/response logging (off by default)
+- `ImouAPIClient.log_http_requests()` for enabling http request/response logging (off by default)
 - If http logging is enabled, log messages are redacted from sensitive information
 - ImouAPIClient.redact_log_message() for enabling log redaction (on by default)
 ### Changed

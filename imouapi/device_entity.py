@@ -2,9 +2,10 @@
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Optional
 
 from imouapi.api import ImouAPIClient
-from imouapi.const import BINARY_SENSOR_ICONS, BINARY_SENSORS, IMOU_SWITCHES, SENSOR_ICONS, SENSORS, SWITCH_ICONS
+from imouapi.const import BINARY_SENSORS, IMOU_SWITCHES, SENSORS
 from imouapi.exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -13,29 +14,50 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 class ImouEntity(ABC):
     """A representation of a sensor within an Imou Device."""
 
+    def __init__(
+        self,
+        api_client: ImouAPIClient,
+        device_id: str,
+        device_name: str,
+        sensor_type: str,
+        sensor_description: str,
+    ) -> None:
+        """Initialize common parameters."""
+        self.api_client = api_client
+        self._device_id = device_id
+        self._device_name = device_name
+        self._name = sensor_type
+        self._description = sensor_description
+        self._enabled = True
+        self._updated = False
+
+    def get_device_id(self) -> str:
+        """Get device id."""
+        return self._device_id
+
+    def get_name(self) -> str:
+        """Get name."""
+        return self._name
+
+    def get_description(self) -> str:
+        """Get description."""
+        return self._description
+
+    def set_enabled(self, value: bool) -> None:
+        """Set enable."""
+        self._enabled = value
+
+    def is_enabled(self) -> bool:
+        """If enabled."""
+        return self._enabled
+
+    def is_updated(self) -> bool:
+        """If has been updated at least once."""
+        return self._updated
+
     @abstractmethod
     async def async_update(self, **kwargs):
         """Update the entity."""
-
-    @abstractmethod
-    def get_device_id(self) -> str:
-        """Get device id."""
-
-    @abstractmethod
-    def get_name(self) -> str:
-        """Get name."""
-
-    @abstractmethod
-    def get_description(self) -> str:
-        """Get description."""
-
-    @abstractmethod
-    def get_icon(self) -> str:
-        """Get icon."""
-
-    @abstractmethod
-    def set_enabled(self, value: bool) -> None:
-        """Set enable."""
 
 
 class ImouSensor(ImouEntity):
@@ -54,37 +76,12 @@ class ImouSensor(ImouEntity):
         Parameters:
             api_client: an instance ofthe API client
             device_id: the device id
+            device_name: the device name
             sensor_type: the sensor type from const SENSORS
         """
-        self.api_client = api_client
-        self._device_id = device_id
-        self._device_name = device_name
-        self._name = sensor_type
-        self._icon = SENSOR_ICONS[sensor_type]
-        self._description = SENSORS[sensor_type]
-        self._enabled = True
+        super().__init__(api_client, device_id, device_name, sensor_type, SENSORS[sensor_type])
         # keep track of the status of the sensor
-        self._state = ""
-
-    def get_device_id(self) -> str:
-        """Get device id."""
-        return self._device_id
-
-    def get_name(self) -> str:
-        """Get name."""
-        return self._name
-
-    def get_icon(self) -> str:
-        """Get icon."""
-        return self._icon
-
-    def get_description(self) -> str:
-        """Get description."""
-        return self._description
-
-    def set_enabled(self, value: bool) -> None:
-        """Set enable."""
-        self._enabled = value
+        self._state = None
 
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -108,10 +105,10 @@ class ImouSensor(ImouEntity):
                     self._description,
                     self._state,
                 )
+                if not self._updated:
+                    self._updated = True
 
-    # entity-specific methods
-
-    def get_state(self) -> str:
+    def get_state(self) -> Optional[str]:
         """Return the state."""
         return self._state
 
@@ -138,37 +135,12 @@ class ImouBinarySensor(ImouEntity):
         Parameters:
             api_client: an instance ofthe API client
             device_id: the device id
+            device_name: the device name
             sensor_type: the sensor type from const BINARY_SENSORS
         """
-        self.api_client = api_client
-        self._device_id = device_id
-        self._device_name = device_name
-        self._name = sensor_type
-        self._icon = BINARY_SENSOR_ICONS[sensor_type]
-        self._description = BINARY_SENSORS[sensor_type]
-        self._enabled = True
+        super().__init__(api_client, device_id, device_name, sensor_type, BINARY_SENSORS[sensor_type])
         # keep track of the status of the sensor
-        self._state = False
-
-    def get_device_id(self) -> str:
-        """Get device id."""
-        return self._device_id
-
-    def get_name(self) -> str:
-        """Get name."""
-        return self._name
-
-    def get_icon(self) -> str:
-        """Get icon."""
-        return self._icon
-
-    def get_description(self) -> str:
-        """Get description."""
-        return self._description
-
-    def set_enabled(self, value: bool) -> None:
-        """Set enable."""
-        self._enabled = value
+        self._state = None
 
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -186,10 +158,10 @@ class ImouBinarySensor(ImouEntity):
                 self._description,
                 self._state,
             )
+            if not self._updated:
+                self._updated = True
 
-    # entity-specific methods
-
-    def is_on(self) -> bool:
+    def is_on(self) -> Optional[bool]:
         """Return the status of the switch."""
         return self._state
 
@@ -210,38 +182,11 @@ class ImouSwitch(ImouEntity):
         Parameters:
             api_client: an instance ofthe API client
             device_id: the device id
-            device_name: the name of the device
+            device_name: the device name
             sensor_type: the sensor type (from the SWITCHES constant)
         """
-        self.api_client = api_client
-        self._device_id = device_id
-        self._device_name = device_name
-        self._name = sensor_type
-        self._icon = SWITCH_ICONS[sensor_type]
-        self._description = IMOU_SWITCHES[sensor_type]
-        self._enabled = True
-        # keep track of the status of the sensor
-        self._state = False
-
-    def get_device_id(self) -> str:
-        """Get device id."""
-        return self._device_id
-
-    def get_name(self) -> str:
-        """Get name."""
-        return self._name
-
-    def get_description(self) -> str:
-        """Get description."""
-        return self._description
-
-    def get_icon(self) -> str:
-        """Get icon."""
-        return self._icon
-
-    def set_enabled(self, value: bool) -> None:
-        """Set enable."""
-        self._enabled = value
+        super().__init__(api_client, device_id, device_name, sensor_type, IMOU_SWITCHES[sensor_type])
+        self._state = None
 
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -255,10 +200,10 @@ class ImouSwitch(ImouEntity):
             data["status"].upper(),
         )
         self._state = data["status"] == "on"
+        if not self._updated:
+            self._updated = True
 
-    # entity-specific methods
-
-    def is_on(self) -> bool:
+    def is_on(self) -> Optional[bool]:
         """Return the status of the switch."""
         return self._state
 
@@ -280,7 +225,7 @@ class ImouSwitch(ImouEntity):
 
     async def async_toggle(self, **kwargs):
         """Toggle the entity."""
-        if not self._enabled:
+        if not self._enabled or not self._updated:
             return
         if self._state:
             await self.async_turn_off()

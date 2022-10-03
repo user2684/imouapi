@@ -7,7 +7,7 @@ An abstraction over the API has been built to provide representations of devices
 - `imouapi.device` provides `ImouDevice` to represent an Imou devices and all its sensors and `ImouDiscoverService` which can be used to discover devices registered with the account
 - `imouapi.device_entity` provides `ImouSensor`, `ImouBinarySensor` and `ImouSwitch`, representing the sensors attached to the device. Upon loading, the library is capable of enumerating available capabilities of the device and instantiate only the switches that the device suports. The API of course allows to eventually control those switches.
 
-    - Supported switches: "motionDetect", "headerDetect", "abAlarmSound", "breathingLight", if supported by the remote device
+    - Supported switches: all the switches supported by the remote device
     - Supported sensor: "lastAlarm"
     - Supported binary_sensor: "online"
 
@@ -15,7 +15,7 @@ Examples on how to interact with ImouDevice and ImouDiscoverService are provided
 
 ### Option 2: low-level API
 
-By using `from imouapi.api import ImouAPIClient` and calling the provided methods for connecting and calling API endpoints.
+With `from imouapi.api import ImouAPIClient` and calling the provided methods for connecting and calling API endpoints.
 The following Imou API are supported:
 
 - deviceBaseList
@@ -57,10 +57,10 @@ The library provides a simplified way for handling exceptions:
 from imouapi.exceptions import ImouException
 
 try:
-    discover_service = ImouDiscoverService(app_id, app_secret, session)
-    await discover_service.async_connect()
+    await device.async_initialize()
 except ImouException as exception:
-    print(exception.to_string())
+    _LOGGER.error(exception.to_string())
+    raise ImouException() from exception
 ```
 
 The `ImouException` class provides a `to_string()` method which returns the name of the exception which was raised and the full stacktrace.

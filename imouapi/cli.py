@@ -6,129 +6,83 @@ import sys
 
 import aiohttp
 
+from imouapi.api import ImouAPIClient
 from imouapi.device import ImouDevice, ImouDiscoverService
 from imouapi.device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
 from imouapi.exceptions import ImouException
 
 
-async def discover_devices(app_id: str, app_secret: str, base_url: str, timeout: int) -> None:
-    """Discovered devices associated with the account."""
+async def async_run_command(command: str, api_client: ImouAPIClient, args: list[str]):
+    """Run a command."""
     session = aiohttp.ClientSession()
+    api_client.set_session(session)
     try:
-        discover_service = ImouDiscoverService(app_id, app_secret, session, base_url, timeout)
-        await discover_service.async_connect()
-        discovered_devices = await discover_service.async_discover_devices()
-        print(f"Discovered {len(discovered_devices)} devices:")
-        for device_name, device in discovered_devices.items():
-            print(f"- {device_name}:")
-            print(f"  - Model: {device.get_model()}")
-            print(f"  - Device ID: {device.get_device_id()}")
-            print(f"  - Firmware: {device.get_firmware()}")
-    except ImouException as exception:
-        print(exception.to_string())
-    await session.close()
+        if command == "discover":
+            discover_service = ImouDiscoverService(api_client)
+            discovered_devices = await discover_service.async_discover_devices()
+            print(f"Discovered {len(discovered_devices)} devices:")
+            for device_name, device in discovered_devices.items():
+                print(f"- {device_name}:")
+                print(f"  - Model: {device.get_model()}")
+                print(f"  - Device ID: {device.get_device_id()}")
+                print(f"  - Firmware: {device.get_firmware()}")
 
+        elif command in ["get_device", "get_sensor", "get_binary_sensor", "get_switch", "set_switch"]:
+            device_id = args[0]
+            device = ImouDevice(api_client, device_id)
+            await device.async_initialize()
+            await device.async_get_data()
 
-async def get_device(app_id: str, app_secret: str, device_id: str, base_url: str, timeout: int) -> None:
-    """Print out the details of a given device."""
-    session = aiohttp.ClientSession()
-    try:
-        device = ImouDevice(app_id, app_secret, device_id, session, base_url, timeout)
-        await device.async_connect()
-        await device.async_initialize()
-        await device.async_get_data()
-        print(device.dump())
-    except ImouException as exception:
-        print(exception.to_string())
-    await session.close()
+            if command == "get_device":
+                print(device.dump())
 
+            elif command == "get_sensor":
+                sensor_name = args[1]
+                print(f"- {device.get_name()}:")
+                sensor: ImouSensor = device.get_sensor_by_name(sensor_name)
+                if sensor is not None:
+                    print(f"  - {sensor.get_description()} ({sensor.get_name()}): {sensor.get_state()}")
+                else:
+                    print(f"sensor {sensor_name} not found")
 
-async def get_sensor(
-    app_id: str, app_secret: str, device_id: str, sensor_name: str, base_url: str, timeout: int
-) -> None:
-    """Print out the details of a given sensor."""
-    session = aiohttp.ClientSession()
-    try:
-        device = ImouDevice(app_id, app_secret, device_id, session, base_url, timeout)
-        await device.async_connect()
-        await device.async_initialize()
-        await device.async_get_data()
-        print(f"- {device.get_name()}:")
-        sensors: list[ImouSensor] = device.get_sensors("sensor")  # type: ignore
-        for sensor in sensors:
-            if sensor_name == sensor.get_name():
-                print(f"  - {sensor.get_description()} ({sensor.get_name()}): {sensor.get_state()}")
-                break
-    except ImouException as exception:
-        print(exception.to_string())
-    await session.close()
+            elif command == "get_binary_sensor":
+                sensor_name = args[1]
+                print(f"- {device.get_name()}:")
+                binary_sensor: ImouBinarySensor = device.get_sensor_by_name(sensor_name)
+                if binary_sensor is not None:
+                    print(
+                        f"  - {binary_sensor.get_description()} ({binary_sensor.get_name()}): {binary_sensor.is_on()}"
+                    )
+                else:
+                    print(f"sensor {sensor_name} not found")
 
+            elif command == "get_switch":
+                sensor_name = args[1]
+                print(f"- {device.get_name()}:")
+                get_switch: ImouSwitch = device.get_sensor_by_name(sensor_name)
+                if get_switch is not None:
+                    print(f"  - {get_switch.get_description()} ({get_switch.get_name()}): {get_switch.is_on()}")
+                else:
+                    print(f"sensor {sensor_name} not found")
 
-async def get_binary_sensor(
-    app_id: str, app_secret: str, device_id: str, sensor_name: str, base_url: str, timeout: int
-) -> None:
-    """Print out the details of a given binary sensor."""
-    session = aiohttp.ClientSession()
-    try:
-        device = ImouDevice(app_id, app_secret, device_id, session, base_url, timeout)
-        await device.async_connect()
-        await device.async_initialize()
-        await device.async_get_data()
-        print(f"- {device.get_name()}:")
-        sensors: list[ImouBinarySensor] = device.get_sensors("binary_sensor")  # type: ignore
-        for sensor in sensors:
-            if sensor_name == sensor.get_name():
-                status = "ON" if sensor.is_on() else "OFF"
-                print(f"  - {sensor.get_description()} ({sensor.get_name()}): {status}")
-                break
-    except ImouException as exception:
-        print(exception.to_string())
-    await session.close()
+            elif command == "set_switch":
+                sensor_name = args[1]
+                value = args[2].upper()
+                set_switch: ImouSwitch = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if set_switch is not None:
+                    if value == "ON":
+                        await set_switch.async_turn_on()
+                    elif value == "OFF":
+                        await set_switch.async_turn_off()
+                    elif value == "TOGGLE":
+                        await set_switch.async_toggle()
+                    await async_run_command("get_switch", api_client, [device_id, sensor_name])
+                else:
+                    print(f"sensor {sensor_name} not found")
 
+        else:
+            print("invalid command provided")
 
-async def get_switch(
-    app_id: str, app_secret: str, device_id: str, sensor_name: str, base_url: str, timeout: int
-) -> None:
-    """Print out the details of a given switch."""
-    session = aiohttp.ClientSession()
-    try:
-        device = ImouDevice(app_id, app_secret, device_id, session, base_url, timeout)
-        await device.async_connect()
-        await device.async_initialize()
-        await device.async_get_data()
-        print(f"- {device.get_name()}:")
-        sensors: list[ImouSwitch] = device.get_sensors("switch")  # type: ignore
-        for sensor in sensors:
-            if sensor_name == sensor.get_name():
-                status = "ON" if sensor.is_on() else "OFF"
-                print(f"  - {sensor.get_description()} ({sensor.get_name()}): {status}")
-                break
-    except ImouException as exception:
-        print(exception.to_string())
-    await session.close()
-
-
-async def set_switch(
-    app_id: str, app_secret: str, device_id: str, sensor_name: str, value: str, base_url: str, timeout: int
-) -> None:
-    """Print out the details of a given switch."""
-    session = aiohttp.ClientSession()
-    try:
-        device = ImouDevice(app_id, app_secret, device_id, session, base_url, timeout)
-        await device.async_connect()
-        await device.async_initialize()
-        await device.async_get_data()
-        sensors: list[ImouSwitch] = device.get_sensors("switch")  # type: ignore
-        for sensor in sensors:
-            if sensor_name == sensor.get_name():
-                if value == "ON":
-                    await sensor.async_turn_on()
-                elif value == "OFF":
-                    await sensor.async_turn_off()
-                elif value == "TOGGLE":
-                    await sensor.async_toggle()
-                await get_switch(app_id, app_secret, device_id, sensor_name, base_url, timeout)
-                break
     except ImouException as exception:
         print(exception.to_string())
     await session.close()
@@ -191,56 +145,47 @@ class ImouCli:
 
     def run_command(self):
         """Run the requested command."""
+        # ensure app id and app secret are provided
         if self.app_id is None or self.app_secret is None:
             print("ERROR: provide app_id and app_secret")
             print("")
             self.print_usage()
             sys.exit(1)
+
+        # instantiate an api client
+        api_client = ImouAPIClient(self.app_id, self.app_secret, None)
+        if self.base_url is not None:
+            api_client.set_base_url(self.base_url)
+        if self.timeout is not None:
+            api_client.set_timeout(self.timeout)
+
         if self.command == "discover":
-            asyncio.run(discover_devices(self.app_id, self.app_secret, self.base_url, self.timeout))
+            asyncio.run(async_run_command(self.command, api_client, self.args))
         elif self.command == "get_device":
             if len(self.args) == 1:
-                asyncio.run(get_device(self.app_id, self.app_secret, self.args[0], self.base_url, self.timeout))
+                asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device id")
         elif self.command == "get_sensor":
             if len(self.args) == 2:
-                asyncio.run(
-                    get_sensor(self.app_id, self.app_secret, self.args[0], self.args[1], self.base_url, self.timeout)
-                )
+                asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
         elif self.command == "get_binary_sensor":
             if len(self.args) == 2:
-                asyncio.run(
-                    get_binary_sensor(
-                        self.app_id, self.app_secret, self.args[0], self.args[1], self.base_url, self.timeout
-                    )
-                )
+                asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
         elif self.command == "get_switch":
             if len(self.args) == 2:
-                asyncio.run(
-                    get_switch(self.app_id, self.app_secret, self.args[0], self.args[1], self.base_url, self.timeout)
-                )
+                asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
         elif self.command == "set_switch":
             if len(self.args) == 3:
-                asyncio.run(
-                    set_switch(
-                        self.app_id,
-                        self.app_secret,
-                        self.args[0],
-                        self.args[1],
-                        self.args[2],
-                        self.base_url,
-                        self.timeout,
-                    )
-                )
+                asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
-                print("ERROR: provide device_id and sensor_name")
+                print("ERROR: provide device_id, sensor_name and value")
         else:
             self.print_usage()
 

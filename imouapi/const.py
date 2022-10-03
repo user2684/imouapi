@@ -6,6 +6,9 @@ API_URL = "https://openapi.easy4ip.com/openapi"
 # default connection timeout
 DEFAULT_TIMEOUT = 10
 
+# max api retries
+MAX_RETRIES = 3
+
 # Imou capabilities and their description (https://open.imoulife.com/book/en/faq/ability.html)
 IMOU_CAPABILITIES = {
     "WLAN": "Support access to wireless local area network",
@@ -119,13 +122,13 @@ IMOU_CAPABILITIES = {
     "PTZ": "Support PTZ and digital zoom operation",
     "PT": "Support PTZ operation",
     "PT1": "Ranger2 only supports 4-way pan/tilt capability. Does not support zoom in and out Does not support\
-        digital zoom operation",
+digital zoom operation",
     "PT2": "Only supports pan/tilt capabilities that can rotate in two directions. Does not support zoom in and \
-        zoom out. Does not support digital zoom operations",
+zoom out. Does not support digital zoom operations",
     "AudioEncodeOff": "No audio input",
     "AudioEncodeControl": "Support audio encoding control (on or off)",
     "AudioEncodeControlV2": "Supports audio encoding control (on or off), only affects real-time video, video \
-        audio, and does not affect intercom audio control",
+audio, and does not affect intercom audio control",
     "FrameReverse": "Support screen flip",
     "RemoteControl": "Support remote linkage",
     "Panorama": "Support Panorama",
@@ -167,7 +170,7 @@ IMOU_CAPABILITIES = {
     "WDRV2": "Wide dynamic v2, support 0-100 gear configuration",
     "TalkSoundModify": "Intercom volume adjustment",
     "VideoMotionSMD": "Motion detection SMD capability, when the device has this capability, motion detection \
-        events include human figures and vehicles",
+events include human figures and vehicles",
     "ChnLocalStorage": "Support channel local storage, such as SD card or hard disk",
     "OSD": "Support video channel OSD configuration",
     "1080P": "Maximum capability set supported by the device",
@@ -200,70 +203,59 @@ IMOU_CAPABILITIES = {
 
 # Imou switches and their description (https://open.imoulife.com/book/en/faq/feature.html)
 IMOU_SWITCHES = {
-    "localRecord": "Local Record",
+    "localRecord": "Local recording",
     "motionDetect": "Motion detection",
-    "faceCapture": "Automatic face capture",
-    "speechRecognition": "device speech recognition",
+    "faceCapture": "Face capture",
+    "speechRecognition": "Speech recognition",
     "breathingLight": "Breathing light",
     "smartLocate": "Listening and positioning",
     "smartTrack": "Smart Tracking",
-    "localAlarmRecord": "Local alarm linkage recording	channel, the enable switch depends on the motion \
-        detection enable switch",
+    "localAlarmRecord": "Local alarm recording",
     "regularCruise": "Scheduled Cruise",
     "headerDetect": "Head Detection",
     "numberStat": "Cross-line passenger flow statistics",
     "manNumDec": "Regional passenger flow statistics",
     "alarmPIR": "PIR alarm",
     "autoZoomFocus": "Automatic zoom focus",
-    "audioEncodeControl": "Support audio encoding control (on or off)",
-    "aecv3": "Support audio encoding control (on or off)",
+    "audioEncodeControl": "Audio encoding control",
+    "aecv3": "Audio encoding control v3",
     "faceDetect": "Face Detection",
-    "localStorageEnable": "Device local storage",
+    "localStorageEnable": "Local storage",
     "whiteLight": "White Light",
-    "linkageWhiteLight": "alarm linkage white light",
-    "linkageSiren": "alarm linkage siren",
-    "infraredLight": "infrared light",
-    "searchLight": "Searchlight",
+    "linkageWhiteLight": "Alarm white light",
+    "linkageSiren": "Alarm siren",
+    "infraredLight": "Infrared light",
+    "searchLight": "Search light",
     "hoveringAlarm": "Hovering Alarm",
-    "beOpenedDoor": "Normally open the door, namely successfully open the door",
-    "closeCamera": "close camera",
+    "beOpenedDoor": "Normally open the door",
+    "closeCamera": "Close camera",
     "mobileDetect": "Mobile detection",
     "rtFaceDetect": "Smart after face detection",
     "rtFaceCompa": "Smart after face comparison",
-    "closeDormant": "Sleepable devices support close dormancy",
+    "closeDormant": "Close dormancy",
     "heatMap": "Heat analysis",
-    "tlsEnable": "easy4ip dedicated tls enable switch",
-    "aiHumanCar": "Humanoid Vehicle Intelligent Enable Switch",
-    "aiHuman": "Humanoid Smart Enable Switch",
-    "aiCar": "Vehicle Intelligent Enable Switch",
-    "openDoorByFace": "Face open door enable switch",
-    "openDoorByTouch": "Touch to open the door enable switch",
+    "tlsEnable": "Tls enable",
+    "aiHumanCar": "Humanoid Vehicle AI",
+    "aiHuman": "Humanoid AI",
+    "aiCar": "Vehicle AI",
+    "openDoorByFace": "Face open door",
+    "openDoorByTouch": "Touch to open door",
     "linkDevAlarm": "Associated device alarm",
     "linkAccDevAlarm": "Associated accessory alarm",
-    "abAlarmSound": "Abnormal alarm sound",
+    "abAlarmSound": "Abnormal sound",
     "playSound": "Device sound",
     "wideDynamic": "Wide Dynamic",
     "smdHuman": "SMD People",
     "smdVehicle": "SMD car",
     "instantDisAlarm": "One-click disarming",
     "periodDisAlarm": "Period disarm",
-    "ccss": "Privacy Plan Switch",
+    "ccss": "Privacy Plan",
     "inll": "Indicator light linkage",
-    "ledsw": "Fill light switch",
-}
-
-SUPPORTED_SWITCHES = ["motionDetect", "headerDetect", "abAlarmSound", "breathingLight"]
-SWITCH_ICONS = {
-    "motionDetect": "mdi:motion-sensor",
-    "headerDetect": "mdi:human",
-    "abAlarmSound": "mdi:alarm-bell",
-    "breathingLight": "mdi:television-ambient-light",
+    "ledsw": "Fill light",
 }
 
 # sensors supported by this library
 SENSORS = {"lastAlarm": "Last alarm"}
-SENSOR_ICONS = {"lastAlarm": "mdi:timer"}
 
 # sensors supported by this library
 BINARY_SENSORS = {"online": "Online"}
-BINARY_SENSOR_ICONS = {"online": "mdi:lan-connect"}
