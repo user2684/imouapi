@@ -540,8 +540,9 @@
 <ul>
 <li>Install the library with <code>pip install imouapi</code></li>
 <li>Register a developer account on <a href="https://open.imoulife.com/..">Imou Life Open API</a> and get your <code>appId</code> and <code>appSecret</code></li>
-<li>Discover registered devices (<code>from imouapi.device import ImouDiscoverService</code>)</li>
-<li>Either use the high level API (<code>from imouapi.device import ImouDevice</code>) or the low level API (<code>from imouapi.api import ImouAPIClient</code>) to interact with the device</li>
+<li>Instantiate the Imou API client (<code>from imouapi.api import ImouAPIClient</code>) and initialize it (e.g. <code>api_client = ImouAPIClient(app_id, app_secret, session)</code>)</li>
+<li>Discover registered devices by importing the Discover service (<code>from imouapi.device import ImouDiscoverService</code>), inializing it (e.g. <code>discover_service = ImouDiscoverService(api_client)</code>) and running a discovery (e.g. <code>discovered_devices = await discover_service.async_discover_devices()</code>)</li>
+<li>Either use the high level API by importing the Imou Device class (<code>from imouapi.device import ImouDevice</code>) and initializing it (e.g. <code>device = ImouDevice(api_client, device_id)</code>) or using directly the low level API provided by <code>ImouAPIClient</code> to interact with the device</li>
 </ul>
 <p>Full details on the installation process, requirements, usage and classes and methods made available by the library are available at <a href="https://user2684.github.io/imouapi">https://user2684.github.io/imouapi</a></p>
 <!-- END INCLUDE -->
