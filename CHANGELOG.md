@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] (2022-10-04)
+### Added
+- Test cases for `ImouAPIClient`
+- Access Token expiration handling
+
 ## [0.2.0] (2022-10-03)
 ### Added
 - `get_sensor_by_name()` and `get_all_sensors()` added to `ImouDevice` class

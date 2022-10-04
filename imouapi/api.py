@@ -1,5 +1,6 @@
 """Low-level API for interacting with Imou devices."""
 import hashlib
+import json
 import logging
 import random
 import re
@@ -178,7 +179,7 @@ class ImouAPIClient:
         if response_status != 200:
             raise APIError(f"status code {response.status}")
         try:
-            response_body = await response.json(content_type="text/plain")
+            response_body = json.loads(await response.text())
         except Exception as exception:
             raise InvalidResponse(f"unable to parse response text {await response.text()}") from exception
         if (
@@ -195,6 +196,11 @@ class ImouAPIClient:
                 raise InvalidConfiguration(f"Invalid appId or appSecret ({error_message})")
             if result_code == "OP1009":
                 raise NotAuthorized(f"{error_message}")
+            # if the access token is invalid or expired, reconnect
+            if result_code == "TK1002":
+                await self.async_reconnect()
+                response_data = await self._async_call_api(api, payload, is_connect_request)
+                return response_data
             raise APIError(error_message)
 
         # return the payload of the reponse

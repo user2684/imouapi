@@ -46,6 +46,7 @@ mkdocs-include-markdown-plugin = {version = "^3.8.1", optional = true}
 mkdocs-material = {version = "^8.5.3", optional = true}
 mkdocs-material-extensions = {version = "^1.0.3", optional = true}
 mkdocs-autorefs = {version = "^0.4.1", optional = true}
+aioresponses = "^0.7.3"
 
 [tool.poetry.extras]
 test = [
@@ -55,7 +56,8 @@ test = [
     "mypy",
     "flake8",
     "flake8-docstrings",
-    "pytest-cov"
+    "pytest-cov",
+    "aioresponses"
     ]
 
 dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version"]
