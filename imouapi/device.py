@@ -180,6 +180,8 @@ class ImouDevice:
         # check if the device is online
         _LOGGER.debug("[%s] update requested", self.get_name())
         data = await self._api_client.async_api_deviceOnline(self._device_id)
+        if "onLine" not in data:
+            raise InvalidResponse(f"onLine not found in {data}")
         self._online = data["onLine"] == "1"
 
         # update the status of all the sensors (if the device is online)

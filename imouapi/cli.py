@@ -106,34 +106,36 @@ class ImouCli:
             'datefmt': '%a, %d %b %Y %H:%M:%S',
         }
         self.args = []
+        self.argv = None
 
     def parse_command_line(self):
         """Parse command line arguments."""
         skip_next = False
-        for i in range(1, len(sys.argv)):
+        self.argv = sys.argv if self.argv is None else self.argv
+        for i in range(1, len(self.argv)):
             if skip_next:
                 skip_next = False
                 continue
-            arg = sys.argv[i]
+            arg = self.argv[i]
             arg = re.sub(' +', ' ', arg)
             if arg == "--app-id":
-                self.app_id = sys.argv[i + 1]
+                self.app_id = self.argv[i + 1]
                 skip_next = True
                 continue
             if arg == "--app-secret":
-                self.app_secret = sys.argv[i + 1]
+                self.app_secret = self.argv[i + 1]
                 skip_next = True
                 continue
             if arg == "--base-url":
-                self.base_url = sys.argv[i + 1]
+                self.base_url = self.argv[i + 1]
                 skip_next = True
                 continue
             if arg == "--timeout":
-                self.timeout = sys.argv[i + 1]
+                self.timeout = self.argv[i + 1]
                 skip_next = True
                 continue
             if arg == "--logging":
-                self.logging = sys.argv[i + 1]
+                self.logging = self.argv[i + 1]
                 self.loggingconfig["level"] = self.logging.upper()
                 logging.basicConfig(**self.loggingconfig)  # type: ignore
                 skip_next = True
@@ -150,7 +152,6 @@ class ImouCli:
             print("ERROR: provide app_id and app_secret")
             print("")
             self.print_usage()
-            sys.exit(1)
 
         # instantiate an api client
         api_client = ImouAPIClient(self.app_id, self.app_secret, None)
@@ -210,9 +211,10 @@ class ImouCli:
         print("  set_switch <device_id> <sensor_name> [on|off|toggle]   Set the state of a switch")
 
 
-# create an instance of the cli
-cli = ImouCli()
-# parse provided command line
-cli.parse_command_line()
-# run the command requested by the user
-cli.run_command()
+if __name__ == "__main__":
+    # create an instance of the cli
+    cli = ImouCli()
+    # parse provided command line
+    cli.parse_command_line()
+    # run the command requested by the user
+    cli.run_command()

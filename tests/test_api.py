@@ -12,9 +12,6 @@ from imouapi.api import ImouAPIClient
 
 from .const import MOCK_RESPONSES
 
-# from imouapi.device import ImouDiscoverService, ImouDevice
-
-
 logger = logging.getLogger("imouapi")
 logger.setLevel(logging.DEBUG)
 
@@ -24,17 +21,20 @@ class TestApiClient:
 
     def setup(self):
         """Initialize the test suite."""
-        self.loop = asyncio.get_event_loop()  # pylint: disable=attribute-defined-outside-init
+        self.loop = asyncio.new_event_loop()  # pylint: disable=attribute-defined-outside-init
         self.session = aiohttp.ClientSession()  # pylint: disable=attribute-defined-outside-init
         self.api_client = ImouAPIClient(  # pylint: disable=attribute-defined-outside-init
             "appId", "appSecret", self.session
         )
         self.api_client.set_log_http_requests(True)
 
-    def config_mock(self, mocked, url: str, response: str, status=200, exception=None):
+    def config_mock(self, mocked, url: str, response: str, **kwargs):
         """Configure a mock request."""
+        status = kwargs["status"] if "status" in kwargs else 200
+        exception = kwargs["exception"] if "exception" in kwargs else None
+        repeat = kwargs["repeat"] if "repeat" in kwargs else False
         payload = MOCK_RESPONSES[response] if response in MOCK_RESPONSES else "{invalid"
-        mocked.post(re.compile(r".+/" + url + "$"), status=status, payload=payload, exception=exception)
+        mocked.post(re.compile(r".+/" + url + "$"), status=status, payload=payload, exception=exception, repeat=repeat)
 
     def test_accessToken_ok(self):  # pylint: disable=invalid-name
         """Test accessToken: ok."""
@@ -54,7 +54,7 @@ class TestApiClient:
     def test_accessToken_wrong_status_code(self):  # pylint: disable=invalid-name
         """Test accessToken: wrong status code."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok", 500)
+            self.config_mock(mocked, "accessToken", "accessToken_ok", status=500)
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(self.api_client.async_connect())
             assert "APIError('status code 500')" in str(exception)
@@ -78,7 +78,7 @@ class TestApiClient:
     def test_accessToken_http_error(self):  # pylint: disable=invalid-name
         """Test accessToken: http error."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok", 200, HttpProcessingError())
+            self.config_mock(mocked, "accessToken", "accessToken_ok", exception=HttpProcessingError())
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(self.api_client.async_connect())
             assert "ConnectionFailed" in str(exception)

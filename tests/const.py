@@ -60,6 +60,14 @@ MOCK_RESPONSES = {
         "id": "26",
     },
     "deviceBaseList_wrong_device_id": {"result": {"msg": "No right, cannot operate.", "code": "OP1009"}, "id": "23"},
+    "deviceBaseList_malformed": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {"count": 1},
+        },
+        "id": "26",
+    },
     "deviceBaseDetailList_ok": {
         "result": {
             "msg": "Operation is successful.",
@@ -109,11 +117,67 @@ MOCK_RESPONSES = {
         },
         "id": "21",
     },
+    "deviceBaseDetailList_missing_data": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "count": 1,
+                "deviceList": [
+                    {
+                        "expandChanNum": "",
+                        "trackFollowStatus": "",
+                        "catalog": "IPC",
+                        "httpPort": "80",
+                        "privatePort": "37777",
+                        "rtspPort": "554",
+                        "deviceId": "8L0DF93PAZ55FD2",
+                        "aplist": [],
+                        "accessType": "PaaS",
+                        "channels": [
+                            {
+                                "storageStrategyStatus": "notExist",
+                                "picUrl": "",
+                                "shareFunctions": "",
+                                "cameraStatus": "off",
+                                "remindStatus": "off",
+                                "channelName": "8L0DF93PAZ55FD2-1",
+                                "resolutions": [],
+                                "ability": "",
+                                "deviceId": "8L0DF93PAZ55FD2",
+                                "channelId": "0",
+                                "shareStatus": "",
+                                "status": "online",
+                            }
+                        ],
+                        "encryptMode": 1,
+                        "tlsPrivatePort": "443",
+                        "name": "webcam",
+                        "deviceModel": "IPC-C22C",
+                        "ability": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,Reboot,InfraredLight,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,TCM,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,WIFI",  # noqa: E501
+                        "brand": "easy4Ip",
+                        "playToken": "8YdkSe1O9=",
+                        "shareStatus": "owner",
+                        "status": "online",
+                    }
+                ],
+            },
+        },
+        "id": "21",
+    },
     "deviceOnline_ok": {
         "result": {
             "msg": "Operation is successful.",
             "code": "0",
             "data": {"channels": [{"channelId": "0", "onLine": "1"}], "deviceId": "8L0DF93PAZ55FD2", "onLine": "1"},
+        },
+        "id": "8",
+    },
+    "deviceOnline_malformed": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {"channels": [{"channelId": "0", "onLine": "1"}], "deviceId": "8L0DF93PAZ55FD2"},
         },
         "id": "8",
     },
@@ -126,6 +190,7 @@ MOCK_RESPONSES = {
         "id": "22",
     },
     "setDeviceCameraStatus_ok": {"result": {"msg": "Operation is successful.", "code": "0"}, "id": "32"},
+    "setDeviceCameraStatus_error": {"result": {"msg": "Error.", "code": "200"}, "id": "32"},
     "getAlarmMessage_ok": {
         "result": {
             "msg": "Operation is successful.",
@@ -162,6 +227,14 @@ MOCK_RESPONSES = {
                 "count": 2,
                 "nextAlarmId": 1489575655024752,
             },
+        },
+        "id": "28",
+    },
+    "getAlarmMessage_malformed": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {"test": "asds"},
         },
         "id": "28",
     },

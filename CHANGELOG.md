@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.2] (2022-10-07)
+### Added
+- Test cases for most of the classes
+
 ## [0.2.1] (2022-10-04)
 ### Added
 - Test cases for `ImouAPIClient`
