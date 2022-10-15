@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0] (2022-10-15)
+### Added
+- `--log-http-requests` option to CLI
+### Fixed
+- Last Alarm sensor unable to retrieve most recent alarms
+- Last Alarm sensor shifted ahead by the local timezone
+
 ## [0.2.2] (2022-10-07)
 ### Added
 - Test cases for most of the classes

@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
-from imouapi.const import API_URL, DEFAULT_TIMEOUT, MAX_RETRIES
-from imouapi.exceptions import (
+from .const import API_URL, DEFAULT_TIMEOUT, MAX_RETRIES
+from .exceptions import (
     APIError,
     ConnectionFailed,
     ImouException,
@@ -278,8 +278,9 @@ class ImouAPIClient:
         # define the api endpoint
         api = "getAlarmMessage"
         # preparare the payload
-        end_time = datetime.now()
-        begin_time = end_time - timedelta(days=30)
+        now_time = datetime.now()
+        begin_time = now_time - timedelta(days=30)
+        end_time = now_time + timedelta(days=1)
         payload = {
             "deviceId": device_id,
             "count": "1",

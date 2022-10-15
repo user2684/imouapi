@@ -2,10 +2,10 @@
 import logging
 from typing import Union
 
-from imouapi.api import ImouAPIClient
-from imouapi.const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS
-from imouapi.device_entity import ImouBinarySensor, ImouEntity, ImouSensor, ImouSwitch
-from imouapi.exceptions import InvalidResponse
+from .api import ImouAPIClient
+from .const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS
+from .device_entity import ImouBinarySensor, ImouEntity, ImouSensor, ImouSwitch
+from .exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 

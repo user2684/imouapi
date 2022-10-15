@@ -6,10 +6,10 @@ import sys
 
 import aiohttp
 
-from imouapi.api import ImouAPIClient
-from imouapi.device import ImouDevice, ImouDiscoverService
-from imouapi.device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
-from imouapi.exceptions import ImouException
+from .api import ImouAPIClient
+from .device import ImouDevice, ImouDiscoverService
+from .device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
+from .exceptions import ImouException
 
 
 async def async_run_command(command: str, api_client: ImouAPIClient, args: list[str]):
@@ -98,6 +98,7 @@ class ImouCli:
         self.base_url = None
         self.timeout = None
         self.logging = "INFO"
+        self.log_http_requests = None
         self.device_id = None
         self.command = None
         self.loggingconfig = {
@@ -134,6 +135,10 @@ class ImouCli:
                 self.timeout = self.argv[i + 1]
                 skip_next = True
                 continue
+            if arg == "--log-http-requests":
+                self.log_http_requests = True if self.argv[i + 1] == "on" else False
+                skip_next = True
+                continue
             if arg == "--logging":
                 self.logging = self.argv[i + 1]
                 self.loggingconfig["level"] = self.logging.upper()
@@ -159,6 +164,8 @@ class ImouCli:
             api_client.set_base_url(self.base_url)
         if self.timeout is not None:
             api_client.set_timeout(self.timeout)
+        if self.log_http_requests is not None:
+            api_client.set_log_http_requests(self.log_http_requests)
 
         if self.command == "discover":
             asyncio.run(async_run_command(self.command, api_client, self.args))
@@ -201,6 +208,7 @@ class ImouCli:
         print("  --logging <info|debug>                                 The logging level")
         print("  --base-url <base_url>                                  Set a custom base url for the API")
         print("  --timeout <timeout>                                    Set a custom timeout for API calls")
+        print("  --log-http-requests <on|off>                           Log HTTP request/response in debug logs")
         print("")
         print("Commmands:")
         print("  discover                                               Discover registered devices")
@@ -208,7 +216,7 @@ class ImouCli:
         print("  get_sensor <device_id> <sensor_name>                   Get the state of a sensor")
         print("  get_binary_sensor <device_id> <sensor_name>            Get the state of a binary sensor")
         print("  get_switch <device_id> <sensor_name>                   Get the state of a switch")
-        print("  set_switch <device_id> <sensor_name> [on|off|toggle]   Set the state of a switch")
+        print("  set_switch <device_id> <sensor_name> <on|off|toggle>   Set the state of a switch")
 
 
 if __name__ == "__main__":

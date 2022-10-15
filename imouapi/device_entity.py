@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional
 
-from imouapi.api import ImouAPIClient
-from imouapi.const import BINARY_SENSORS, IMOU_SWITCHES, SENSORS
-from imouapi.exceptions import InvalidResponse
+from .api import ImouAPIClient
+from .const import BINARY_SENSORS, IMOU_SWITCHES, SENSORS
+from .exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -97,7 +97,7 @@ class ImouSensor(ImouEntity):
                 if "time" not in alarm:
                     raise InvalidResponse(f"time not found in {alarm}")
                 # convert it into ISO 8601 and store it
-                iso_time = datetime.fromtimestamp(alarm["time"]).isoformat()
+                iso_time = datetime.utcfromtimestamp(alarm["time"]).isoformat()
                 self._state = iso_time
                 _LOGGER.debug(
                     "[%s] updating %s, value is %s",
