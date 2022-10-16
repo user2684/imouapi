@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "imouapi"
-version = "1.0.0"
+version = "1.0.1"
 homepage = "https://github.com/user2684/imouapi"
 description = "Library for controlling Imou devices by interacting with the Imou Life API."
 authors = ["user2684 <user2684@users.noreply.github.com>"]
