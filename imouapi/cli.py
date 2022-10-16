@@ -12,7 +12,7 @@ from .device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
 from .exceptions import ImouException
 
 
-async def async_run_command(command: str, api_client: ImouAPIClient, args: list[str]):
+async def async_run_command(command: str, api_client: ImouAPIClient, args: list[str]):  # noqa: C901
     """Run a command."""
     session = aiohttp.ClientSession()
     api_client.set_session(session)
@@ -27,7 +27,14 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                 print(f"  - Device ID: {device.get_device_id()}")
                 print(f"  - Firmware: {device.get_firmware()}")
 
-        elif command in ["get_device", "get_sensor", "get_binary_sensor", "get_switch", "set_switch"]:
+        elif command in [
+            "get_device",
+            "get_sensor",
+            "get_binary_sensor",
+            "get_switch",
+            "set_switch",
+            "get_diagnostics",
+        ]:
             device_id = args[0]
             device = ImouDevice(api_client, device_id)
             await device.async_initialize()
@@ -79,6 +86,9 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                     await async_run_command("get_switch", api_client, [device_id, sensor_name])
                 else:
                     print(f"sensor {sensor_name} not found")
+
+            elif command == "get_diagnostics":
+                print(device.get_diagnostics())
 
         else:
             print("invalid command provided")
@@ -194,6 +204,11 @@ class ImouCli:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id, sensor_name and value")
+        elif self.command == "get_diagnostics":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device id")
         else:
             self.print_usage()
 
@@ -217,6 +232,7 @@ class ImouCli:
         print("  get_binary_sensor <device_id> <sensor_name>            Get the state of a binary sensor")
         print("  get_switch <device_id> <sensor_name>                   Get the state of a switch")
         print("  set_switch <device_id> <sensor_name> <on|off|toggle>   Set the state of a switch")
+        print("  get_diagnostics <device_id>                            Get diagnostics information of the device id")
 
 
 if __name__ == "__main__":

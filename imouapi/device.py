@@ -1,6 +1,6 @@
 """High level API to discover and interacting with Imou devices and their sensors."""
 import logging
-from typing import Union
+from typing import Any, Union
 
 from .api import ImouAPIClient
 from .const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS
@@ -198,40 +198,106 @@ class ImouDevice:
         """Return the object as a string."""
         return f"{self._name} ({self._device_model}, serial {self._device_id})"
 
-    def dump(self) -> str:
-        """Return the full description of the object and its attributes."""
+    def get_diagnostics(self) -> dict[str, Any]:
+        """Return diagnostics for the device."""
         online = "yes" if self._online else "no"
-        dump = (
-            f"- Device ID: {self._device_id}\n"
-            + f"    Name: {self._name}\n"
-            + f"    Catalog: {self._catalog}\n"
-            + f"    Model: {self._device_model}\n"
-            + f"    Firmware: {self._firmware}\n"
-            + f"    Online: {online}\n"
-        )
-        dump = dump + "    Capabilities: \n"
-        for capability in self._capabilities:
+        # prepare capabilities
+        capabilities = []
+        for capability_name in self._capabilities:
+            capability = {}
             description = (
-                f"{IMOU_CAPABILITIES[capability]} ({capability})" if capability in IMOU_CAPABILITIES else capability
+                f"{IMOU_CAPABILITIES[capability_name]} ({capability_name})"
+                if capability_name in IMOU_CAPABILITIES
+                else capability_name
             )
-            dump = dump + f"        - {description}\n"
-        dump = dump + "    Switches: \n"
+            capability["name"] = capability_name
+            capability["description"] = description
+            capabilities.append(capability)
+        # prepare switches
+        switches = []
         for sensor_instance in self._sensor_instances["switch"]:
+            sensor = {}
             sensor_name = sensor_instance.get_name()
             description = (
                 f"{IMOU_SWITCHES[sensor_name]} ({sensor_name})" if sensor_name in IMOU_SWITCHES else sensor_name
             )
-            dump = dump + f"        - {description}: {sensor_instance.is_on()}\n"
-        dump = dump + "    Sensors: \n"
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["state"] = sensor_instance.is_on()
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            switches.append(sensor)
+        # prepare sensors
+        sensors = []
         for sensor_instance in self._sensor_instances["sensor"]:
+            sensor = {}
             sensor_name = sensor_instance.get_name()
             description = f"{SENSORS[sensor_name]} ({sensor_name})"
-            dump = dump + f"        - {description}: {sensor_instance.get_state()}\n"
-        dump = dump + "    Binary Sensors: \n"
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["state"] = sensor_instance.get_state()
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            sensors.append(sensor)
+        # prepare binary sensors
+        binary_sensors = []
         for sensor_instance in self._sensor_instances["binary_sensor"]:
+            sensor = {}
             sensor_name = sensor_instance.get_name()
             description = f"{BINARY_SENSORS[sensor_name]} ({sensor_name})"
-            dump = dump + f"        - {description}: {sensor_instance.is_on()}\n"
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["state"] = sensor_instance.is_on()
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            binary_sensors.append(sensor)
+        # prepare data structure to return
+        data: dict[str, Any] = {
+            "api": {
+                "base_url": self._api_client.get_base_url(),
+                "timeout": self._api_client.get_timeout(),
+                "is_connected": self._api_client.is_connected(),
+            },
+            "device": {
+                "id": self._device_id,
+                "name": self._name,
+                "catalog": self._catalog,
+                "given_name": self._given_name,
+                "model": self._device_model,
+                "firmware": self._firmware,
+                "manufacturer": self._manufacturer,
+                "online": online,
+            },
+            "capabilities": capabilities,
+            "switches": switches,
+            "sensors": sensors,
+            "binary_sensors": binary_sensors,
+        }
+        return data
+
+    def dump(self) -> str:
+        """Return the full description of the object and its attributes."""
+        data = self.get_diagnostics()
+        dump = (
+            f"- Device ID: {data['device']['id']}\n"
+            + f"    Name: {data['device']['name']}\n"
+            + f"    Catalog: {data['device']['catalog']}\n"
+            + f"    Model: {data['device']['model']}\n"
+            + f"    Firmware: {data['device']['firmware']}\n"
+            + f"    Online: {data['device']['online']}\n"
+        )
+        dump = dump + "    Capabilities: \n"
+        for capability in data['capabilities']:
+            dump = dump + f"        - {capability['description']}\n"
+        dump = dump + "    Switches: \n"
+        for switch in data['switches']:
+            dump = dump + f"        - {switch['description']}: {switch['state']}\n"
+        dump = dump + "    Sensors: \n"
+        for sensor in data['sensors']:
+            dump = dump + f"        - {sensor['description']}: {sensor['state']}\n"
+        dump = dump + "    Binary Sensors: \n"
+        for binary_sensor in data['binary_sensors']:
+            dump = dump + f"        - {binary_sensor['description']}: {binary_sensor['state']}\n"
         return dump
 
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] (2022-10-16)
+### Added
+- `get_diagnostics()` method to `ImouDevice` class
+- `get_diagnostics` command to CLI
+
 ## [1.0.0] (2022-10-15)
 ### Added
 - `--log-http-requests` option to CLI

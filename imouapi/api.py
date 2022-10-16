@@ -64,10 +64,18 @@ class ImouAPIClient:
                 )
         return data
 
+    def get_base_url(self) -> str:
+        """Get base url for the API."""
+        return self._base_url
+
     def set_base_url(self, value: str) -> None:
         """Set a custom base url for the API."""
         self._base_url = value
         _LOGGER.debug("Set endpoint URL to %s", self._base_url)
+
+    def get_timeout(self) -> int:
+        """Get timeout for the API."""
+        return self._timeout
 
     def set_timeout(self, value: int) -> None:
         """Set a custom timeout."""
