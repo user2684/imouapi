@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.2] (2022-10-19)
+### Fixed
+- Switches mapping to versioned capabilities are now created (e.g. audioEncodeControl for capability AudioEncodeControlV2)
+
 ## [1.0.1] (2022-10-16)
 ### Added
 - `get_diagnostics()` method to `ImouDevice` class

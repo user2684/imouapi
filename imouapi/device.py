@@ -1,5 +1,6 @@
 """High level API to discover and interacting with Imou devices and their sensors."""
 import logging
+import re
 from typing import Any, Union
 
 from .api import ImouAPIClient
@@ -133,7 +134,9 @@ class ImouDevice:
             # (ref. https://open.imoulife.com/book/en/faq/feature.html)
             for switch_type in switches_keys:
                 for capability in self._capabilities:
-                    if switch_type.lower() == capability.lower():
+                    capability = capability.lower()
+                    capability = re.sub("v\\d$", '', capability)
+                    if switch_type.lower() == capability and switch_type.lower() not in self._switches:
                         self._switches.append(switch_type)
                         # create an instance and save it
                         switch_instance = ImouSwitch(
