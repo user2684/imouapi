@@ -58,6 +58,7 @@ class TestCli:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.cli.argv = ["cli", "--app-id", "app_id", "--app-secret", "app_secret", "get_device", "device_id"]
             self.cli.parse_command_line()
             self.cli.run_command()
@@ -72,6 +73,7 @@ class TestCli:
             self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.cli.argv = [
                 "cli",
@@ -98,6 +100,7 @@ class TestCli:
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok", repeat=True)
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok", repeat=True)
             self.cli.argv = [
                 "cli",
                 "--app-id",
@@ -123,6 +126,7 @@ class TestCli:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.cli.argv = [
                 "cli",
                 "--app-id",
@@ -147,6 +151,7 @@ class TestCli:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.cli.argv = [
                 "cli",
                 "--app-id",

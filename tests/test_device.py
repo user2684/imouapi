@@ -72,6 +72,7 @@ class TestDevice:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.loop.run_until_complete(device.async_get_data())
             assert device.get_sensor_by_name("lastAlarm").get_state() == "2022-09-25T17:36:33"
             assert device.get_sensor_by_name("online").is_on() is True
@@ -147,6 +148,7 @@ class TestDevice:
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             self.loop.run_until_complete(set_switch.async_turn_on())
@@ -167,6 +169,7 @@ class TestDevice:
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_error")
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             with pytest.raises(Exception) as exception:
