@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.3] (2022-10-22)
+### Added
+- Support for not documented `WLM` capability
+- Support for undocumented capabilities or capabilities inherited from other capabilities
+- Support for `deviceOpenList`, `deviceOpenBaseDetailList`, `listDeviceAbility`, `deviceStorage`, `getNightVisionMode`, `setNightVisionMode`, `getMessageCallback`, `setMessageCallback` APIs through `async_api_deviceOpenList()`, `async_api_deviceOpenBaseDetailList()`, `async_api_listDeviceAbility()`, `async_api_deviceStorage()`, `async_api_getNightVisionMode()`, `async_api_setNightVisionMode()`, `async_api_getMessageCallback()`, `async_api_getMessageCallbackOn()`, `async_api_setMessageCallbackOff()`
+- `api_deviceBaseList`, `api_deviceOpenList`, `api_deviceBaseDetailList`, `api_deviceOpenDetailList`, `api_getDeviceCameraStatus`, `api_setDeviceCameraStatus`, `api_listDeviceAbility`, `api_getAlarmMessage`, `api_deviceStorage`, `api_getNightVisionMode`, `api_setNightVisionMode`, `api_getMessageCallback`, `api_getMessageCallbackOn`, `api_getMessageCallbackOff` commands to CLI
+## Changed
+- `async_api_getAlarmMessage()` now returning the last 10 alarms of the month, not just the last one
+## Removed
+- `get_device_class()` from `ImouSensor`
+
 ## [1.0.2] (2022-10-19)
 ### Fixed
 - Switches mapping to versioned capabilities are now created (e.g. audioEncodeControl for capability AudioEncodeControlV2)

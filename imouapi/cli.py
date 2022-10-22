@@ -1,5 +1,6 @@
 """Console script for imouapi."""
 import asyncio
+import json
 import logging
 import re
 import sys
@@ -7,6 +8,7 @@ import sys
 import aiohttp
 
 from .api import ImouAPIClient
+from .const import IMOU_CAPABILITIES, IMOU_SWITCHES
 from .device import ImouDevice, ImouDiscoverService
 from .device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
 from .exceptions import ImouException
@@ -90,6 +92,90 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             elif command == "get_diagnostics":
                 print(device.get_diagnostics())
 
+        elif command == "api_deviceBaseList":
+            data = await api_client.async_api_deviceBaseList()
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_deviceOpenList":
+            data = await api_client.async_api_deviceOpenList()
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_deviceBaseDetailList":
+            device_id = args[0]
+            data = await api_client.async_api_deviceBaseDetailList([device_id])
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_deviceOpenDetailList":
+            device_id = args[0]
+            data = await api_client.async_api_deviceOpenDetailList([device_id])
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_listDeviceAbility":
+            device_id = args[0]
+            data = await api_client.async_api_listDeviceAbility([device_id])
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_getAlarmMessage":
+            device_id = args[0]
+            data = await api_client.async_api_getAlarmMessage(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_deviceStorage":
+            device_id = args[0]
+            data = await api_client.async_api_deviceStorage(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_setDeviceCameraStatus":
+            device_id = args[0]
+            sensor_name = args[1]
+            value_to_set = args[2] == "on"
+            data = await api_client.async_api_setDeviceCameraStatus(device_id, sensor_name, value_to_set)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_getDeviceCameraStatus":
+            device_id = args[0]
+            sensor_name = args[1]
+            data = await api_client.async_api_getDeviceCameraStatus(device_id, sensor_name)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_getNightVisionMode":
+            device_id = args[0]
+            data = await api_client.async_api_getNightVisionMode(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_setNightVisionMode":
+            device_id = args[0]
+            mode = args[1]
+            data = await api_client.async_api_setNightVisionMode(device_id, mode)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_getMessageCallback":
+            data = await api_client.async_api_getMessageCallback()
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_setMessageCallbackOn":
+            url = args[0]
+            data = await api_client.async_api_setMessageCallbackOn(url)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_setMessageCallbackOff":
+            data = await api_client.async_api_setMessageCallbackOff()
+            print(json.dumps(data, indent=4))
+
+        elif command == "get_device_raw":
+            device_id = args[0]
+            capabilities_to_test = list(IMOU_CAPABILITIES.keys())
+            print("Capabilities:")
+            for capability in capabilities_to_test:
+                capability = re.sub("v\\d$", "", capability, flags=re.IGNORECASE)
+                data = await api_client.async_api_getDeviceCameraStatus(device_id, capability)
+                print(f"{capability}: {data['status']}")
+            print("\nSwitches:")
+            switches_to_test = list(IMOU_SWITCHES.keys())
+            for switch in switches_to_test:
+                data = await api_client.async_api_getDeviceCameraStatus(device_id, switch)
+                print(f"{switch}: {data['status']}")
+
         else:
             print("invalid command provided")
 
@@ -160,7 +246,7 @@ class ImouCli:
                 continue
             self.args.append(arg)
 
-    def run_command(self):
+    def run_command(self):  # noqa: C901
         """Run the requested command."""
         # ensure app id and app secret are provided
         if self.app_id is None or self.app_secret is None:
@@ -179,36 +265,121 @@ class ImouCli:
 
         if self.command == "discover":
             asyncio.run(async_run_command(self.command, api_client, self.args))
+
         elif self.command == "get_device":
             if len(self.args) == 1:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device id")
+
+        elif self.command == "get_device_raw":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
         elif self.command == "get_sensor":
             if len(self.args) == 2:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
+
         elif self.command == "get_binary_sensor":
             if len(self.args) == 2:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
+
         elif self.command == "get_switch":
             if len(self.args) == 2:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id and sensor_name")
+
         elif self.command == "set_switch":
             if len(self.args) == 3:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device_id, sensor_name and value")
+
         elif self.command == "get_diagnostics":
             if len(self.args) == 1:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
             else:
                 print("ERROR: provide device id")
+
+        elif self.command == "api_deviceBaseList":
+            asyncio.run(async_run_command(self.command, api_client, self.args))
+
+        elif self.command == "api_deviceOpenList":
+            asyncio.run(async_run_command(self.command, api_client, self.args))
+
+        elif self.command == "api_deviceBaseDetailList":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_deviceOpenDetailList":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_listDeviceAbility":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_getAlarmMessage":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_deviceStorage":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_getDeviceCameraStatus":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id and sensor_name")
+
+        elif self.command == "api_setDeviceCameraStatus":
+            if len(self.args) == 3:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, sensor_name and value")
+
+        elif self.command == "api_getNightVisionMode":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_setNightVisionMode":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id and mode")
+
+        elif self.command == "api_getMessageCallback":
+            asyncio.run(async_run_command(self.command, api_client, self.args))
+
+        elif self.command == "api_setMessageCallbackOn":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide url")
+
+        elif self.command == "api_setMessageCallbackOff":
+            asyncio.run(async_run_command(self.command, api_client, self.args))
+
         else:
             self.print_usage()
 
@@ -218,21 +389,74 @@ class ImouCli:
         print("Usage: python -m imouapi.cli [OPTIONS] COMMAND <ARGUMENTS>")
         print("")
         print("Options:")
-        print("  --app-id <app_id>                                      Imou Cloud App ID (mandatory)")
-        print("  --app-secret <app_secret>                              Imou Cloud App Secret (mandatory)")
-        print("  --logging <info|debug>                                 The logging level")
-        print("  --base-url <base_url>                                  Set a custom base url for the API")
-        print("  --timeout <timeout>                                    Set a custom timeout for API calls")
-        print("  --log-http-requests <on|off>                           Log HTTP request/response in debug logs")
+        print("  --app-id <app_id>                                                   Imou Cloud App ID (mandatory)")
+        print("  --app-secret <app_secret>                                           Imou Cloud App Secret (mandatory)")
+        print("  --logging <info|debug>                                              The logging level")
+        print("  --base-url <base_url>                                               Set a custom base url for the API")
+        print(
+            "  --timeout <timeout>                                                 Set a custom timeout for API calls"
+        )
+        print(
+            "  --log-http-requests <on|off>                                        Log HTTP request/response in debug logs"  # noqa: E501
+        )
         print("")
         print("Commmands:")
-        print("  discover                                               Discover registered devices")
-        print("  get_device <device_id>                                 Get the details of the device id provided")
-        print("  get_sensor <device_id> <sensor_name>                   Get the state of a sensor")
-        print("  get_binary_sensor <device_id> <sensor_name>            Get the state of a binary sensor")
-        print("  get_switch <device_id> <sensor_name>                   Get the state of a switch")
-        print("  set_switch <device_id> <sensor_name> <on|off|toggle>   Set the state of a switch")
-        print("  get_diagnostics <device_id>                            Get diagnostics information of the device id")
+        print("  discover                                                            Discover registered devices")
+        print(
+            "  get_device <device_id>                                              Get the details of the device id provided"  # noqa: E501
+        )
+        print(
+            "  get_device_raw <device_id>                                          Bruteforce the state of all capabilities and switches"  # noqa: E501
+        )
+        print("  get_sensor <device_id> <sensor_name>                                Get the state of a sensor")
+        print("  get_binary_sensor <device_id> <sensor_name>                         Get the state of a binary sensor")
+        print("  get_switch <device_id> <sensor_name>                                Get the state of a switch")
+        print("  set_switch <device_id> <sensor_name> <on|off|toggle>                Set the state of a switch")
+        print(
+            "  get_diagnostics <device_id>                                         Get diagnostics information of the device id"  # noqa: E501
+        )
+        print(
+            "  api_deviceBaseList                                                  Return the list of registered devices by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_deviceOpenList                                                  Return the list of registered devices (open) by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_deviceBaseDetailList <device_id>                                Return the details of the requested devices by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_deviceOpenDetailList <device_id>                                Return the details of the requested devices (open) by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_listDeviceAbility <device_id>                                   Ability of a device by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_getAlarmMessage <device_id>                                     Get the device alarm list by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_deviceStorage <device_id>                                       Obtain device storage medium capacity information by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_getDeviceCameraStatus <device_id> <sensor_name>                 Get the state of a switch by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_setDeviceCameraStatus <device_id> <sensor_name> <on|off>        Set the state of a switch by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_getNightVisionMode <device_id>                                  Query the night vision mode of the device by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_setNightVisionMode <device_id> <mode>                           Set the night vision mode of the device by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_getMessageCallback                                              Get the message callback address by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_setMessageCallbackOn <url>                                      Set the message callback address by calling directly the API"  # noqa: E501
+        )
+        print(
+            "  api_setMessageCallbackOff                                           Unset the message callback address by calling directly the API"  # noqa: E501
+        )
 
 
 if __name__ == "__main__":

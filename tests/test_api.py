@@ -121,12 +121,28 @@ class TestApiClient:
                 self.loop.run_until_complete(self.api_client.async_api_deviceBaseList())
             assert "NotAuthorized" in str(exception) and "OP1009" in str(exception)
 
+    def test_deviceOpenList_ok(self):  # pylint: disable=invalid-name
+        """Test deviceOpenList: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceOpenList", "deviceOpenList_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_deviceOpenList())
+            assert data["deviceList"][0]["deviceId"] == "8L0DF93PAZ55FD2"
+
     def test_deviceBaseDetailList_ok(self):  # pylint: disable=invalid-name
         """Test deviceBaseDetailList: ok."""
         with aioresponses() as mocked:
             self.config_mock(mocked, "accessToken", "accessToken_ok")
             self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
             data = self.loop.run_until_complete(self.api_client.async_api_deviceBaseDetailList(["8L0DF93PAZ55FD2"]))
+            assert data["deviceList"][0]["deviceModel"] == "IPC-C22C"
+
+    def test_deviceOpenDetailList_ok(self):  # pylint: disable=invalid-name
+        """Test deviceOpenDetailList: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceOpenDetailList", "deviceOpenDetailList_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_deviceOpenDetailList(["8L0DF93PAZ55FD2"]))
             assert data["deviceList"][0]["deviceModel"] == "IPC-C22C"
 
     def test_deviceOnline_ok(self):  # pylint: disable=invalid-name
@@ -164,3 +180,59 @@ class TestApiClient:
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             data = self.loop.run_until_complete(self.api_client.async_api_getAlarmMessage("8L0DF93PAZ55FD2"))
             assert data["alarms"][0]["msgType"] == "human"
+
+    def test_listDeviceAbility_ok(self):  # pylint: disable=invalid-name
+        """Test listDeviceAbility: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "listDeviceAbility", "listDeviceAbility_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_listDeviceAbility("8L0DF93PAZ55FD2"))
+            assert data["deviceList"][0]["deviceId"] == "8L0DF93PAZ55FD2"
+
+    def test_deviceStorage_ok(self):  # pylint: disable=invalid-name
+        """Test deviceStorage: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_deviceStorage("8L0DF93PAZ55FD2"))
+            assert data["totalBytes"] == 31254904832
+
+    def test_getNightVisionMode_ok(self):  # pylint: disable=invalid-name
+        """Test getNightVisionMode: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_getNightVisionMode("8L0DF93PAZ55FD2"))
+            assert data["mode"] == "Intelligent"
+
+    def test_setNightVisionMode_ok(self):  # pylint: disable=invalid-name
+        """Test setNightVisionMode: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "setNightVisionMode", "setNightVisionMode_ok")
+            self.loop.run_until_complete(self.api_client.async_api_setNightVisionMode("8L0DF93PAZ55FD2", "Intelligent"))
+            assert True is True
+
+    def test_getMessageCallback_ok(self):  # pylint: disable=invalid-name
+        """Test getMessageCallback: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_getMessageCallback())
+            assert data["status"] == "off"
+
+    def test_setMessageCallbackOn_ok(self):  # pylint: disable=invalid-name
+        """Test setMessageCallbackOn: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "setMessageCallback", "setMessageCallbackOn_ok")
+            self.loop.run_until_complete(self.api_client.async_api_setMessageCallbackOn("https://url.com"))
+            assert True is True
+
+    def test_setMessageCallbackOff_ok(self):  # pylint: disable=invalid-name
+        """Test setMessageCallbackOff: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "setMessageCallback", "setMessageCallbackOff_ok")
+            self.loop.run_until_complete(self.api_client.async_api_setMessageCallbackOff())
+            assert True is True

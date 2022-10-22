@@ -220,12 +220,27 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/manage/query/deviceBaseList.html)."""
         # define the api endpoint
         api = "deviceBaseList"
-        # preparare the payload
+        # prepare the payload
         payload = {
             "bindId": -1,
-            "limit": 20,
+            "limit": 50,
             "type": "bindAndShare",
-            "needApInfo": False,
+            "needApInfo": True,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_deviceOpenList(self) -> dict:  # pylint: disable=invalid-name
+        """Return the list of registered devices (Open) \
+            (https://open.imoulife.com/book/http/device/manage/query/deviceOpenList.html)."""
+        # define the api endpoint
+        api = "deviceOpenList"
+        # prepare the payload
+        payload = {
+            "bindId": -1,
+            "limit": 50,
+            "type": "bindAndShare",
+            "needApInfo": True,
         }
         # call the api
         return await self._async_call_api(api, payload)
@@ -235,10 +250,51 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/manage/query/deviceBaseDetailList.html)."""
         # define the api endpoint
         api = "deviceBaseDetailList"
-        # preparare the payload
+        # prepare the payload
         device_list = []
         for device in devices:
-            device_list.append({"deviceId": device, "channelList": "0"})
+            device_list.append(
+                {
+                    "deviceId": device,
+                    "channelList": "0",
+                }
+            )
+        payload = {"deviceList": device_list}
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_deviceOpenDetailList(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+        """Return the details of the requested devices (Open) \
+            (https://open.imoulife.com/book/http/device/manage/query/deviceOpenDetailList.html)."""
+        # define the api endpoint
+        api = "deviceOpenDetailList"
+        # prepare the payload
+        device_list = []
+        for device in devices:
+            device_list.append(
+                {
+                    "deviceId": device,
+                    "channelList": "0",
+                }
+            )
+        payload = {"deviceList": device_list}
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_listDeviceAbility(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+        """Ability to obtain multiple devices, channels, and accessories in batches \
+            (https://open.imoulife.com/book/http/device/manage/query/listDeviceAbility.html)."""
+        # define the api endpoint
+        api = "listDeviceAbility"
+        # prepare the payload
+        device_list = []
+        for device in devices:
+            device_list.append(
+                {
+                    "deviceId": device,
+                    "channelList": "0",
+                }
+            )
         payload = {"deviceList": device_list}
         # call the api
         return await self._async_call_api(api, payload)
@@ -248,8 +304,22 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/manage/query/deviceOnline.html)."""
         # define the api endpoint
         api = "deviceOnline"
-        # preparare the payload
-        payload = {"deviceId": device_id}
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_deviceStorage(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Obtain device storage medium capacity information. \
+            (https://open.imoulife.com/book/http/device/config/storage/deviceStorage.html)."""
+        # define the api endpoint
+        api = "deviceStorage"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+        }
         # call the api
         return await self._async_call_api(api, payload)
 
@@ -260,7 +330,7 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/config/ability/getDeviceCameraStatus.html)."""
         # define the api endpoint
         api = "getDeviceCameraStatus"
-        # preparare the payload
+        # prepare the payload
         payload = {
             "deviceId": device_id,
             "enableType": enable_type,
@@ -275,8 +345,12 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/config/ability/setDeviceCameraStatus.html)."""
         # define the api endpoint
         api = "setDeviceCameraStatus"
-        # preparare the payload
-        payload = {"deviceId": device_id, "enableType": enable_type, "enable": value}
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "enableType": enable_type,
+            "enable": value,
+        }
         # call the api
         return await self._async_call_api(api, payload)
 
@@ -285,16 +359,82 @@ class ImouAPIClient:
             (https://open.imoulife.com/book/http/device/alarm/getAlarmMessage.html)."""
         # define the api endpoint
         api = "getAlarmMessage"
-        # preparare the payload
+        # prepare the payload
         now_time = datetime.now()
         begin_time = now_time - timedelta(days=30)
         end_time = now_time + timedelta(days=1)
         payload = {
             "deviceId": device_id,
-            "count": "1",
+            "count": "10",
             "channelId": "0",
             "beginTime": begin_time.strftime("%Y-%m-%d %H:%M:%S"),
             "endTime": end_time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_getNightVisionMode(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Query the night vision mode configuration of the device \
+            (https://open.imoulife.com/book/http/device/config/video/getNightVisionMode.html)."""
+        # define the api endpoint
+        api = "getNightVisionMode"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_setNightVisionMode(self, device_id: str, mode: str) -> dict:  # pylint: disable=invalid-name
+        """Set the night vision mode of the device \
+            (https://open.imoulife.com/book/http/device/config/video/setNightVisionMode.html)."""
+        # define the api endpoint
+        api = "setNightVisionMode"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+            "mode": mode,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_getMessageCallback(self) -> dict:  # pylint: disable=invalid-name
+        """Get the message callback address information currently set \
+            (https://open.imoulife.com/book/http/push/getMessageCallback.html)."""
+        # define the api endpoint
+        api = "getMessageCallback"
+        # prepare the payload
+        payload: dict = {}
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_setMessageCallbackOn(self, callback_url: str) -> dict:  # pylint: disable=invalid-name
+        """Set the message callback address. \
+            (https://open.imoulife.com/book/http/push/setMessageCallback.html)."""
+        # define the api endpoint
+        api = "setMessageCallback"
+        # prepare the payload
+        payload = {
+            "callbackFlag": "alarm,deviceStatus",
+            "basePush": "2",
+            "callbackUrl": callback_url,
+            "status": "on",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_setMessageCallbackOff(self) -> dict:  # pylint: disable=invalid-name
+        """Unset the message callback address. \
+            (https://open.imoulife.com/book/http/push/setMessageCallback.html)."""
+        # define the api endpoint
+        api = "setMessageCallback"
+        # prepare the payload
+        payload = {
+            "callbackFlag": "alarm,deviceStatus",
+            "basePush": "2",
+            "status": "off",
         }
         # call the api
         return await self._async_call_api(api, payload)

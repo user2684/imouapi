@@ -68,6 +68,24 @@ MOCK_RESPONSES = {
         },
         "id": "26",
     },
+    "deviceOpenList_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "count": 1,
+                "deviceList": [
+                    {
+                        "channels": [{"channelName": "8L0DF93PAZ55FD2-1", "channelId": "0"}],
+                        "deviceId": "8L0DF93PAZ55FD2",
+                        "bindId": 1,
+                        "aplist": [],
+                    },
+                ],
+            },
+        },
+        "id": "26",
+    },
     "deviceBaseDetailList_ok": {
         "result": {
             "msg": "Operation is successful.",
@@ -132,6 +150,55 @@ MOCK_RESPONSES = {
                         "privatePort": "37777",
                         "rtspPort": "554",
                         "deviceId": "8L0DF93PAZ55FD2",
+                        "aplist": [],
+                        "accessType": "PaaS",
+                        "channels": [
+                            {
+                                "storageStrategyStatus": "notExist",
+                                "picUrl": "",
+                                "shareFunctions": "",
+                                "cameraStatus": "off",
+                                "remindStatus": "off",
+                                "channelName": "8L0DF93PAZ55FD2-1",
+                                "resolutions": [],
+                                "ability": "",
+                                "deviceId": "8L0DF93PAZ55FD2",
+                                "channelId": "0",
+                                "shareStatus": "",
+                                "status": "online",
+                            }
+                        ],
+                        "encryptMode": 1,
+                        "tlsPrivatePort": "443",
+                        "name": "webcam",
+                        "deviceModel": "IPC-C22C",
+                        "ability": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,Reboot,InfraredLight,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,TCM,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,WIFI",  # noqa: E501
+                        "brand": "easy4Ip",
+                        "playToken": "8YdkSe1O9=",
+                        "shareStatus": "owner",
+                        "status": "online",
+                    }
+                ],
+            },
+        },
+        "id": "21",
+    },
+    "deviceOpenDetailList_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "count": 1,
+                "deviceList": [
+                    {
+                        "expandChanNum": "",
+                        "trackFollowStatus": "",
+                        "catalog": "IPC",
+                        "httpPort": "80",
+                        "privatePort": "37777",
+                        "rtspPort": "554",
+                        "deviceId": "8L0DF93PAZ55FD2",
+                        "version": "2.680.0000000.25.R.220527",
                         "aplist": [],
                         "accessType": "PaaS",
                         "channels": [
@@ -234,7 +301,89 @@ MOCK_RESPONSES = {
         "result": {
             "msg": "Operation is successful.",
             "code": "0",
-            "data": {"test": "asds"},
+            "data": {
+                "test": "asds",
+            },
+        },
+        "id": "28",
+    },
+    "listDeviceAbility_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "deviceList": [
+                    {
+                        "channels": [
+                            {
+                                "channelAbility": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,Siren,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,PlaySound,Reboot,LinkDevAlarm,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,CK,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,NVM,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,AudioTalk,WIFI",  # noqa: E501
+                                "channelId": "0",
+                            }
+                        ],
+                        "aps": [],
+                        "ability": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,Siren,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,PlaySound,Reboot,LinkDevAlarm,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,CK,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,NVM,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,AudioTalk,WIFI",  # noqa: E501
+                        "deviceId": "8L0DF93PAZ55FD2",
+                    }
+                ],
+            },
+        },
+        "id": "28",
+    },
+    "deviceStorage_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "totalBytes": 31254904832,
+                "usedBytes": 27553759232,
+            },
+        },
+        "id": "28",
+    },
+    "getNightVisionMode_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "mode": "Intelligent",
+                "modes": ["Intelligent", "FullColor", "Infrared", "Off"],
+            },
+        },
+        "id": "28",
+    },
+    "setNightVisionMode_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {},
+        },
+        "id": "28",
+    },
+    "getMessageCallback_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "callbackFlag": "",
+                "callbackUrl": "",
+                "status": "off",
+            },
+        },
+        "id": "28",
+    },
+    "setMessageCallbackOn_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {},
+        },
+        "id": "28",
+    },
+    "setMessageCallbackOff_ok": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {},
         },
         "id": "28",
     },

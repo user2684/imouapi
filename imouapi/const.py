@@ -198,6 +198,9 @@ events include human figures and vehicles",
     "AlarmSound": "Support alarm sound setting",
     "Electric": "Device Support Battery Capability",
     "WIFI": "The device supports WIFI capability",
+    "WLM ": "WLM",
+    "Linkagewhitelight": "Alarm white light",
+    "MotionDetect": "Motion detection",
 }
 
 
@@ -255,7 +258,12 @@ IMOU_SWITCHES = {
 }
 
 # sensors supported by this library
-SENSORS = {"lastAlarm": "Last alarm"}
+SENSORS = {
+    "lastAlarm": "Last alarm",
+    "storageUsed": "Storage used",
+}
 
 # sensors supported by this library
-BINARY_SENSORS = {"online": "Online"}
+BINARY_SENSORS = {
+    "online": "Online",
+}

@@ -126,9 +126,11 @@ class ImouDevice:
             self._online = device_data["status"] == "online"
             # get device capabilities
             self._capabilities = device_data["ability"].split(",")
-            # For some reason motionDetect is not listed as a capability like it should
-            if "motionDetect" not in self._capabilities:
-                self._capabilities.append("motionDetect")
+            # Add undocumented capabilities or capabilities inherited from other capabilities
+            if "AlarmMD" in self._capabilities:
+                self._capabilities.append("MotionDetect")
+            if "WLM" in self._capabilities:
+                self._capabilities.append("Linkagewhitelight")
             switches_keys = IMOU_SWITCHES.keys()
             # add switches. For each possible switch, check if there is a capability with the same name \
             # (ref. https://open.imoulife.com/book/en/faq/feature.html)
@@ -154,6 +156,15 @@ class ImouDevice:
                     self._device_id,
                     self.get_name(),
                     "lastAlarm",
+                )
+            )
+            # add storageUsed sensor
+            self._sensor_instances["sensor"].append(
+                ImouSensor(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "storageUsed",
                 )
             )
             # add online binary sensor
@@ -262,7 +273,7 @@ class ImouDevice:
                 "is_connected": self._api_client.is_connected(),
             },
             "device": {
-                "id": self._device_id,
+                "device_id": self._device_id,
                 "name": self._name,
                 "catalog": self._catalog,
                 "given_name": self._given_name,
@@ -282,7 +293,7 @@ class ImouDevice:
         """Return the full description of the object and its attributes."""
         data = self.get_diagnostics()
         dump = (
-            f"- Device ID: {data['device']['id']}\n"
+            f"- Device ID: {data['device']['device_id']}\n"
             + f"    Name: {data['device']['name']}\n"
             + f"    Catalog: {data['device']['catalog']}\n"
             + f"    Model: {data['device']['model']}\n"

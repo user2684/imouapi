@@ -99,24 +99,27 @@ class ImouSensor(ImouEntity):
                 # convert it into ISO 8601 and store it
                 iso_time = datetime.utcfromtimestamp(alarm["time"]).isoformat()
                 self._state = iso_time
-                _LOGGER.debug(
-                    "[%s] updating %s, value is %s",
-                    self._device_name,
-                    self._description,
-                    self._state,
-                )
-                if not self._updated:
-                    self._updated = True
+
+        elif self._name == "storageUsed":
+            # get the storage status
+            data = await self.api_client.async_api_deviceStorage(self._device_id)
+            if "totalBytes" not in data or "usedBytes" not in data:
+                raise InvalidResponse(f"totalBytes or usedBytes not found in {data}")
+            percentage_used = int(data["usedBytes"] * 100 / data["totalBytes"])
+            self._state = percentage_used
+
+        _LOGGER.debug(
+            "[%s] updating %s, value is %s",
+            self._device_name,
+            self._description,
+            self._state,
+        )
+        if not self._updated:
+            self._updated = True
 
     def get_state(self) -> Optional[str]:
         """Return the state."""
         return self._state
-
-    def get_device_class(self) -> str:
-        """Return de device class of the sensor."""
-        if self._name == "lastAlarm":
-            return "timestamp"
-        return ""
 
 
 class ImouBinarySensor(ImouEntity):
