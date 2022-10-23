@@ -1342,9 +1342,7 @@
 <span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Interact with IMOU API.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1738,7 +1736,7 @@
         <span class="c1"># prepare the payload</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;callbackFlag&quot;</span><span class="p">:</span> <span class="s2">&quot;alarm,deviceStatus&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;basePush&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+            <span class="c1"># &quot;basePush&quot;: &quot;2&quot;,</span>
             <span class="s2">&quot;callbackUrl&quot;</span><span class="p">:</span> <span class="n">callback_url</span><span class="p">,</span>
             <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
         <span class="p">}</span>
@@ -1752,8 +1750,6 @@
         <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;setMessageCallback&quot;</span>
         <span class="c1"># prepare the payload</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;callbackFlag&quot;</span><span class="p">:</span> <span class="s2">&quot;alarm,deviceStatus&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;basePush&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
             <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;off&quot;</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="c1"># call the api</span>
@@ -2552,17 +2548,13 @@
 <span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_setMessageCallbackOff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_setMessageCallbackOff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
     <span class="sd">&quot;&quot;&quot;Unset the message callback address. \</span>
 <span class="sd">        (https://open.imoulife.com/book/http/push/setMessageCallback.html).&quot;&quot;&quot;</span>
     <span class="c1"># define the api endpoint</span>
     <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;setMessageCallback&quot;</span>
     <span class="c1"># prepare the payload</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;callbackFlag&quot;</span><span class="p">:</span> <span class="s2">&quot;alarm,deviceStatus&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;basePush&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
         <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;off&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="c1"># call the api</span>
@@ -2614,7 +2606,7 @@
     <span class="c1"># prepare the payload</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;callbackFlag&quot;</span><span class="p">:</span> <span class="s2">&quot;alarm,deviceStatus&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;basePush&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;basePush&quot;: &quot;2&quot;,</span>
         <span class="s2">&quot;callbackUrl&quot;</span><span class="p">:</span> <span class="n">callback_url</span><span class="p">,</span>
         <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;on&quot;</span><span class="p">,</span>
     <span class="p">}</span>
