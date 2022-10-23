@@ -124,7 +124,7 @@ MOCK_RESPONSES = {
                         "tlsPrivatePort": "443",
                         "name": "webcam",
                         "deviceModel": "IPC-C22C",
-                        "ability": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,Reboot,InfraredLight,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,TCM,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,WIFI",  # noqa: E501
+                        "ability": "WLAN,MT,HSEncrypt,CloudStorage,LocalStorage,PlaybackByFilename,BreathingLight,RD,LocalRecord,XUpgrade,Auth,ModifyPassword,LocalStorageEnable,RTSV1,PBSV1,TSV1,ESV1,TimeFormat,Reboot,InfraredLight,AbAlarmSound,SCCode,RDV2,DaySummerTime,WeekSummerTime,TLSEnable,TimingGraphics,TCM,LRRF,CDD,CDDV2,DLS,CDD-OSS,CDD-OBS,CDD-US3,CDD-BOS,CDD-COS,AUTODSTV2,AlarmMD,AudioEncodeControlV2,FrameReverse,RemoteControl,MDW,MDS,HeaderDetect,WifiReport,WideDynamic,CheckAbDecible,CCSC,RQD,CLOUDAIV1,EventFilter,RSRS,WIFI,NVM",  # noqa: E501
                         "brand": "easy4Ip",
                         "playToken": "8YdkSe1O9=",
                         "shareStatus": "owner",

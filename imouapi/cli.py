@@ -10,7 +10,7 @@ import aiohttp
 from .api import ImouAPIClient
 from .const import IMOU_CAPABILITIES, IMOU_SWITCHES
 from .device import ImouDevice, ImouDiscoverService
-from .device_entity import ImouBinarySensor, ImouSensor, ImouSwitch
+from .device_entity import ImouBinarySensor, ImouSelect, ImouSensor, ImouSwitch
 from .exceptions import ImouException
 
 
@@ -35,6 +35,8 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             "get_binary_sensor",
             "get_switch",
             "set_switch",
+            "get_select",
+            "set_select",
             "get_diagnostics",
         ]:
             device_id = args[0]
@@ -86,6 +88,26 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                     elif value == "TOGGLE":
                         await set_switch.async_toggle()
                     await async_run_command("get_switch", api_client, [device_id, sensor_name])
+                else:
+                    print(f"sensor {sensor_name} not found")
+
+            elif command == "get_select":
+                sensor_name = args[1]
+                print(f"- {device.get_name()}:")
+                get_select: ImouSelect = device.get_sensor_by_name(sensor_name)
+                if get_select is not None:
+                    print(
+                        f"  - {get_select.get_description()} ({get_select.get_name()}): {get_select.get_current_option()} ({get_select.get_available_options()})"  # noqa: E501
+                    )
+                else:
+                    print(f"sensor {sensor_name} not found")
+
+            elif command == "set_select":
+                sensor_name = args[1]
+                value = args[2]
+                set_select: ImouSelect = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if set_select is not None:
+                    await set_select.async_select_option(value)
                 else:
                     print(f"sensor {sensor_name} not found")
 
@@ -302,6 +324,18 @@ class ImouCli:
             else:
                 print("ERROR: provide device_id, sensor_name and value")
 
+        elif self.command == "get_select":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id and sensor_name")
+
+        elif self.command == "set_select":
+            if len(self.args) == 3:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, sensor_name and value")
+
         elif self.command == "get_diagnostics":
             if len(self.args) == 1:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
@@ -412,6 +446,8 @@ class ImouCli:
         print("  get_binary_sensor <device_id> <sensor_name>                         Get the state of a binary sensor")
         print("  get_switch <device_id> <sensor_name>                                Get the state of a switch")
         print("  set_switch <device_id> <sensor_name> <on|off|toggle>                Set the state of a switch")
+        print("  get_select <device_id> <sensor_name>                                Get the state of a select sensor")
+        print("  set_select <device_id> <sensor_name> <value>                        Set the state of a select sensor")
         print(
             "  get_diagnostics <device_id>                                         Get diagnostics information of the device id"  # noqa: E501
         )

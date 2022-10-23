@@ -37,6 +37,19 @@ class TestDevice:
         payload = MOCK_RESPONSES[response] if response in MOCK_RESPONSES else "{invalid"
         mocked.post(re.compile(r".+/" + url + "$"), status=status, payload=payload, exception=exception, repeat=repeat)
 
+    def configure_responses_ok(self, mocked):
+        """Configure all responses ok."""
+        self.config_mock(mocked, "accessToken", "accessToken_ok", repeat=True)
+        self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok", repeat=True)
+        self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
+        self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok", repeat=True)
+        self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+        self.config_mock(mocked, "deviceStorage", "deviceStorage_ok", repeat=True)
+        self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
+        self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
+        self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+        self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+
     def test_discover_ok(self):
         """Test ImouDiscoverService: ok."""
         with aioresponses() as mocked:
@@ -62,17 +75,12 @@ class TestDevice:
     def test_get_device_ok(self):
         """Test get device: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
+            self.configure_responses_ok(mocked)
             device = ImouDevice(self.api_client, "8L0DF93PAZ55FD2")
             self.loop.run_until_complete(device.async_initialize())
             assert device.get_device_id() == "8L0DF93PAZ55FD2"
             assert device.get_firmware() == "2.680.0000000.25.R.220527"
             assert device.is_online() is True
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.loop.run_until_complete(device.async_get_data())
             assert device.get_sensor_by_name("lastAlarm").get_state() == "2022-09-25T17:36:33"
             assert device.get_sensor_by_name("online").is_on() is True
@@ -119,6 +127,7 @@ class TestDevice:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_malformed")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(device.async_get_data())
             assert "InvalidResponse" in str(exception)
@@ -133,6 +142,7 @@ class TestDevice:
             self.config_mock(mocked, "deviceOnline", "deviceOnline_malformed")
             self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(device.async_get_data())
             assert "InvalidResponse" in str(exception) and "onLine not found" in str(exception)
@@ -149,6 +159,8 @@ class TestDevice:
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+            self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             self.loop.run_until_complete(set_switch.async_turn_on())
@@ -170,6 +182,8 @@ class TestDevice:
             self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_error")
             self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok")
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             with pytest.raises(Exception) as exception:

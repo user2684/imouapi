@@ -418,7 +418,7 @@ class ImouAPIClient:
         # prepare the payload
         payload = {
             "callbackFlag": "alarm,deviceStatus",
-            "basePush": "2",
+            # "basePush": "2",
             "callbackUrl": callback_url,
             "status": "on",
         }
@@ -432,8 +432,6 @@ class ImouAPIClient:
         api = "setMessageCallback"
         # prepare the payload
         payload = {
-            "callbackFlag": "alarm,deviceStatus",
-            "basePush": "2",
             "status": "off",
         }
         # call the api

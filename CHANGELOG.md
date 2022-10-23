@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4] (2022-10-22)
+### Added
+- `ImouSelect` class and support for `nightVisionMode` select
+- `get_select` and `set_select` commands to CLI
+- `pushNotifications` switch
+## Changed
+- Sensors (not only switches) are now added based on the available capabilities
+
 ## [1.0.3] (2022-10-22)
 ### Added
 - Support for not documented `WLM` capability

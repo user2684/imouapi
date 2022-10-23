@@ -4,8 +4,8 @@ import re
 from typing import Any, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SENSORS
-from .device_entity import ImouBinarySensor, ImouEntity, ImouSensor, ImouSwitch
+from .const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS
+from .device_entity import ImouBinarySensor, ImouEntity, ImouSelect, ImouSensor, ImouSwitch
 from .exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -38,7 +38,7 @@ class ImouDevice:
         self._online = False
         self._capabilities: list[str] = []
         self._switches: list[str] = []
-        self._sensor_instances: dict[str, list] = {"switch": [], "sensor": [], "binary_sensor": []}
+        self._sensor_instances: dict[str, list] = {"switch": [], "sensor": [], "binary_sensor": [], "select": []}
 
         self._initialized = False
         self._enabled = True
@@ -90,7 +90,7 @@ class ImouDevice:
             return []
         return self._sensor_instances[platform]
 
-    def get_sensor_by_name(self, name: str) -> Union[ImouSensor, ImouBinarySensor, ImouSwitch, None]:
+    def get_sensor_by_name(self, name: str) -> Union[ImouSensor, ImouBinarySensor, ImouSwitch, ImouSelect, None]:
         """Get sensor instance with a given name."""
         for (
             platform,  # pylint: disable=unused-variable
@@ -131,6 +131,8 @@ class ImouDevice:
                 self._capabilities.append("MotionDetect")
             if "WLM" in self._capabilities:
                 self._capabilities.append("Linkagewhitelight")
+            if "WLAN" in self._capabilities:
+                self._capabilities.append("pushNotifications")
             switches_keys = IMOU_SWITCHES.keys()
             # add switches. For each possible switch, check if there is a capability with the same name \
             # (ref. https://open.imoulife.com/book/en/faq/feature.html)
@@ -150,32 +152,45 @@ class ImouDevice:
                         self._sensor_instances["switch"].append(switch_instance)
                         break
             # add lastAlarm sensor
-            self._sensor_instances["sensor"].append(
-                ImouSensor(
-                    self._api_client,
-                    self._device_id,
-                    self.get_name(),
-                    "lastAlarm",
+            if "AlarmMD" in self._capabilities:
+                self._sensor_instances["sensor"].append(
+                    ImouSensor(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "lastAlarm",
+                    )
                 )
-            )
             # add storageUsed sensor
-            self._sensor_instances["sensor"].append(
-                ImouSensor(
-                    self._api_client,
-                    self._device_id,
-                    self.get_name(),
-                    "storageUsed",
+            if "LocalStorage" in self._capabilities:
+                self._sensor_instances["sensor"].append(
+                    ImouSensor(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "storageUsed",
+                    )
                 )
-            )
             # add online binary sensor
-            self._sensor_instances["binary_sensor"].append(
-                ImouBinarySensor(
-                    self._api_client,
-                    self._device_id,
-                    self.get_name(),
-                    "online",
+            if "WLAN" in self._capabilities:
+                self._sensor_instances["binary_sensor"].append(
+                    ImouBinarySensor(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "online",
+                    )
                 )
-            )
+            # add nightVisionMode select
+            if "NVM" in self._capabilities:
+                self._sensor_instances["select"].append(
+                    ImouSelect(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "nightVisionMode",
+                    )
+                )
         except Exception as exception:
             raise InvalidResponse(f" missing parameter or error parsing in {device_data}") from exception
         _LOGGER.debug("Retrieved device %s", self.to_string())
@@ -265,6 +280,19 @@ class ImouDevice:
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
             binary_sensors.append(sensor)
+        # prepare select
+        selects = []
+        for sensor_instance in self._sensor_instances["select"]:
+            sensor = {}
+            sensor_name = sensor_instance.get_name()
+            description = f"{SELECT[sensor_name]} ({sensor_name})"
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["current_option"] = sensor_instance.get_current_option()
+            sensor["available_options"] = sensor_instance.get_available_options()
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            selects.append(sensor)
         # prepare data structure to return
         data: dict[str, Any] = {
             "api": {
@@ -286,6 +314,7 @@ class ImouDevice:
             "switches": switches,
             "sensors": sensors,
             "binary_sensors": binary_sensors,
+            "selects": selects,
         }
         return data
 
@@ -312,6 +341,9 @@ class ImouDevice:
         dump = dump + "    Binary Sensors: \n"
         for binary_sensor in data['binary_sensors']:
             dump = dump + f"        - {binary_sensor['description']}: {binary_sensor['state']}\n"
+        dump = dump + "    Select: \n"
+        for select in data['selects']:
+            dump = dump + f"        - {select['description']}: {select['current_option']}\n"
         return dump
 
 

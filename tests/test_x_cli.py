@@ -29,6 +29,20 @@ class TestCli:
         payload = MOCK_RESPONSES[response] if response in MOCK_RESPONSES else "{invalid"
         mocked.post(re.compile(r".+/" + url + "$"), status=status, payload=payload, exception=exception, repeat=repeat)
 
+    def configure_responses_ok(self, mocked):
+        """Configure all responses ok."""
+        self.config_mock(mocked, "accessToken", "accessToken_ok", repeat=True)
+        self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok", repeat=True)
+        self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok", repeat=True)
+        self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
+        self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok", repeat=True)
+        self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+        self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
+        self.config_mock(mocked, "deviceStorage", "deviceStorage_ok", repeat=True)
+        self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
+        self.config_mock(mocked, "setNightVisionMode", "setNightVisionMode_ok", repeat=True)
+        self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+
     def test_discover_ok(self, capsys):
         """Test discover: ok."""
         with aioresponses() as mocked:
@@ -52,13 +66,7 @@ class TestCli:
     def test_get_device(self, capsys):
         """Test get device: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.configure_responses_ok(mocked)
             self.cli.argv = ["cli", "--app-id", "app_id", "--app-secret", "app_secret", "get_device", "device_id"]
             self.cli.parse_command_line()
             self.cli.run_command()
@@ -68,13 +76,7 @@ class TestCli:
     def test_get_switch(self, capsys):
         """Test get switch: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.configure_responses_ok(mocked)
             self.cli.argv = [
                 "cli",
                 "--app-id",
@@ -93,14 +95,7 @@ class TestCli:
     def test_set_switch(self, capsys):
         """Test set switch: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok", repeat=True)
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok", repeat=True)
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok", repeat=True)
+            self.configure_responses_ok(mocked)
             self.cli.argv = [
                 "cli",
                 "--app-id",
@@ -117,16 +112,48 @@ class TestCli:
             captured = capsys.readouterr()
             assert "Head Detection (headerDetect): True" in captured.out
 
+    def test_get_select(self, capsys):
+        """Test get select: ok."""
+        with aioresponses() as mocked:
+            self.configure_responses_ok(mocked)
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "get_select",
+                "device_id",
+                "nightVisionMode",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "Intelligent" in captured.out
+
+    def test_set_select(self, capsys):
+        """Test set select: ok."""
+        with aioresponses() as mocked:
+            self.configure_responses_ok(mocked)
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "set_select",
+                "device_id",
+                "nightVisionMode",
+                "Intelligent",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            assert True is True
+
     def test_get_sensor(self, capsys):
         """Test get sensor: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.configure_responses_ok(mocked)
             self.cli.argv = [
                 "cli",
                 "--app-id",
@@ -145,13 +172,7 @@ class TestCli:
     def test_get_binary_sensor(self, capsys):
         """Test get binary sensor: ok."""
         with aioresponses() as mocked:
-            self.config_mock(mocked, "accessToken", "accessToken_ok")
-            self.config_mock(mocked, "deviceBaseList", "deviceBaseList_ok")
-            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
-            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
-            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
-            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
-            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.configure_responses_ok(mocked)
             self.cli.argv = [
                 "cli",
                 "--app-id",

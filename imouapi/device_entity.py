@@ -2,11 +2,11 @@
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, IMOU_SWITCHES, SENSORS
-from .exceptions import InvalidResponse
+from .const import BINARY_SENSORS, IMOU_SWITCHES, SELECT, SENSORS
+from .exceptions import APIError, InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -87,6 +87,7 @@ class ImouSensor(ImouEntity):
         """Update the entity."""
         if not self._enabled:
             return
+        # lastAlarm sensor
         if self._name == "lastAlarm":
             # get the time of the last alarm
             data = await self.api_client.async_api_getAlarmMessage(self._device_id)
@@ -100,6 +101,7 @@ class ImouSensor(ImouEntity):
                 iso_time = datetime.utcfromtimestamp(alarm["time"]).isoformat()
                 self._state = iso_time
 
+        # storageUsed sensor
         elif self._name == "storageUsed":
             # get the storage status
             data = await self.api_client.async_api_deviceStorage(self._device_id)
@@ -149,6 +151,8 @@ class ImouBinarySensor(ImouEntity):
         """Update the entity."""
         if not self._enabled:
             return
+
+        # online sensor
         if self._name == "online":
             # get the online status
             data = await self.api_client.async_api_deviceOnline(self._device_id)
@@ -195,7 +199,12 @@ class ImouSwitch(ImouEntity):
         """Update the entity."""
         if not self._enabled:
             return
-        data = await self.api_client.async_api_getDeviceCameraStatus(self._device_id, self._name)
+        # pushNotifications sensor
+        if self._name == "pushNotifications":
+            data = await self.api_client.async_api_getMessageCallback()
+        # all the other dynamically created sensors
+        else:
+            data = await self.api_client.async_api_getDeviceCameraStatus(self._device_id, self._name)
         _LOGGER.debug(
             "[%s] updating %s, value is %s",
             self._device_name,
@@ -214,16 +223,27 @@ class ImouSwitch(ImouEntity):
         """Turn the entity on."""
         if not self._enabled:
             return
-        _LOGGER.debug("[%s] %s requsted to turn ON", self._device_name, self._description)
-        await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, True)
+        _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
+        # pushNotifications sensor
+        if self._name == "pushNotifications":
+            if "url" not in kwargs:
+                raise APIError("url not provided")
+            await self.api_client.async_api_setMessageCallbackOn(kwargs.get("url"))
+        # all the other dynamically created sensors
+        else:
+            await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, True)
         self._state = True
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off."""
         if not self._enabled:
             return
-        _LOGGER.debug("[%s] %s requsted to turn OFF", self._device_name, self._description)
-        await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, False)
+        _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
+        if self._name == "pushNotifications":
+            await self.api_client.async_api_setMessageCallbackOff()
+        # all the other dynamically created sensors
+        else:
+            await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, False)
         self._state = False
 
     async def async_toggle(self, **kwargs):
@@ -234,3 +254,65 @@ class ImouSwitch(ImouEntity):
             await self.async_turn_off()
         else:
             await self.async_turn_on()
+
+
+class ImouSelect(ImouEntity):
+    """A representation of a select within an IMOU Device."""
+
+    def __init__(
+        self,
+        api_client: ImouAPIClient,
+        device_id: str,
+        device_name: str,
+        sensor_type: str,
+    ) -> None:
+        """
+        Initialize the instance.
+
+        Parameters:
+            api_client: an instance ofthe API client
+            device_id: the device id
+            device_name: the device name
+            sensor_type: the sensor type from const SELECT
+        """
+        super().__init__(api_client, device_id, device_name, sensor_type, SELECT[sensor_type])
+        # keep track of the status of the sensor
+        self._current_option: Union[str, None] = None
+        self._available_options: list[str] = []
+
+    async def async_update(self, **kwargs):
+        """Update the entity."""
+        if not self._enabled:
+            return
+        if self._name == "nightVisionMode":
+            # get the night vision mode option selected
+            data = await self.api_client.async_api_getNightVisionMode(self._device_id)
+            if "mode" not in data or "modes" not in data:
+                raise InvalidResponse(f"mode or modes not found in {data}")
+            self._current_option = data["mode"]
+            self._available_options = data["modes"]
+        _LOGGER.debug(
+            "[%s] updating %s, value is %s",
+            self._device_name,
+            self._description,
+            self._current_option,
+        )
+        if not self._updated:
+            self._updated = True
+
+    def get_current_option(self) -> Optional[str]:
+        """Return the current option."""
+        return self._current_option
+
+    def get_available_options(self) -> list[str]:
+        """Return the available options."""
+        return self._available_options
+
+    async def async_select_option(self, option: str) -> None:
+        """Change the selected option."""
+        if not self._enabled:
+            return
+        _LOGGER.debug("[%s] %s setting to %s", self._device_name, self._description, option)
+        if self._name == "nightVisionMode":
+            await self.api_client.async_api_setNightVisionMode(self._device_id, option)
+            self._current_option = option

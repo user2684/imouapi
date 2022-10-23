@@ -198,9 +198,11 @@ events include human figures and vehicles",
     "AlarmSound": "Support alarm sound setting",
     "Electric": "Device Support Battery Capability",
     "WIFI": "The device supports WIFI capability",
-    "WLM ": "WLM",
+    # derived or custom capabilities
     "Linkagewhitelight": "Alarm white light",
+    "WLM ": "WLM",
     "MotionDetect": "Motion detection",
+    "pushNotifications": "Push notifications",
 }
 
 
@@ -255,6 +257,7 @@ IMOU_SWITCHES = {
     "ccss": "Privacy Plan",
     "inll": "Indicator light linkage",
     "ledsw": "Fill light",
+    "pushNotifications": "Push notifications",
 }
 
 # sensors supported by this library
@@ -266,4 +269,9 @@ SENSORS = {
 # sensors supported by this library
 BINARY_SENSORS = {
     "online": "Online",
+}
+
+# select supported by this library
+SELECT = {
+    "nightVisionMode": "Night vision mode",
 }
