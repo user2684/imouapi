@@ -4,8 +4,8 @@ import re
 from typing import Any, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS
-from .device_entity import ImouBinarySensor, ImouEntity, ImouSelect, ImouSensor, ImouSwitch
+from .const import BINARY_SENSORS, BUTTONS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS
+from .device_entity import ImouBinarySensor, ImouButton, ImouEntity, ImouSelect, ImouSensor, ImouSwitch
 from .exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -38,7 +38,13 @@ class ImouDevice:
         self._online = False
         self._capabilities: list[str] = []
         self._switches: list[str] = []
-        self._sensor_instances: dict[str, list] = {"switch": [], "sensor": [], "binary_sensor": [], "select": []}
+        self._sensor_instances: dict[str, list] = {
+            "switch": [],
+            "sensor": [],
+            "binary_sensor": [],
+            "select": [],
+            "button": [],
+        }
 
         self._initialized = False
         self._enabled = True
@@ -90,7 +96,9 @@ class ImouDevice:
             return []
         return self._sensor_instances[platform]
 
-    def get_sensor_by_name(self, name: str) -> Union[ImouSensor, ImouBinarySensor, ImouSwitch, ImouSelect, None]:
+    def get_sensor_by_name(
+        self, name: str
+    ) -> Union[ImouSensor, ImouBinarySensor, ImouSwitch, ImouSelect, ImouButton, None]:
         """Get sensor instance with a given name."""
         for (
             platform,  # pylint: disable=unused-variable
@@ -171,6 +179,15 @@ class ImouDevice:
                         "storageUsed",
                     )
                 )
+            # add callbackUrl sensor
+            self._sensor_instances["sensor"].append(
+                ImouSensor(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "callbackUrl",
+                )
+            )
             # add online binary sensor
             if "WLAN" in self._capabilities:
                 self._sensor_instances["binary_sensor"].append(
@@ -191,6 +208,24 @@ class ImouDevice:
                         "nightVisionMode",
                     )
                 )
+            # add restartDevice button
+            self._sensor_instances["button"].append(
+                ImouButton(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "restartDevice",
+                )
+            )
+            # add refreshData button
+            self._sensor_instances["button"].append(
+                ImouButton(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "refreshData",
+                )
+            )
         except Exception as exception:
             raise InvalidResponse(f" missing parameter or error parsing in {device_data}") from exception
         _LOGGER.debug("Retrieved device %s", self.to_string())
@@ -293,6 +328,17 @@ class ImouDevice:
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
             selects.append(sensor)
+        # prepare button
+        buttons = []
+        for sensor_instance in self._sensor_instances["button"]:
+            sensor = {}
+            sensor_name = sensor_instance.get_name()
+            description = f"{BUTTONS[sensor_name]} ({sensor_name})"
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            buttons.append(sensor)
         # prepare data structure to return
         data: dict[str, Any] = {
             "api": {
@@ -315,6 +361,7 @@ class ImouDevice:
             "sensors": sensors,
             "binary_sensors": binary_sensors,
             "selects": selects,
+            "buttons": buttons,
         }
         return data
 
@@ -344,6 +391,9 @@ class ImouDevice:
         dump = dump + "    Select: \n"
         for select in data['selects']:
             dump = dump + f"        - {select['description']}: {select['current_option']}\n"
+        dump = dump + "    Buttons: \n"
+        for button in data['buttons']:
+            dump = dump + f"        - {button['description']}\n"
         return dump
 
 

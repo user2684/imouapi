@@ -49,6 +49,7 @@ class TestDevice:
         self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
         self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
         self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+        self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok", repeat=True)
 
     def test_discover_ok(self):
         """Test ImouDiscoverService: ok."""
@@ -161,6 +162,7 @@ class TestDevice:
             self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
             self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             self.loop.run_until_complete(set_switch.async_turn_on())
@@ -183,9 +185,31 @@ class TestDevice:
             self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_error")
             self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
             self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok")
-            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
             self.loop.run_until_complete(device.async_get_data())
             set_switch = device.get_sensor_by_name("headerDetect")
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(set_switch.async_turn_on())
             assert "APIError" in str(exception)
+
+    def test_press_button_ok(self):
+        """Test press button: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
+            device = ImouDevice(self.api_client, "8L0DF93PAZ55FD2")
+            self.loop.run_until_complete(device.async_initialize())
+            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
+            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
+            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_error")
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+            self.config_mock(mocked, "restartDevice", "restartDevice_ok")
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
+            self.loop.run_until_complete(device.async_get_data())
+            button = device.get_sensor_by_name("restartDevice")
+            self.loop.run_until_complete(button.async_press())
+            assert True is True

@@ -10,7 +10,7 @@ import aiohttp
 from .api import ImouAPIClient
 from .const import IMOU_CAPABILITIES, IMOU_SWITCHES
 from .device import ImouDevice, ImouDiscoverService
-from .device_entity import ImouBinarySensor, ImouSelect, ImouSensor, ImouSwitch
+from .device_entity import ImouBinarySensor, ImouButton, ImouSelect, ImouSensor, ImouSwitch
 from .exceptions import ImouException
 
 
@@ -37,6 +37,7 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             "set_switch",
             "get_select",
             "set_select",
+            "press_button",
             "get_diagnostics",
         ]:
             device_id = args[0]
@@ -111,8 +112,30 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                 else:
                     print(f"sensor {sensor_name} not found")
 
+            elif command == "press_button":
+                sensor_name = args[1]
+                button: ImouButton = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if button is not None:
+                    await button.async_press()
+                else:
+                    print(f"sensor {sensor_name} not found")
+
             elif command == "get_diagnostics":
                 print(device.get_diagnostics())
+
+        elif command == "get_device_raw":
+            device_id = args[0]
+            capabilities_to_test = list(IMOU_CAPABILITIES.keys())
+            print("Capabilities:")
+            for capability in capabilities_to_test:
+                capability = re.sub("v\\d$", "", capability, flags=re.IGNORECASE)
+                data = await api_client.async_api_getDeviceCameraStatus(device_id, capability)
+                print(f"{capability}: {data['status']}")
+            print("\nSwitches:")
+            switches_to_test = list(IMOU_SWITCHES.keys())
+            for switch in switches_to_test:
+                data = await api_client.async_api_getDeviceCameraStatus(device_id, switch)
+                print(f"{switch}: {data['status']}")
 
         elif command == "api_deviceBaseList":
             data = await api_client.async_api_deviceBaseList()
@@ -184,19 +207,15 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             data = await api_client.async_api_setMessageCallbackOff()
             print(json.dumps(data, indent=4))
 
-        elif command == "get_device_raw":
+        elif command == "api_restartDevice":
             device_id = args[0]
-            capabilities_to_test = list(IMOU_CAPABILITIES.keys())
-            print("Capabilities:")
-            for capability in capabilities_to_test:
-                capability = re.sub("v\\d$", "", capability, flags=re.IGNORECASE)
-                data = await api_client.async_api_getDeviceCameraStatus(device_id, capability)
-                print(f"{capability}: {data['status']}")
-            print("\nSwitches:")
-            switches_to_test = list(IMOU_SWITCHES.keys())
-            for switch in switches_to_test:
-                data = await api_client.async_api_getDeviceCameraStatus(device_id, switch)
-                print(f"{switch}: {data['status']}")
+            data = await api_client.async_api_restartDevice(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_deviceSdcardStatus":
+            device_id = args[0]
+            data = await api_client.async_api_deviceSdcardStatus(device_id)
+            print(json.dumps(data, indent=4))
 
         else:
             print("invalid command provided")
@@ -336,6 +355,12 @@ class ImouCli:
             else:
                 print("ERROR: provide device_id, sensor_name and value")
 
+        elif self.command == "press_button":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id and sensor_name")
+
         elif self.command == "get_diagnostics":
             if len(self.args) == 1:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
@@ -414,6 +439,18 @@ class ImouCli:
         elif self.command == "api_setMessageCallbackOff":
             asyncio.run(async_run_command(self.command, api_client, self.args))
 
+        elif self.command == "api_restartDevice":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_deviceSdcardStatus":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
         else:
             self.print_usage()
 
@@ -448,6 +485,7 @@ class ImouCli:
         print("  set_switch <device_id> <sensor_name> <on|off|toggle>                Set the state of a switch")
         print("  get_select <device_id> <sensor_name>                                Get the state of a select sensor")
         print("  set_select <device_id> <sensor_name> <value>                        Set the state of a select sensor")
+        print("  press_button <device_id> <sensor_name>                              Press a button")
         print(
             "  get_diagnostics <device_id>                                         Get diagnostics information of the device id"  # noqa: E501
         )
@@ -492,6 +530,10 @@ class ImouCli:
         )
         print(
             "  api_setMessageCallbackOff                                           Unset the message callback address by calling directly the API"  # noqa: E501
+        )
+        print("  api_restartDevice <device_id>                                       Restart the device")
+        print(
+            "  api_deviceSdcardStatus <device_id>                                  Get the SD card status of the device"
         )
 
 

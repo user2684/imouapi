@@ -436,3 +436,27 @@ class ImouAPIClient:
         }
         # call the api
         return await self._async_call_api(api, payload)
+
+    async def async_api_restartDevice(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Restart the device. \
+            (https://open.imoulife.com/book/en/http/device/operate/restartDevice.html)."""
+        # define the api endpoint
+        api = "restartDevice"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_deviceSdcardStatus(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Get the SD card status of the device.. \
+            (https://open.imoulife.com/book/en/http/device/config/storage/deviceSdcardStatus.html)."""
+        # define the api endpoint
+        api = "deviceSdcardStatus"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, IMOU_SWITCHES, SELECT, SENSORS
+from .const import BINARY_SENSORS, BUTTONS, IMOU_SWITCHES, SELECT, SENSORS
 from .exceptions import APIError, InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -30,6 +30,7 @@ class ImouEntity(ABC):
         self._description = sensor_description
         self._enabled = True
         self._updated = False
+        self._device_instance = None
 
     def get_device_id(self) -> str:
         """Get device id."""
@@ -54,6 +55,10 @@ class ImouEntity(ABC):
     def is_updated(self) -> bool:
         """If has been updated at least once."""
         return self._updated
+
+    def set_device(self, device_instance) -> None:
+        """Set the device instance this entity is belonging to."""
+        self._device_instance = device_instance
 
     @abstractmethod
     async def async_update(self, **kwargs):
@@ -103,12 +108,25 @@ class ImouSensor(ImouEntity):
 
         # storageUsed sensor
         elif self._name == "storageUsed":
-            # get the storage status
-            data = await self.api_client.async_api_deviceStorage(self._device_id)
-            if "totalBytes" not in data or "usedBytes" not in data:
-                raise InvalidResponse(f"totalBytes or usedBytes not found in {data}")
-            percentage_used = int(data["usedBytes"] * 100 / data["totalBytes"])
-            self._state = percentage_used
+            # get SD card status
+            data = await self.api_client.async_api_deviceSdcardStatus(self._device_id)
+            if "status" not in data:
+                raise InvalidResponse(f"status not found in {data}")
+            if data["status"] == "normal":
+                # get the storage status
+                data = await self.api_client.async_api_deviceStorage(self._device_id)
+                if "totalBytes" not in data or "usedBytes" not in data:
+                    raise InvalidResponse(f"totalBytes or usedBytes not found in {data}")
+                percentage_used = int(data["usedBytes"] * 100 / data["totalBytes"])
+                self._state = percentage_used
+
+        # callbackUrl sensor
+        elif self._name == "callbackUrl":
+            # get callback url
+            data = await self.api_client.async_api_getMessageCallback()
+            if "callbackUrl" not in data:
+                raise InvalidResponse(f"callbackUrl not found in {data}")
+            self._state = data["callbackUrl"]
 
         _LOGGER.debug(
             "[%s] updating %s, value is %s",
@@ -316,3 +334,54 @@ class ImouSelect(ImouEntity):
         if self._name == "nightVisionMode":
             await self.api_client.async_api_setNightVisionMode(self._device_id, option)
             self._current_option = option
+
+
+class ImouButton(ImouEntity):
+    """A representation of a button within an IMOU Device."""
+
+    def __init__(
+        self,
+        api_client: ImouAPIClient,
+        device_id: str,
+        device_name: str,
+        sensor_type: str,
+    ) -> None:
+        """
+        Initialize the instance.
+
+        Parameters:
+            api_client: an instance ofthe API client
+            device_id: the device id
+            device_name: the device name
+            sensor_type: the sensor type from const BUTTON
+        """
+        super().__init__(api_client, device_id, device_name, sensor_type, BUTTONS[sensor_type])
+
+    async def async_press(self) -> None:
+        """Press action."""
+        if not self._enabled:
+            return
+        if self._name == "restartDevice":
+            # restart the device
+            await self.api_client.async_api_restartDevice(self._device_id)
+        if self._name == "refreshData":
+            # refresh the data of all the sensors of the device
+            if self._device_instance is not None:
+                await self._device_instance.async_get_data()
+            else:
+                _LOGGER.warning(
+                    "[%s] device instance not set for refreshData",
+                    self._device_name,
+                )
+
+        _LOGGER.debug(
+            "[%s] pressed button %s",
+            self._device_name,
+            self._description,
+        )
+        if not self._updated:
+            self._updated = True
+
+    async def async_update(self, **kwargs):
+        """Update the entity."""
+        return

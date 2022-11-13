@@ -212,23 +212,23 @@ IMOU_SWITCHES = {
     "motionDetect": "Motion detection",
     "faceCapture": "Face capture",
     "speechRecognition": "Speech recognition",
-    "breathingLight": "Breathing light",
+    "breathingLight": "Status indicator",
     "smartLocate": "Listening and positioning",
     "smartTrack": "Smart Tracking",
     "localAlarmRecord": "Local alarm recording",
     "regularCruise": "Scheduled Cruise",
-    "headerDetect": "Head Detection",
+    "headerDetect": "Human detection",
     "numberStat": "Cross-line passenger flow statistics",
     "manNumDec": "Regional passenger flow statistics",
     "alarmPIR": "PIR alarm",
     "autoZoomFocus": "Automatic zoom focus",
-    "audioEncodeControl": "Audio encoding control",
+    "audioEncodeControl": "Record audio",
     "aecv3": "Audio encoding control v3",
     "faceDetect": "Face Detection",
     "localStorageEnable": "Local storage",
     "whiteLight": "White Light",
-    "linkageWhiteLight": "Alarm white light",
-    "linkageSiren": "Alarm siren",
+    "linkageWhiteLight": "White light armed",
+    "linkageSiren": "Siren Armed",
     "infraredLight": "Infrared light",
     "searchLight": "Search light",
     "hoveringAlarm": "Hovering Alarm",
@@ -245,11 +245,11 @@ IMOU_SWITCHES = {
     "aiCar": "Vehicle AI",
     "openDoorByFace": "Face open door",
     "openDoorByTouch": "Touch to open door",
-    "linkDevAlarm": "Associated device alarm",
+    "linkDevAlarm": "Siren Armed",
     "linkAccDevAlarm": "Associated accessory alarm",
-    "abAlarmSound": "Abnormal sound",
+    "abAlarmSound": "Noise detection",
     "playSound": "Device sound",
-    "wideDynamic": "Wide Dynamic",
+    "wideDynamic": "HDR",
     "smdHuman": "SMD People",
     "smdVehicle": "SMD car",
     "instantDisAlarm": "One-click disarming",
@@ -258,12 +258,14 @@ IMOU_SWITCHES = {
     "inll": "Indicator light linkage",
     "ledsw": "Fill light",
     "pushNotifications": "Push notifications",
+    "siren": "Activate siren",
 }
 
 # sensors supported by this library
 SENSORS = {
     "lastAlarm": "Last alarm",
     "storageUsed": "Storage used",
+    "callbackUrl": "Callback url",
 }
 
 # sensors supported by this library
@@ -274,4 +276,10 @@ BINARY_SENSORS = {
 # select supported by this library
 SELECT = {
     "nightVisionMode": "Night vision mode",
+}
+
+# buttons supported by this library
+BUTTONS = {
+    "restartDevice": "Restart Device",
+    "refreshData": "Refresh data",
 }

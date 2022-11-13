@@ -42,6 +42,8 @@ class TestCli:
         self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok", repeat=True)
         self.config_mock(mocked, "setNightVisionMode", "setNightVisionMode_ok", repeat=True)
         self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+        self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok", repeat=True)
+        self.config_mock(mocked, "restartDevice", "restartDevice_ok", repeat=True)
 
     def test_discover_ok(self, capsys):
         """Test discover: ok."""
@@ -90,7 +92,7 @@ class TestCli:
             self.cli.parse_command_line()
             self.cli.run_command()
             captured = capsys.readouterr()
-            assert "Head Detection (headerDetect): True" in captured.out
+            assert "Human detection (headerDetect): True" in captured.out
 
     def test_set_switch(self, capsys):
         """Test set switch: ok."""
@@ -110,7 +112,7 @@ class TestCli:
             self.cli.parse_command_line()
             self.cli.run_command()
             captured = capsys.readouterr()
-            assert "Head Detection (headerDetect): True" in captured.out
+            assert "Human detection (headerDetect): True" in captured.out
 
     def test_get_select(self, capsys):
         """Test get select: ok."""
@@ -187,6 +189,25 @@ class TestCli:
             self.cli.run_command()
             captured = capsys.readouterr()
             assert " Online (online): True" in captured.out
+
+    def test_press_button(self, capsys):
+        """Test press button: ok."""
+        with aioresponses() as mocked:
+            self.configure_responses_ok(mocked)
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "press_button",
+                "device_id",
+                "restartDevice",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert captured.out == ""
 
     def test_api_deviceBaseList(self, capsys):  # pylint: disable=invalid-name
         """Test api_deviceBaseList: ok."""
@@ -453,3 +474,41 @@ class TestCli:
             self.cli.run_command()
             captured = capsys.readouterr()
             assert "{}" in captured.out
+
+    def test_api_restartDevice(self, capsys):  # pylint: disable=invalid-name
+        """Test api_restartDevice: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "restartDevice", "restartDevice_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_restartDevice",
+                "device_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "{}" in captured.out
+
+    def test_api_deviceSdcardStatus(self, capsys):  # pylint: disable=invalid-name
+        """Test api_deviceSdcardStatus: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_deviceSdcardStatus",
+                "device_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "normal" in captured.out

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.5] (2022-11-13)
+### Added
+- Support for `restartDevice`, `deviceSdcardStatus` Imou APIs through `async_api_restartDevice()`, `async_api_deviceSdcardStatus()` and CLI commands
+- Support for "Activate Siren" switch
+- `ImouButton` class and `restartDevice`, `refreshData` buttons
+- Support for `press_button` to CLI
+- Support for `callbackUrl` sensor
+- `set_device()` function to `ImouEntity`
+## Changed
+- Reviewed switches' labels
+### Fixed
+- Storage used sensor now reporting None when SD card is not present
+
 ## [1.0.4] (2022-10-22)
 ### Added
 - `ImouSelect` class and support for `nightVisionMode` select

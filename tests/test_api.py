@@ -236,3 +236,19 @@ class TestApiClient:
             self.config_mock(mocked, "setMessageCallback", "setMessageCallbackOff_ok")
             self.loop.run_until_complete(self.api_client.async_api_setMessageCallbackOff())
             assert True is True
+
+    def test_restartDevice_ok(self):  # pylint: disable=invalid-name
+        """Test restartDevice: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "restartDevice", "restartDevice_ok")
+            self.loop.run_until_complete(self.api_client.async_api_restartDevice("device_id"))
+            assert True is True
+
+    def test_deviceSdcardStatus_ok(self):  # pylint: disable=invalid-name
+        """Test deviceSdcardStatus: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_deviceSdcardStatus("device_id"))
+            assert data["status"] == "normal"

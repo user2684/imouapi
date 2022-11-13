@@ -387,4 +387,21 @@ MOCK_RESPONSES = {
         },
         "id": "28",
     },
+    "restartDevice_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+        },
+        "id": "28",
+    },
+    "deviceSdcardStatus_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+            "data": {
+                "status": "normal",
+            },
+        },
+        "id": "28",
+    },
 }
