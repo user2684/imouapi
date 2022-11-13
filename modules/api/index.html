@@ -428,6 +428,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_deviceSdcardStatus" class="md-nav__link">
+    async_api_deviceSdcardStatus()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_deviceStorage" class="md-nav__link">
     async_api_deviceStorage()
   </a>
@@ -465,6 +472,13 @@
           <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_listDeviceAbility" class="md-nav__link">
     async_api_listDeviceAbility()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_restartDevice" class="md-nav__link">
+    async_api_restartDevice()
   </a>
   
 </li>
@@ -720,6 +734,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_deviceSdcardStatus" class="md-nav__link">
+    async_api_deviceSdcardStatus()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_deviceStorage" class="md-nav__link">
     async_api_deviceStorage()
   </a>
@@ -757,6 +778,13 @@
           <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_listDeviceAbility" class="md-nav__link">
     async_api_listDeviceAbility()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_restartDevice" class="md-nav__link">
+    async_api_restartDevice()
   </a>
   
 </li>
@@ -1342,7 +1370,31 @@
 <span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
-<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Interact with IMOU API.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1754,6 +1806,30 @@
         <span class="p">}</span>
         <span class="c1"># call the api</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_restartDevice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="sd">&quot;&quot;&quot;Restart the device. \</span>
+<span class="sd">            (https://open.imoulife.com/book/en/http/device/operate/restartDevice.html).&quot;&quot;&quot;</span>
+        <span class="c1"># define the api endpoint</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;restartDevice&quot;</span>
+        <span class="c1"># prepare the payload</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># call the api</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_deviceSdcardStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="sd">&quot;&quot;&quot;Get the SD card status of the device.. \</span>
+<span class="sd">            (https://open.imoulife.com/book/en/http/device/config/storage/deviceSdcardStatus.html).&quot;&quot;&quot;</span>
+        <span class="c1"># define the api endpoint</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;deviceSdcardStatus&quot;</span>
+        <span class="c1"># prepare the payload</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># call the api</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -2155,6 +2231,53 @@
 
 
 
+<h3 id="imouapi.api.ImouAPIClient.async_api_deviceSdcardStatus" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_api_deviceSdcardStatus</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.api.ImouAPIClient.async_api_deviceSdcardStatus" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the SD card status of the device..             (https://open.imoulife.com/book/en/http/device/config/storage/deviceSdcardStatus.html).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/api.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_deviceSdcardStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+    <span class="sd">&quot;&quot;&quot;Get the SD card status of the device.. \</span>
+<span class="sd">        (https://open.imoulife.com/book/en/http/device/config/storage/deviceSdcardStatus.html).&quot;&quot;&quot;</span>
+    <span class="c1"># define the api endpoint</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;deviceSdcardStatus&quot;</span>
+    <span class="c1"># prepare the payload</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="c1"># call the api</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
 <h3 id="imouapi.api.ImouAPIClient.async_api_deviceStorage" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">async_api_deviceStorage</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span></code>
   
@@ -2455,6 +2578,53 @@
             <span class="p">}</span>
         <span class="p">)</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;deviceList&quot;</span><span class="p">:</span> <span class="n">device_list</span><span class="p">}</span>
+    <span class="c1"># call the api</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.api.ImouAPIClient.async_api_restartDevice" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_api_restartDevice</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.api.ImouAPIClient.async_api_restartDevice" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Restart the device.             (https://open.imoulife.com/book/en/http/device/operate/restartDevice.html).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/api.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_restartDevice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+    <span class="sd">&quot;&quot;&quot;Restart the device. \</span>
+<span class="sd">        (https://open.imoulife.com/book/en/http/device/operate/restartDevice.html).&quot;&quot;&quot;</span>
+    <span class="c1"># define the api endpoint</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;restartDevice&quot;</span>
+    <span class="c1"># prepare the payload</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+    <span class="p">}</span>
     <span class="c1"># call the api</span>
     <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
