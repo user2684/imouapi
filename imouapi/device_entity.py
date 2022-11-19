@@ -31,6 +31,7 @@ class ImouEntity(ABC):
         self._enabled = True
         self._updated = False
         self._device_instance = None
+        self._attributes: dict[str, str] = {}
 
     def get_device_id(self) -> str:
         """Get device id."""
@@ -59,6 +60,10 @@ class ImouEntity(ABC):
     def set_device(self, device_instance) -> None:
         """Set the device instance this entity is belonging to."""
         self._device_instance = device_instance
+
+    def get_attributes(self) -> dict:
+        """Returns attributes."""
+        return self._attributes
 
     @abstractmethod
     async def async_update(self, **kwargs):
@@ -92,19 +97,6 @@ class ImouSensor(ImouEntity):
         """Update the entity."""
         if not self._enabled:
             return
-        # lastAlarm sensor
-        if self._name == "lastAlarm":
-            # get the time of the last alarm
-            data = await self.api_client.async_api_getAlarmMessage(self._device_id)
-            if "alarms" not in data:
-                raise InvalidResponse(f"alarms not found in {data}")
-            if len(data["alarms"]) > 0:
-                alarm = data["alarms"][0]
-                if "time" not in alarm:
-                    raise InvalidResponse(f"time not found in {alarm}")
-                # convert it into ISO 8601 and store it
-                iso_time = datetime.utcfromtimestamp(alarm["time"]).isoformat()
-                self._state = iso_time
 
         # storageUsed sensor
         elif self._name == "storageUsed":
@@ -129,10 +121,11 @@ class ImouSensor(ImouEntity):
             self._state = data["callbackUrl"]
 
         _LOGGER.debug(
-            "[%s] updating %s, value is %s",
+            "[%s] updating %s, value is %s %s",
             self._device_name,
             self._description,
             self._state,
+            self._attributes,
         )
         if not self._updated:
             self._updated = True
@@ -177,14 +170,40 @@ class ImouBinarySensor(ImouEntity):
             if "onLine" not in data:
                 raise InvalidResponse(f"onLine not found in {data}")
             self._state = data["onLine"] == "1"
-            _LOGGER.debug(
-                "[%s] updating %s, value is %s",
-                self._device_name,
-                self._description,
-                self._state,
-            )
-            if not self._updated:
-                self._updated = True
+
+        # motionAlarm sensor
+        if self._name == "motionAlarm":
+            # get the time of the last alarm
+            data = await self.api_client.async_api_getAlarmMessage(self._device_id)
+            if "alarms" not in data:
+                raise InvalidResponse(f"alarms not found in {data}")
+            if len(data["alarms"]) > 0:
+                alarm = data["alarms"][0]
+                if "time" not in alarm or "type" not in alarm or "msgType" not in alarm or "deviceId" not in alarm:
+                    raise InvalidResponse(f"time, type, msgType or deviceId not found in {alarm}")
+                # convert it into ISO 8601
+                alarm_time = datetime.utcfromtimestamp(alarm["time"]).isoformat()
+                # if previously stored alarm time is different, an alarm occurred in the mean time
+                if "alarm_time" in self._attributes and alarm_time != self._attributes["alarm_time"]:
+                    self._state = True
+                else:
+                    self._state = False
+                # save attributes
+                self._attributes = {
+                    "alarm_time": alarm_time,
+                    "alarm_type": alarm["msgType"],
+                    "alarm_code": alarm["type"],
+                }
+
+        _LOGGER.debug(
+            "[%s] updating %s, value is %s %s",
+            self._device_name,
+            self._description,
+            self._state,
+            self._attributes,
+        )
+        if not self._updated:
+            self._updated = True
 
     def is_on(self) -> Optional[bool]:
         """Return the status of the switch."""
@@ -224,10 +243,11 @@ class ImouSwitch(ImouEntity):
         else:
             data = await self.api_client.async_api_getDeviceCameraStatus(self._device_id, self._name)
         _LOGGER.debug(
-            "[%s] updating %s, value is %s",
+            "[%s] updating %s, value is %s %s",
             self._device_name,
             self._description,
             data["status"].upper(),
+            self._attributes,
         )
         self._state = data["status"] == "on"
         if not self._updated:
@@ -310,10 +330,11 @@ class ImouSelect(ImouEntity):
             self._current_option = data["mode"]
             self._available_options = data["modes"]
         _LOGGER.debug(
-            "[%s] updating %s, value is %s",
+            "[%s] updating %s, value is %s %s",
             self._device_name,
             self._description,
             self._current_option,
+            self._attributes,
         )
         if not self._updated:
             self._updated = True
@@ -364,15 +385,6 @@ class ImouButton(ImouEntity):
         if self._name == "restartDevice":
             # restart the device
             await self.api_client.async_api_restartDevice(self._device_id)
-        if self._name == "refreshData":
-            # refresh the data of all the sensors of the device
-            if self._device_instance is not None:
-                await self._device_instance.async_get_data()
-            else:
-                _LOGGER.warning(
-                    "[%s] device instance not set for refreshData",
-                    self._device_name,
-                )
 
         _LOGGER.debug(
             "[%s] pressed button %s",

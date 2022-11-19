@@ -159,16 +159,6 @@ class ImouDevice:
                         )
                         self._sensor_instances["switch"].append(switch_instance)
                         break
-            # add lastAlarm sensor
-            if "AlarmMD" in self._capabilities:
-                self._sensor_instances["sensor"].append(
-                    ImouSensor(
-                        self._api_client,
-                        self._device_id,
-                        self.get_name(),
-                        "lastAlarm",
-                    )
-                )
             # add storageUsed sensor
             if "LocalStorage" in self._capabilities:
                 self._sensor_instances["sensor"].append(
@@ -198,6 +188,16 @@ class ImouDevice:
                         "online",
                     )
                 )
+            # add motionAlarm binary sensor
+            if "AlarmMD" in self._capabilities:
+                self._sensor_instances["binary_sensor"].append(
+                    ImouBinarySensor(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "motionAlarm",
+                    )
+                )
             # add nightVisionMode select
             if "NVM" in self._capabilities:
                 self._sensor_instances["select"].append(
@@ -224,6 +224,15 @@ class ImouDevice:
                     self._device_id,
                     self.get_name(),
                     "refreshData",
+                )
+            )
+            # add refreshAlarm button
+            self._sensor_instances["button"].append(
+                ImouButton(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "refreshAlarm",
                 )
             )
         except Exception as exception:
@@ -290,6 +299,7 @@ class ImouDevice:
             sensor["state"] = sensor_instance.is_on()
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
             switches.append(sensor)
         # prepare sensors
         sensors = []
@@ -302,6 +312,7 @@ class ImouDevice:
             sensor["state"] = sensor_instance.get_state()
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
             sensors.append(sensor)
         # prepare binary sensors
         binary_sensors = []
@@ -314,6 +325,7 @@ class ImouDevice:
             sensor["state"] = sensor_instance.is_on()
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
             binary_sensors.append(sensor)
         # prepare select
         selects = []
@@ -327,6 +339,7 @@ class ImouDevice:
             sensor["available_options"] = sensor_instance.get_available_options()
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
             selects.append(sensor)
         # prepare button
         buttons = []
@@ -338,6 +351,7 @@ class ImouDevice:
             sensor["description"] = description
             sensor["is_enabled"] = sensor_instance.is_enabled()
             sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
             buttons.append(sensor)
         # prepare data structure to return
         data: dict[str, Any] = {
@@ -381,19 +395,22 @@ class ImouDevice:
             dump = dump + f"        - {capability['description']}\n"
         dump = dump + "    Switches: \n"
         for switch in data['switches']:
-            dump = dump + f"        - {switch['description']}: {switch['state']}\n"
+            dump = dump + f"        - {switch['description']}: {switch['state']} {switch['attributes']}\n"
         dump = dump + "    Sensors: \n"
         for sensor in data['sensors']:
-            dump = dump + f"        - {sensor['description']}: {sensor['state']}\n"
+            dump = dump + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes']}\n"
         dump = dump + "    Binary Sensors: \n"
         for binary_sensor in data['binary_sensors']:
-            dump = dump + f"        - {binary_sensor['description']}: {binary_sensor['state']}\n"
+            dump = (
+                dump
+                + f"        - {binary_sensor['description']}: {binary_sensor['state']} {binary_sensor['attributes']}\n"
+            )
         dump = dump + "    Select: \n"
         for select in data['selects']:
-            dump = dump + f"        - {select['description']}: {select['current_option']}\n"
+            dump = dump + f"        - {select['description']}: {select['current_option']} {select['attributes']}\n"
         dump = dump + "    Buttons: \n"
         for button in data['buttons']:
-            dump = dump + f"        - {button['description']}\n"
+            dump = dump + f"        - {button['description']} {button['attributes']}\n"
         return dump
 
 

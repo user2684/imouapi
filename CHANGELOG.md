@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6] (2022-11-19)
+### Added
+- Attributes to `ImouEntity` class and `get_attributes()`
+- `motionDetection` binary sensor and `refreshAlarm` button
+## Removed
+- `lastAlarm` sensor
+
 ## [1.0.5] (2022-11-13)
 ### Added
 - Support for `restartDevice`, `deviceSdcardStatus` Imou APIs through `async_api_restartDevice()`, `async_api_deviceSdcardStatus()` and CLI commands

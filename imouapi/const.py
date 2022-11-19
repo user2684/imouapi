@@ -263,7 +263,6 @@ IMOU_SWITCHES = {
 
 # sensors supported by this library
 SENSORS = {
-    "lastAlarm": "Last alarm",
     "storageUsed": "Storage used",
     "callbackUrl": "Callback url",
 }
@@ -271,6 +270,7 @@ SENSORS = {
 # sensors supported by this library
 BINARY_SENSORS = {
     "online": "Online",
+    "motionAlarm": "Motion Alarm",
 }
 
 # select supported by this library
@@ -280,6 +280,7 @@ SELECT = {
 
 # buttons supported by this library
 BUTTONS = {
-    "restartDevice": "Restart Device",
-    "refreshData": "Refresh data",
+    "restartDevice": "Restart device",
+    "refreshData": "Refresh all data",
+    "refreshAlarm": "Refresh alarm",
 }
