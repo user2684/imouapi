@@ -1242,7 +1242,24 @@
 <span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
-<span class="normal">397</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDevice</span><span class="p">:</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDevice</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A representation of an IMOU Device.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1390,16 +1407,6 @@
                         <span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;switch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">switch_instance</span><span class="p">)</span>
                         <span class="k">break</span>
-            <span class="c1"># add lastAlarm sensor</span>
-            <span class="k">if</span> <span class="s2">&quot;AlarmMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">ImouSensor</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
-                        <span class="s2">&quot;lastAlarm&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
             <span class="c1"># add storageUsed sensor</span>
             <span class="k">if</span> <span class="s2">&quot;LocalStorage&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1429,6 +1436,16 @@
                         <span class="s2">&quot;online&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
+            <span class="c1"># add motionAlarm binary sensor</span>
+            <span class="k">if</span> <span class="s2">&quot;AlarmMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;binary_sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">ImouBinarySensor</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                        <span class="s2">&quot;motionAlarm&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="c1"># add nightVisionMode select</span>
             <span class="k">if</span> <span class="s2">&quot;NVM&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1455,6 +1472,15 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
                     <span class="s2">&quot;refreshData&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># add refreshAlarm button</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;button&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ImouButton</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                    <span class="s2">&quot;refreshAlarm&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
@@ -1521,6 +1547,7 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">switches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare sensors</span>
         <span class="n">sensors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1533,6 +1560,7 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare binary sensors</span>
         <span class="n">binary_sensors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1545,6 +1573,7 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">binary_sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare select</span>
         <span class="n">selects</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1558,6 +1587,7 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;available_options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_available_options</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare button</span>
         <span class="n">buttons</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1569,6 +1599,7 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare data structure to return</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1612,19 +1643,22 @@
             <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">capability</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Switches: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">switch</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;switches&#39;</span><span class="p">]:</span>
-            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Sensors: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]:</span>
-            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Binary Sensors: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">binary_sensor</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;binary_sensors&#39;</span><span class="p">]:</span>
-            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">dump</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Select: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;selects&#39;</span><span class="p">]:</span>
-            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;current_option&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;current_option&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Buttons: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;buttons&#39;</span><span class="p">]:</span>
-            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">dump</span>
 </code></pre></div></td></tr></table></div>
         </details>
@@ -1784,16 +1818,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
@@ -1807,7 +1832,16 @@
 <span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
-<span class="normal">259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Update device properties and its sensors.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -1971,7 +2005,16 @@
 <span class="normal">231</span>
 <span class="normal">232</span>
 <span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the instance by retrieving the device details and associated sensors.&quot;&quot;&quot;</span>
     <span class="c1"># get the details for this device from the API</span>
     <span class="n">device_array</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="o">.</span><span class="n">async_api_deviceBaseDetailList</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">])</span>
@@ -2013,16 +2056,6 @@
                     <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;switch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">switch_instance</span><span class="p">)</span>
                     <span class="k">break</span>
-        <span class="c1"># add lastAlarm sensor</span>
-        <span class="k">if</span> <span class="s2">&quot;AlarmMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">ImouSensor</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
-                    <span class="s2">&quot;lastAlarm&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
         <span class="c1"># add storageUsed sensor</span>
         <span class="k">if</span> <span class="s2">&quot;LocalStorage&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -2050,6 +2083,16 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
                     <span class="s2">&quot;online&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1"># add motionAlarm binary sensor</span>
+        <span class="k">if</span> <span class="s2">&quot;AlarmMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;binary_sensor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ImouBinarySensor</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                    <span class="s2">&quot;motionAlarm&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="c1"># add nightVisionMode select</span>
@@ -2080,6 +2123,15 @@
                 <span class="s2">&quot;refreshData&quot;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
+        <span class="c1"># add refreshAlarm button</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;button&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">ImouButton</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                <span class="s2">&quot;refreshAlarm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; missing parameter or error parsing in </span><span class="si">{</span><span class="n">device_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieved device </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
@@ -2108,21 +2160,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">382</span>
 <span class="normal">383</span>
 <span class="normal">384</span>
 <span class="normal">385</span>
@@ -2137,7 +2175,24 @@
 <span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
-<span class="normal">397</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the full description of the object and its attributes.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_diagnostics</span><span class="p">()</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="p">(</span>
@@ -2153,19 +2208,22 @@
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">capability</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Switches: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">switch</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;switches&#39;</span><span class="p">]:</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">switch</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Sensors: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]:</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sensor</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Binary Sensors: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">binary_sensor</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;binary_sensors&#39;</span><span class="p">]:</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dump</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">binary_sensor</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Select: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;selects&#39;</span><span class="p">]:</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;current_option&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;current_option&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">select</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Buttons: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;buttons&#39;</span><span class="p">]:</span>
-        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">dump</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -2257,16 +2315,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
@@ -2358,7 +2407,21 @@
 <span class="normal">363</span>
 <span class="normal">364</span>
 <span class="normal">365</span>
-<span class="normal">366</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return diagnostics for the device.&quot;&quot;&quot;</span>
     <span class="n">online</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_online</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span>
     <span class="c1"># prepare capabilities</span>
@@ -2386,6 +2449,7 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">switches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare sensors</span>
     <span class="n">sensors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2398,6 +2462,7 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare binary sensors</span>
     <span class="n">binary_sensors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2410,6 +2475,7 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">binary_sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare select</span>
     <span class="n">selects</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2423,6 +2489,7 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;available_options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_available_options</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">selects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare button</span>
     <span class="n">buttons</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2434,6 +2501,7 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare data structure to return</span>
     <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -2778,9 +2846,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the object as a string.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_model</span><span class="si">}</span><span class="s2">, serial </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="si">}</span><span class="s2">)&quot;</span>
 </code></pre></div></td></tr></table></div>
@@ -2816,24 +2884,7 @@
 
         <details class="quote">
           <summary>Source code in <code>imouapi/device.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">417</span>
 <span class="normal">418</span>
 <span class="normal">419</span>
 <span class="normal">420</span>
@@ -2845,7 +2896,24 @@
 <span class="normal">426</span>
 <span class="normal">427</span>
 <span class="normal">428</span>
-<span class="normal">429</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDiscoverService</span><span class="p">:</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDiscoverService</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for discovering IMOU devices.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -2930,14 +2998,14 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize the instance.</span>
 
@@ -2971,24 +3039,24 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_discover_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_discover_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Discover registered devices and return a dict device name -&gt; device object.&quot;&quot;&quot;</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting discovery&quot;</span><span class="p">)</span>
     <span class="c1"># get the list of devices</span>
