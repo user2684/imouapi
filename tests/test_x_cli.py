@@ -164,12 +164,12 @@ class TestCli:
                 "app_secret",
                 "get_sensor",
                 "device_id",
-                "lastAlarm",
+                "storageUsed",
             ]
             self.cli.parse_command_line()
             self.cli.run_command()
             captured = capsys.readouterr()
-            assert "2022-09-25T17:36:33" in captured.out
+            assert "storageUsed" in captured.out
 
     def test_get_binary_sensor(self, capsys):
         """Test get binary sensor: ok."""

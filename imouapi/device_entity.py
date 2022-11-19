@@ -62,7 +62,7 @@ class ImouEntity(ABC):
         self._device_instance = device_instance
 
     def get_attributes(self) -> dict:
-        """Returns attributes."""
+        """Entity attributes."""
         return self._attributes
 
     @abstractmethod
