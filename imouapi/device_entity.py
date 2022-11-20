@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, IMOU_SWITCHES, SELECT, SENSORS
+from .const import BINARY_SENSORS, BUTTONS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
 from .exceptions import APIError, InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -397,3 +397,68 @@ class ImouButton(ImouEntity):
     async def async_update(self, **kwargs):
         """Update the entity."""
         return
+
+
+class ImouSiren(ImouEntity):
+    """A representation of a siren within an IMOU Device."""
+
+    def __init__(
+        self,
+        api_client: ImouAPIClient,
+        device_id: str,
+        device_name: str,
+        sensor_type: str,
+    ) -> None:
+        """
+        Initialize the instance.
+
+        Parameters:
+            api_client: an instance ofthe API client
+            device_id: the device id
+            device_name: the device name
+            sensor_type: the sensor type (from the SIRENS constant)
+        """
+        super().__init__(api_client, device_id, device_name, sensor_type, SIRENS[sensor_type])
+        self._state = False
+
+    async def async_update(self, **kwargs):
+        """Update the entity."""
+        if not self._enabled:
+            return
+        # siren sensor
+        if self._name == "siren":
+            # async_api_getDeviceCameraStatus() does not return the current state of the siren, do nothing here
+            pass
+
+    def is_on(self) -> Optional[bool]:
+        """Return the status of the switch."""
+        return self._state
+
+    async def async_turn_on(self, **kwargs):
+        """Turn the entity on."""
+        if not self._enabled:
+            return
+        _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
+        # siren sensor
+        if self._name == "siren":
+            await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, True)
+        self._state = True
+
+    async def async_turn_off(self, **kwargs):
+        """Turn the entity off."""
+        if not self._enabled:
+            return
+        _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
+        # siren sensor
+        if self._name == "siren":
+            await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, False)
+        self._state = False
+
+    async def async_toggle(self, **kwargs):
+        """Toggle the entity."""
+        if not self._enabled or not self._updated:
+            return
+        if self._state:
+            await self.async_turn_off()
+        else:
+            await self.async_turn_on()

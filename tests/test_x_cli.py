@@ -209,6 +209,45 @@ class TestCli:
             captured = capsys.readouterr()
             assert captured.out == ""
 
+    def test_get_siren(self, capsys):
+        """Test get siren: ok."""
+        with aioresponses() as mocked:
+            self.configure_responses_ok(mocked)
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "get_siren",
+                "device_id",
+                "siren",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "Activate siren (siren)" in captured.out
+
+    def test_set_siren(self, capsys):
+        """Test set siren: ok."""
+        with aioresponses() as mocked:
+            self.configure_responses_ok(mocked)
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "set_siren",
+                "device_id",
+                "siren",
+                "on",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "Activate siren (siren)" in captured.out
+
     def test_api_deviceBaseList(self, capsys):  # pylint: disable=invalid-name
         """Test api_deviceBaseList: ok."""
         with aioresponses() as mocked:

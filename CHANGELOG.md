@@ -1,10 +1,16 @@
 # Changelog
 
+## [1.0.7] (2022-11-20)
+### Added
+- `ImouSiren` class, `get_siren()` and `set_siren()` to cli
+### Removed
+- `siren` switch, now implemented as `ImouSiren`
+
 ## [1.0.6] (2022-11-19)
 ### Added
 - Attributes to `ImouEntity` class and `get_attributes()`
 - `motionDetection` binary sensor and `refreshAlarm` button
-## Removed
+### Removed
 - `lastAlarm` sensor
 
 ## [1.0.5] (2022-11-13)
@@ -15,7 +21,7 @@
 - Support for `press_button` to CLI
 - Support for `callbackUrl` sensor
 - `set_device()` function to `ImouEntity`
-## Changed
+### Changed
 - Reviewed switches' labels
 ### Fixed
 - Storage used sensor now reporting None when SD card is not present
@@ -25,7 +31,7 @@
 - `ImouSelect` class and support for `nightVisionMode` select
 - `get_select` and `set_select` commands to CLI
 - `pushNotifications` switch
-## Changed
+### Changed
 - Sensors (not only switches) are now added based on the available capabilities
 
 ## [1.0.3] (2022-10-22)
@@ -34,9 +40,9 @@
 - Support for undocumented capabilities or capabilities inherited from other capabilities
 - Support for `deviceOpenList`, `deviceOpenBaseDetailList`, `listDeviceAbility`, `deviceStorage`, `getNightVisionMode`, `setNightVisionMode`, `getMessageCallback`, `setMessageCallback` APIs through `async_api_deviceOpenList()`, `async_api_deviceOpenBaseDetailList()`, `async_api_listDeviceAbility()`, `async_api_deviceStorage()`, `async_api_getNightVisionMode()`, `async_api_setNightVisionMode()`, `async_api_getMessageCallback()`, `async_api_getMessageCallbackOn()`, `async_api_setMessageCallbackOff()`
 - `api_deviceBaseList`, `api_deviceOpenList`, `api_deviceBaseDetailList`, `api_deviceOpenDetailList`, `api_getDeviceCameraStatus`, `api_setDeviceCameraStatus`, `api_listDeviceAbility`, `api_getAlarmMessage`, `api_deviceStorage`, `api_getNightVisionMode`, `api_setNightVisionMode`, `api_getMessageCallback`, `api_getMessageCallbackOn`, `api_getMessageCallbackOff` commands to CLI
-## Changed
+### Changed
 - `async_api_getAlarmMessage()` now returning the last 10 alarms of the month, not just the last one
-## Removed
+### Removed
 - `get_device_class()` from `ImouSensor`
 
 ## [1.0.2] (2022-10-19)

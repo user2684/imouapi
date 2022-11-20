@@ -4,8 +4,8 @@ import re
 from typing import Any, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS
-from .device_entity import ImouBinarySensor, ImouButton, ImouEntity, ImouSelect, ImouSensor, ImouSwitch
+from .const import BINARY_SENSORS, BUTTONS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
+from .device_entity import ImouBinarySensor, ImouButton, ImouEntity, ImouSelect, ImouSensor, ImouSiren, ImouSwitch
 from .exceptions import InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -44,6 +44,7 @@ class ImouDevice:
             "binary_sensor": [],
             "select": [],
             "button": [],
+            "siren": [],
         }
 
         self._initialized = False
@@ -235,6 +236,16 @@ class ImouDevice:
                     "refreshAlarm",
                 )
             )
+            # add siren siren
+            if "Siren" in self._capabilities:
+                self._sensor_instances["siren"].append(
+                    ImouSiren(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "siren",
+                    )
+                )
         except Exception as exception:
             raise InvalidResponse(f" missing parameter or error parsing in {device_data}") from exception
         _LOGGER.debug("Retrieved device %s", self.to_string())
@@ -353,6 +364,19 @@ class ImouDevice:
             sensor["is_updated"] = sensor_instance.is_updated()
             sensor["attributes"] = sensor_instance.get_attributes()
             buttons.append(sensor)
+        # prepare sirens
+        sirens = []
+        for sensor_instance in self._sensor_instances["siren"]:
+            sensor = {}
+            sensor_name = sensor_instance.get_name()
+            description = f"{SIRENS[sensor_name]} ({sensor_name})" if sensor_name in SIRENS else sensor_name
+            sensor["name"] = sensor_name
+            sensor["description"] = description
+            sensor["state"] = sensor_instance.is_on()
+            sensor["is_enabled"] = sensor_instance.is_enabled()
+            sensor["is_updated"] = sensor_instance.is_updated()
+            sensor["attributes"] = sensor_instance.get_attributes()
+            sirens.append(sensor)
         # prepare data structure to return
         data: dict[str, Any] = {
             "api": {
@@ -376,6 +400,7 @@ class ImouDevice:
             "binary_sensors": binary_sensors,
             "selects": selects,
             "buttons": buttons,
+            "sirens": sirens,
         }
         return data
 
@@ -411,6 +436,9 @@ class ImouDevice:
         dump = dump + "    Buttons: \n"
         for button in data['buttons']:
             dump = dump + f"        - {button['description']} {button['attributes']}\n"
+        dump = dump + "    Sirens: \n"
+        for siren in data['sirens']:
+            dump = dump + f"        - {siren['description']}: {siren['state']} {siren['attributes']}\n"
         return dump
 
 

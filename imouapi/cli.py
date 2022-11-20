@@ -10,7 +10,7 @@ import aiohttp
 from .api import ImouAPIClient
 from .const import IMOU_CAPABILITIES, IMOU_SWITCHES
 from .device import ImouDevice, ImouDiscoverService
-from .device_entity import ImouBinarySensor, ImouButton, ImouSelect, ImouSensor, ImouSwitch
+from .device_entity import ImouBinarySensor, ImouButton, ImouSelect, ImouSensor, ImouSiren, ImouSwitch
 from .exceptions import ImouException
 
 
@@ -38,6 +38,8 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             "get_select",
             "set_select",
             "press_button",
+            "get_siren",
+            "set_siren",
             "get_diagnostics",
         ]:
             device_id = args[0]
@@ -109,6 +111,28 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                 set_select: ImouSelect = device.get_sensor_by_name(sensor_name)  # type: ignore
                 if set_select is not None:
                     await set_select.async_select_option(value)
+                else:
+                    print(f"sensor {sensor_name} not found")
+
+            elif command == "get_siren":
+                sensor_name = args[1]
+                print(f"- {device.get_name()}:")
+                get_siren: ImouSiren = device.get_sensor_by_name(sensor_name)
+                if get_siren is not None:
+                    print(f"  - {get_siren.get_description()} ({get_siren.get_name()}): {get_siren.is_on()}")
+                else:
+                    print(f"sensor {sensor_name} not found")
+
+            elif command == "set_siren":
+                sensor_name = args[1]
+                value = args[2].upper()
+                set_siren: ImouSwitch = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if set_siren is not None:
+                    if value == "ON":
+                        await set_siren.async_turn_on()
+                    elif value == "OFF":
+                        await set_siren.async_turn_off()
+                    await async_run_command("get_siren", api_client, [device_id, sensor_name])
                 else:
                     print(f"sensor {sensor_name} not found")
 
@@ -361,6 +385,18 @@ class ImouCli:
             else:
                 print("ERROR: provide device_id and sensor_name")
 
+        elif self.command == "get_siren":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id and sensor_name")
+
+        elif self.command == "set_siren":
+            if len(self.args) == 3:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, sensor_name and value")
+
         elif self.command == "get_diagnostics":
             if len(self.args) == 1:
                 asyncio.run(async_run_command(self.command, api_client, self.args))
@@ -486,6 +522,8 @@ class ImouCli:
         print("  get_select <device_id> <sensor_name>                                Get the state of a select sensor")
         print("  set_select <device_id> <sensor_name> <value>                        Set the state of a select sensor")
         print("  press_button <device_id> <sensor_name>                              Press a button")
+        print("  get_siren <device_id> <sensor_name>                                 Get the state of a siren sensor")
+        print("  set_siren <device_id> <sensor_name> <value>                        Set the state of a siren sensor")
         print(
             "  get_diagnostics <device_id>                                         Get diagnostics information of the device id"  # noqa: E501
         )

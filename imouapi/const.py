@@ -258,7 +258,6 @@ IMOU_SWITCHES = {
     "inll": "Indicator light linkage",
     "ledsw": "Fill light",
     "pushNotifications": "Push notifications",
-    "siren": "Activate siren",
 }
 
 # sensors supported by this library
@@ -283,4 +282,9 @@ BUTTONS = {
     "restartDevice": "Restart device",
     "refreshData": "Refresh all data",
     "refreshAlarm": "Refresh alarm",
+}
+
+# sirens supported by this library
+SIRENS = {
+    "siren": "Activate siren",
 }

@@ -197,3 +197,26 @@ class TestDevice:
             button = device.get_sensor_by_name("restartDevice")
             self.loop.run_until_complete(button.async_press())
             assert True is True
+
+    def test_siren_ok(self):
+        """Test siren: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "deviceBaseDetailList", "deviceBaseDetailList_ok")
+            device = ImouDevice(self.api_client, "8L0DF93PAZ55FD2")
+            self.loop.run_until_complete(device.async_initialize())
+            self.config_mock(mocked, "deviceOnline", "deviceOnline_ok", repeat=True)
+            self.config_mock(mocked, "getAlarmMessage", "getAlarmMessage_ok")
+            self.config_mock(mocked, "getDeviceCameraStatus", "getDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "setDeviceCameraStatus", "setDeviceCameraStatus_ok", repeat=True)
+            self.config_mock(mocked, "deviceStorage", "deviceStorage_ok")
+            self.config_mock(mocked, "getNightVisionMode", "getNightVisionMode_ok")
+            self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
+            self.config_mock(mocked, "restartDevice", "restartDevice_ok")
+            self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
+            self.loop.run_until_complete(device.async_get_data())
+            siren = device.get_sensor_by_name("siren")
+            self.loop.run_until_complete(siren.async_turn_on())
+            assert siren.is_on() is True
+            self.loop.run_until_complete(siren.async_turn_off())
+            assert siren.is_on() is False
