@@ -1259,7 +1259,35 @@
 <span class="normal">411</span>
 <span class="normal">412</span>
 <span class="normal">413</span>
-<span class="normal">414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDevice</span><span class="p">:</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDevice</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A representation of an IMOU Device.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1292,6 +1320,7 @@
             <span class="s2">&quot;binary_sensor&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;select&quot;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s2">&quot;button&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;siren&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1483,6 +1512,16 @@
                     <span class="s2">&quot;refreshAlarm&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
+            <span class="c1"># add siren siren</span>
+            <span class="k">if</span> <span class="s2">&quot;Siren&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;siren&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">ImouSiren</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                        <span class="s2">&quot;siren&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; missing parameter or error parsing in </span><span class="si">{</span><span class="n">device_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieved device </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
@@ -1601,6 +1640,19 @@
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
             <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
             <span class="n">buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
+        <span class="c1"># prepare sirens</span>
+        <span class="n">sirens</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sensor_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;siren&quot;</span><span class="p">]:</span>
+            <span class="n">sensor</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">SIRENS</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">sensor_name</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">sensor_name</span> <span class="ow">in</span> <span class="n">SIRENS</span> <span class="k">else</span> <span class="n">sensor_name</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_name</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+            <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
+            <span class="n">sirens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
         <span class="c1"># prepare data structure to return</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;api&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1624,6 +1676,7 @@
             <span class="s2">&quot;binary_sensors&quot;</span><span class="p">:</span> <span class="n">binary_sensors</span><span class="p">,</span>
             <span class="s2">&quot;selects&quot;</span><span class="p">:</span> <span class="n">selects</span><span class="p">,</span>
             <span class="s2">&quot;buttons&quot;</span><span class="p">:</span> <span class="n">buttons</span><span class="p">,</span>
+            <span class="s2">&quot;sirens&quot;</span><span class="p">:</span> <span class="n">sirens</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">data</span>
 
@@ -1659,6 +1712,9 @@
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Buttons: </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;buttons&#39;</span><span class="p">]:</span>
             <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Sirens: </span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">siren</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sirens&#39;</span><span class="p">]:</span>
+            <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">dump</span>
 </code></pre></div></td></tr></table></div>
         </details>
@@ -1758,7 +1814,8 @@
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">,</span>
     <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1788,6 +1845,7 @@
         <span class="s2">&quot;binary_sensor&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s2">&quot;select&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s2">&quot;button&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;siren&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="p">}</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1818,18 +1876,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
@@ -1841,7 +1888,18 @@
 <span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span>
-<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Update device properties and its sensors.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -1891,8 +1949,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -2014,7 +2071,18 @@
 <span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
-<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the instance by retrieving the device details and associated sensors.&quot;&quot;&quot;</span>
     <span class="c1"># get the details for this device from the API</span>
     <span class="n">device_array</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="o">.</span><span class="n">async_api_deviceBaseDetailList</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">])</span>
@@ -2132,6 +2200,16 @@
                 <span class="s2">&quot;refreshAlarm&quot;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
+        <span class="c1"># add siren siren</span>
+        <span class="k">if</span> <span class="s2">&quot;Siren&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_capabilities</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;siren&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ImouSiren</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_api_client</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+                    <span class="s2">&quot;siren&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; missing parameter or error parsing in </span><span class="si">{</span><span class="n">device_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exception</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieved device </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
@@ -2160,39 +2238,42 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span>
-<span class="normal">390</span>
-<span class="normal">391</span>
-<span class="normal">392</span>
-<span class="normal">393</span>
-<span class="normal">394</span>
-<span class="normal">395</span>
-<span class="normal">396</span>
-<span class="normal">397</span>
-<span class="normal">398</span>
-<span class="normal">399</span>
-<span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">407</span>
 <span class="normal">408</span>
 <span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
 <span class="normal">413</span>
-<span class="normal">414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the full description of the object and its attributes.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_diagnostics</span><span class="p">()</span>
     <span class="n">dump</span> <span class="o">=</span> <span class="p">(</span>
@@ -2224,6 +2305,9 @@
     <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Buttons: </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;buttons&#39;</span><span class="p">]:</span>
         <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">button</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="s2">&quot;    Sirens: </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">siren</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sirens&#39;</span><span class="p">]:</span>
+        <span class="n">dump</span> <span class="o">=</span> <span class="n">dump</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;        - </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">siren</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">dump</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -2247,8 +2331,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
-<span class="normal">83</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
@@ -2256,7 +2339,8 @@
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_all_sensors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImouEntity</span><span class="p">]:</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_all_sensors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImouEntity</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Get all the sensor instances.&quot;&quot;&quot;</span>
     <span class="n">sensors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="p">(</span>
@@ -2288,9 +2372,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get device id.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span>
 </code></pre></div></td></tr></table></div>
@@ -2315,18 +2399,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">285</span>
 <span class="normal">286</span>
 <span class="normal">287</span>
 <span class="normal">288</span>
@@ -2421,7 +2494,32 @@
 <span class="normal">377</span>
 <span class="normal">378</span>
 <span class="normal">379</span>
-<span class="normal">380</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return diagnostics for the device.&quot;&quot;&quot;</span>
     <span class="n">online</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_online</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span>
     <span class="c1"># prepare capabilities</span>
@@ -2503,6 +2601,19 @@
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
         <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
         <span class="n">buttons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
+    <span class="c1"># prepare sirens</span>
+    <span class="n">sirens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sensor_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">[</span><span class="s2">&quot;siren&quot;</span><span class="p">]:</span>
+        <span class="n">sensor</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">SIRENS</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">sensor_name</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">sensor_name</span> <span class="ow">in</span> <span class="n">SIRENS</span> <span class="k">else</span> <span class="n">sensor_name</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_name</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_on</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;is_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">is_updated</span><span class="p">()</span>
+        <span class="n">sensor</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensor_instance</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
+        <span class="n">sirens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
     <span class="c1"># prepare data structure to return</span>
     <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;api&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -2526,6 +2637,7 @@
         <span class="s2">&quot;binary_sensors&quot;</span><span class="p">:</span> <span class="n">binary_sensors</span><span class="p">,</span>
         <span class="s2">&quot;selects&quot;</span><span class="p">:</span> <span class="n">selects</span><span class="p">,</span>
         <span class="s2">&quot;buttons&quot;</span><span class="p">:</span> <span class="n">buttons</span><span class="p">,</span>
+        <span class="s2">&quot;sirens&quot;</span><span class="p">:</span> <span class="n">sirens</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">data</span>
 </code></pre></div></td></tr></table></div>
@@ -2550,9 +2662,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get firmware.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_firmware</span>
 </code></pre></div></td></tr></table></div>
@@ -2577,9 +2689,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_manufacturer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_manufacturer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get manufacturer.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manufacturer</span>
 </code></pre></div></td></tr></table></div>
@@ -2604,9 +2716,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get model.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_model</span>
 </code></pre></div></td></tr></table></div>
@@ -2631,11 +2743,11 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get device name.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_given_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_given_name</span>
@@ -2662,8 +2774,7 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -2673,7 +2784,8 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_sensor_by_name</span><span class="p">(</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_sensor_by_name</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ImouSensor</span><span class="p">,</span> <span class="n">ImouBinarySensor</span><span class="p">,</span> <span class="n">ImouSwitch</span><span class="p">,</span> <span class="n">ImouSelect</span><span class="p">,</span> <span class="n">ImouButton</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Get sensor instance with a given name.&quot;&quot;&quot;</span>
@@ -2707,11 +2819,11 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">93</span>
-<span class="normal">94</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_sensors_by_platform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">platform</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImouEntity</span><span class="p">]:</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_sensors_by_platform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">platform</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImouEntity</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Get sensor instances associated to a given platform.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">platform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_instances</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
@@ -2738,9 +2850,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Is enabled.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span>
 </code></pre></div></td></tr></table></div>
@@ -2765,9 +2877,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_online</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_online</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get online.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_online</span>
 </code></pre></div></td></tr></table></div>
@@ -2792,9 +2904,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set enable.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span> <span class="o">=</span> <span class="n">value</span>
 </code></pre></div></td></tr></table></div>
@@ -2819,9 +2931,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set device name.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_given_name</span> <span class="o">=</span> <span class="n">given_name</span>
 </code></pre></div></td></tr></table></div>
@@ -2846,9 +2958,9 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the object as a string.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_model</span><span class="si">}</span><span class="s2">, serial </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="si">}</span><span class="s2">)&quot;</span>
 </code></pre></div></td></tr></table></div>
@@ -2884,36 +2996,36 @@
 
         <details class="quote">
           <summary>Source code in <code>imouapi/device.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDiscoverService</span><span class="p">:</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouDiscoverService</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for discovering IMOU devices.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -2998,14 +3110,14 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize the instance.</span>
 
@@ -3039,24 +3151,24 @@
 
       <details class="quote">
         <summary>Source code in <code>imouapi/device.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_discover_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_discover_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Discover registered devices and return a dict device name -&gt; device object.&quot;&quot;&quot;</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting discovery&quot;</span><span class="p">)</span>
     <span class="c1"># get the list of devices</span>

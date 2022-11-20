@@ -597,6 +597,61 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren" class="md-nav__link">
+    ImouSiren
+  </a>
+  
+    <nav class="md-nav" aria-label="ImouSiren">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_toggle" class="md-nav__link">
+    async_toggle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_turn_off" class="md-nav__link">
+    async_turn_off()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_turn_on" class="md-nav__link">
+    async_turn_on()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_update" class="md-nav__link">
+    async_update()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.is_on" class="md-nav__link">
+    is_on()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#imouapi.device_entity.ImouSwitch" class="md-nav__link">
     ImouSwitch
   </a>
@@ -979,6 +1034,61 @@
           <li class="md-nav__item">
   <a href="#imouapi.device_entity.ImouSensor.get_state" class="md-nav__link">
     get_state()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren" class="md-nav__link">
+    ImouSiren
+  </a>
+  
+    <nav class="md-nav" aria-label="ImouSiren">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_toggle" class="md-nav__link">
+    async_toggle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_turn_off" class="md-nav__link">
+    async_turn_off()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_turn_on" class="md-nav__link">
+    async_turn_on()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.async_update" class="md-nav__link">
+    async_update()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouSiren.is_on" class="md-nav__link">
+    is_on()
   </a>
   
 </li>
@@ -3141,6 +3251,481 @@
 <span class="normal">134</span>
 <span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return the state.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="imouapi.device_entity.ImouSiren" class="doc doc-heading">
+        <code>ImouSiren</code>
+
+
+<a href="#imouapi.device_entity.ImouSiren" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="imouapi.device_entity.ImouEntity" href="#imouapi.device_entity.ImouEntity">ImouEntity</a></code></p>
+
+  
+      <p>A representation of a siren within an IMOU Device.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouSiren</span><span class="p">(</span><span class="n">ImouEntity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A representation of a siren within an IMOU Device.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">,</span>
+        <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">sensor_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the instance.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            api_client: an instance ofthe API client</span>
+<span class="sd">            device_id: the device id</span>
+<span class="sd">            device_name: the device name</span>
+<span class="sd">            sensor_type: the sensor type (from the SIRENS constant)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">,</span> <span class="n">SIRENS</span><span class="p">[</span><span class="n">sensor_type</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the entity.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># siren sensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+            <span class="c1"># async_api_getDeviceCameraStatus() does not return the current state of the siren, do nothing here</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">is_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the status of the switch.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_turn_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Turn the entity on.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> requested to turn ON (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># siren sensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_setDeviceCameraStatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_turn_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Turn the entity off.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> requested to turn OFF (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># siren sensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_setDeviceCameraStatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Toggle the entity.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updated</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_turn_off</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_turn_on</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">)</span></code>
+
+<a href="#imouapi.device_entity.ImouSiren.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Initialize the instance.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>api_client</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="imouapi.api.ImouAPIClient" href="../api/#imouapi.api.ImouAPIClient">ImouAPIClient</a></code>
+          </td>
+          <td><p>an instance ofthe API client</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the device id</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the device name</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>sensor_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the sensor type (from the SIRENS constant)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">,</span>
+    <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sensor_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the instance.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        api_client: an instance ofthe API client</span>
+<span class="sd">        device_id: the device id</span>
+<span class="sd">        device_name: the device name</span>
+<span class="sd">        sensor_type: the sensor type (from the SIRENS constant)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">,</span> <span class="n">SIRENS</span><span class="p">[</span><span class="n">sensor_type</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.async_toggle" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_toggle</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouSiren.async_toggle" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Toggle the entity.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Toggle the entity.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_updated</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_turn_off</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_turn_on</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.async_turn_off" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_turn_off</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouSiren.async_turn_off" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Turn the entity off.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_turn_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Turn the entity off.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> requested to turn OFF (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># siren sensor</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_setDeviceCameraStatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.async_turn_on" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_turn_on</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouSiren.async_turn_on" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Turn the entity on.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_turn_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Turn the entity on.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] </span><span class="si">%s</span><span class="s2"> requested to turn ON (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># siren sensor</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_setDeviceCameraStatus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.async_update" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouSiren.async_update" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Update the entity.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the entity.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="c1"># siren sensor</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="s2">&quot;siren&quot;</span><span class="p">:</span>
+        <span class="c1"># async_api_getDeviceCameraStatus() does not return the current state of the siren, do nothing here</span>
+        <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouSiren.is_on" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">is_on</span><span class="p">()</span></code>
+
+<a href="#imouapi.device_entity.ImouSiren.is_on" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the status of the switch.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Return the status of the switch.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
 </code></pre></div></td></tr></table></div>
       </details>
