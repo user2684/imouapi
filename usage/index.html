@@ -534,47 +534,18 @@
 <p>An abstraction over the API has been built to provide representations of devices and sensors:</p>
 <ul>
 <li><code>imouapi.device</code> provides <code>ImouDevice</code> to represent an Imou devices and all its sensors and <code>ImouDiscoverService</code> which can be used to discover devices registered with the account</li>
-<li>
-<p><code>imouapi.device_entity</code> provides <code>ImouSensor</code>, <code>ImouBinarySensor</code> and <code>ImouSwitch</code>, representing the sensors attached to the device. Upon loading, the library is capable of enumerating available capabilities of the device and instantiate only the switches that the device suports. The API of course allows to eventually control those switches.</p>
-<ul>
-<li>Supported switches: all the switches supported by the remote device</li>
-<li>Supported sensor: "lastAlarm"</li>
-<li>Supported binary_sensor: "online"</li>
-</ul>
-</li>
+<li><code>imouapi.device_entity</code> provides <code>ImouSensor</code>, <code>ImouBinarySensor</code> , <code>ImouSwitch</code> , etc. representing the sensors attached to the device. Upon loading, the library is capable of enumerating available capabilities of the device and instantiate only the switches that the device suports. The API of course allows to eventually control those switches.</li>
 </ul>
 <p>Examples on how to interact with ImouDevice and ImouDiscoverService are provided in the CLI implementation.</p>
 <h4 id="option-2-low-level-api">Option 2: low-level API<a class="headerlink" href="#option-2-low-level-api" title="Permanent link">&para;</a></h4>
 <p>With <code>from imouapi.api import ImouAPIClient</code> and calling the provided methods for connecting and calling API endpoints.
-The following Imou API are supported:</p>
-<ul>
-<li>deviceBaseList</li>
-<li>deviceBaseDetailList</li>
-<li>deviceOnline</li>
-<li>getDeviceCameraStatus</li>
-<li>setDeviceCameraStatus</li>
-<li>getAlarmMessage</li>
-</ul>
-<p>Examples on how to interact with ImouAPIClient is provided in the high-level API implementation.</p>
+Details on the supported APIs are provided in each module's documentation.
+Examples on how to interact with ImouAPIClient is provided in the high-level API implementation.</p>
 <h4 id="option-3-cli">Option 3: CLI<a class="headerlink" href="#option-3-cli" title="Permanent link">&para;</a></h4>
-<p>A command line interface is provided for testing and troubleshooting purposes.</p>
-<div class="highlight"><pre><span></span><code>Usage: python -m imouapi.cli [OPTIONS] COMMAND &lt;ARGUMENTS&gt;
-
-Options:
-  --app-id &lt;app_id&gt;                                      Imou Cloud App ID (mandatory)
-  --app-secret &lt;app_secret&gt;                              Imou Cloud App Secret (mandatory)
-  --logging &lt;info|debug&gt;                                 The logging level
-  --base-url &lt;base_url&gt;                                  Set a custom base url for the API
-  --timeout &lt;timeout&gt;                                    Set a custom timeout for API calls
-
-Commmands:
-  discover                                               Discover registered devices
-  get_device &lt;device_id&gt;                                 Get the details of the device id provided
-  get_sensor &lt;device_id&gt; &lt;sensor_name&gt;                   Get the state of a sensor
-  get_binary_sensor &lt;device_id&gt; &lt;sensor_name&gt;            Get the state of a binary sensor
-  get_switch &lt;device_id&gt; &lt;sensor_name&gt;                   Get the state of a switch
-  set_switch &lt;device_id&gt; &lt;sensor_name&gt; [on|off|toggle]   Set the state of a switch
-</code></pre></div>
+<p>A command line interface is provided for testing and troubleshooting purposes.
+To get a list of supported commands and options run the following:
+<div class="highlight"><pre><span></span><code>python -m imouapi.cli --help
+</code></pre></div></p>
 <h3 id="exception-handling">Exception Handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h3>
 <p>The library provides a simplified way for handling exceptions:
 <div class="highlight"><pre><span></span><code>from imouapi.exceptions import ImouException

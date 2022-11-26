@@ -432,6 +432,47 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera" class="md-nav__link">
+    ImouCamera
+  </a>
+  
+    <nav class="md-nav" aria-label="ImouCamera">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_service_ptz_location" class="md-nav__link">
+    async_service_ptz_location()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_service_ptz_move" class="md-nav__link">
+    async_service_ptz_move()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_update" class="md-nav__link">
+    async_update()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#imouapi.device_entity.ImouEntity" class="md-nav__link">
     ImouEntity
   </a>
@@ -868,6 +909,47 @@
         
           <li class="md-nav__item">
   <a href="#imouapi.device_entity.ImouButton.async_update" class="md-nav__link">
+    async_update()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera" class="md-nav__link">
+    ImouCamera
+  </a>
+  
+    <nav class="md-nav" aria-label="ImouCamera">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_service_ptz_location" class="md-nav__link">
+    async_service_ptz_location()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_service_ptz_move" class="md-nav__link">
+    async_service_ptz_move()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.device_entity.ImouCamera.async_update" class="md-nav__link">
     async_update()
   </a>
   
@@ -1962,6 +2044,411 @@
 
 
 
+<h2 id="imouapi.device_entity.ImouCamera" class="doc doc-heading">
+        <code>ImouCamera</code>
+
+
+<a href="#imouapi.device_entity.ImouCamera" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="imouapi.device_entity.ImouEntity" href="#imouapi.device_entity.ImouEntity">ImouEntity</a></code></p>
+
+  
+      <p>A representation of a camera within an IMOU Device.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouCamera</span><span class="p">(</span><span class="n">ImouEntity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A representation of a camera within an IMOU Device.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">,</span>
+        <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">sensor_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the instance.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            api_client: an instance ofthe API client</span>
+<span class="sd">            device_id: the device id</span>
+<span class="sd">            device_name: the device name</span>
+<span class="sd">            sensor_type: the sensor type (from the CAMERAS constant)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">,</span> <span class="n">CAMERAS</span><span class="p">[</span><span class="n">sensor_type</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the entity.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_service_ptz_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">horizontal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">vertical</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Perform PTZ location action.&quot;&quot;&quot;</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] invoked PTZ location action horizontal:</span><span class="si">%f</span><span class="s2">, vertical:</span><span class="si">%f</span><span class="s2">, zoom:</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span>
+            <span class="n">horizontal</span><span class="p">,</span>
+            <span class="n">vertical</span><span class="p">,</span>
+            <span class="n">zoom</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_controlLocationPTZ</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+            <span class="n">horizontal</span><span class="p">,</span>
+            <span class="n">vertical</span><span class="p">,</span>
+            <span class="n">zoom</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_service_ptz_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Perform PTZ move action.&quot;&quot;&quot;</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] invoked PTZ move action. operation:</span><span class="si">%s</span><span class="s2">, duration:</span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span>
+            <span class="n">operation</span><span class="p">,</span>
+            <span class="n">duration</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_controlMovePTZ</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+            <span class="n">operation</span><span class="p">,</span>
+            <span class="n">duration</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouCamera.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">)</span></code>
+
+<a href="#imouapi.device_entity.ImouCamera.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Initialize the instance.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>api_client</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="imouapi.api.ImouAPIClient" href="../api/#imouapi.api.ImouAPIClient">ImouAPIClient</a></code>
+          </td>
+          <td><p>an instance ofthe API client</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the device id</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>device_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the device name</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>sensor_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the sensor type (from the CAMERAS constant)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">api_client</span><span class="p">:</span> <span class="n">ImouAPIClient</span><span class="p">,</span>
+    <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sensor_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the instance.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        api_client: an instance ofthe API client</span>
+<span class="sd">        device_id: the device id</span>
+<span class="sd">        device_name: the device name</span>
+<span class="sd">        sensor_type: the sensor type (from the CAMERAS constant)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_client</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">sensor_type</span><span class="p">,</span> <span class="n">CAMERAS</span><span class="p">[</span><span class="n">sensor_type</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouCamera.async_service_ptz_location" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_service_ptz_location</span><span class="p">(</span><span class="n">horizontal</span><span class="p">,</span> <span class="n">vertical</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouCamera.async_service_ptz_location" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Perform PTZ location action.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_service_ptz_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">horizontal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">vertical</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Perform PTZ location action.&quot;&quot;&quot;</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] invoked PTZ location action horizontal:</span><span class="si">%f</span><span class="s2">, vertical:</span><span class="si">%f</span><span class="s2">, zoom:</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span>
+        <span class="n">horizontal</span><span class="p">,</span>
+        <span class="n">vertical</span><span class="p">,</span>
+        <span class="n">zoom</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_controlLocationPTZ</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+        <span class="n">horizontal</span><span class="p">,</span>
+        <span class="n">vertical</span><span class="p">,</span>
+        <span class="n">zoom</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouCamera.async_service_ptz_move" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_service_ptz_move</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouCamera.async_service_ptz_move" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Perform PTZ move action.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_service_ptz_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Perform PTZ move action.&quot;&quot;&quot;</span>
+    <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] invoked PTZ move action. operation:</span><span class="si">%s</span><span class="s2">, duration:</span><span class="si">%i</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device_name</span><span class="p">,</span>
+        <span class="n">operation</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_client</span><span class="o">.</span><span class="n">async_api_controlMovePTZ</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+        <span class="n">operation</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.device_entity.ImouCamera.async_update" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.device_entity.ImouCamera.async_update" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Update the entity.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/device_entity.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the entity.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
+        <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
 <h2 id="imouapi.device_entity.ImouEntity" class="doc doc-heading">
         <code>ImouEntity</code>
 
@@ -2172,8 +2659,8 @@
 <code class="highlight language-python"><span class="n">async_update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
       <small class="doc doc-label doc-label-async"><code>async</code></small>
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
   </span>
 
 <a href="#imouapi.device_entity.ImouEntity.async_update" class="headerlink" title="Permanent link">&para;</a></h3>
