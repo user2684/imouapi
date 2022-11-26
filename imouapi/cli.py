@@ -241,6 +241,26 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             data = await api_client.async_api_deviceSdcardStatus(device_id)
             print(json.dumps(data, indent=4))
 
+        elif command == "api_devicePTZInfo":
+            device_id = args[0]
+            data = await api_client.async_api_devicePTZInfo(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_controlLocationPTZ":
+            device_id = args[0]
+            horizontal = float(args[1])
+            vertical = float(args[2])
+            zoom = float(args[3])
+            data = await api_client.async_api_controlLocationPTZ(device_id, horizontal, vertical, zoom)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_controlMovePTZ":
+            device_id = args[0]
+            operation = args[1]
+            duration = int(args[2])
+            data = await api_client.async_api_controlMovePTZ(device_id, operation, duration)
+            print(json.dumps(data, indent=4))
+
         else:
             print("invalid command provided")
 
@@ -487,6 +507,24 @@ class ImouCli:
             else:
                 print("ERROR: provide device_id")
 
+        elif self.command == "api_devicePTZInfo":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_controlLocationPTZ":
+            if len(self.args) == 4:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, h, v ,z")
+
+        elif self.command == "api_controlMovePTZ":
+            if len(self.args) == 3:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, operation, duration")
+
         else:
             self.print_usage()
 
@@ -572,6 +610,13 @@ class ImouCli:
         print("  api_restartDevice <device_id>                                       Restart the device")
         print(
             "  api_deviceSdcardStatus <device_id>                                  Get the SD card status of the device"
+        )
+        print("  api_devicePTZInfo <device_id>                                       Get current PTZ position")
+        print(
+            "  api_controlLocationPTZ <device_id> <h> <v> <z>                      Move to the h: horizontal, v: vertical location with z: zoom "  # noqa: E501
+        )
+        print(
+            "  api_controlMovePTZ <device_id> <operation> <duration>               Move by performing the PTZ_OPERATIONS for the duration provided"  # noqa: E501
         )
 
 

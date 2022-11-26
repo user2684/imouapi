@@ -551,3 +551,65 @@ class TestCli:
             self.cli.run_command()
             captured = capsys.readouterr()
             assert "normal" in captured.out
+
+    def test_api_devicePTZInfo(self, capsys):  # pylint: disable=invalid-name
+        """Test api_devicePTZInfos: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "devicePTZInfo", "devicePTZInfo_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_devicePTZInfo",
+                "device_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "0.9" in captured.out
+
+    def test_api_controlLocationPTZ(self, capsys):  # pylint: disable=invalid-name
+        """Test api_controlLocationPTZ: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "controlLocationPTZ", "controlLocationPTZ_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_controlLocationPTZ",
+                "device_id",
+                "0",
+                "0",
+                "0",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "{}" in captured.out
+
+    def test_api_controlMovePTZ(self, capsys):  # pylint: disable=invalid-name
+        """Test api_controlMovePTZ: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "controlMovePTZ", "controlMovePTZ_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_controlMovePTZ",
+                "device_id",
+                "up",
+                "1000",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "{}" in captured.out

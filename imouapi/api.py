@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 from aiohttp import ClientSession
 
-from .const import API_URL, DEFAULT_TIMEOUT, MAX_RETRIES
+from .const import API_URL, DEFAULT_TIMEOUT, MAX_RETRIES, PTZ_OPERATIONS
 from .exceptions import (
     APIError,
     ConnectionFailed,
@@ -450,13 +450,74 @@ class ImouAPIClient:
         return await self._async_call_api(api, payload)
 
     async def async_api_deviceSdcardStatus(self, device_id: str) -> dict:  # pylint: disable=invalid-name
-        """Get the SD card status of the device.. \
+        """Get the SD card status of the device. \
             (https://open.imoulife.com/book/en/http/device/config/storage/deviceSdcardStatus.html)."""
         # define the api endpoint
         api = "deviceSdcardStatus"
         # prepare the payload
         payload = {
             "deviceId": device_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_devicePTZInfo(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Get the current PTZ position information of the device. \
+            (https://open.imoulife.com/book/en/http/device/operate/devicePTZInfo.html)."""
+        # define the api endpoint
+        api = "devicePTZInfo"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_controlLocationPTZ(  # pylint: disable=invalid-name
+        self, device_id: str, h: float, v: float, z: float
+    ) -> dict:
+        """PTZ positioning interface. \
+            (https://open.imoulife.com/book/en/http/device/operate/controlLocationPTZ.html)."""
+        # define the api endpoint
+        api = "controlLocationPTZ"
+        # prepare the payload
+        try:
+            h = float(h)
+            v = float(v)
+            z = float(z)
+        except Exception as exception:
+            raise APIError(f"cannot convert to float h:{h}, v:{v}, z:{z}") from exception
+        if (h < -1 or h > 1) or (v < -1 or v > 1):
+            raise APIError(f"h and v must be [-1;1]: h:{h}, v:{v}")
+        if z < 0 or z > 1:
+            raise APIError(f"z must be [0;1]: z: {z}")
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+            "h": h,
+            "v": v,
+            "z": z,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_controlMovePTZ(  # pylint: disable=invalid-name
+        self, device_id: str, operation: str, duration: int
+    ) -> dict:
+        """PTZ movement control interface. \
+            (https://open.imoulife.com/book/en/http/device/operate/controlMovePTZ.html)."""
+        # define the api endpoint
+        api = "controlMovePTZ"
+        # prepare the payload
+        operation = operation.upper()
+        if operation not in PTZ_OPERATIONS:
+            raise APIError(f"operation must one of {PTZ_OPERATIONS.keys()}")
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+            "operation": str(PTZ_OPERATIONS[operation]),
+            "duration": str(duration),
         }
         # call the api
         return await self._async_call_api(api, payload)

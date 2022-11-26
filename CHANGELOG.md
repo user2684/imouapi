@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.8] (2022-11-26)
+### Added
+- Support for `devicePTZInfo`, `controlLocationPTZ`, `controlMovePTZ` Imou APIs through  ``async_api_devicePTZInfo()`, `async_api_controlLocationPTZ()`, `async_api_controlMovePTZ()` and CLI commands
+
 ## [1.0.7] (2022-11-20)
 ### Added
 - `ImouSiren` class, `get_siren()` and `set_siren()` to cli

@@ -9,6 +9,21 @@ DEFAULT_TIMEOUT = 10
 # max api retries
 MAX_RETRIES = 3
 
+# PTZ operation mapping
+PTZ_OPERATIONS = {
+    "UP": 0,
+    "DOWN": 1,
+    "LEFT": 2,
+    "RIGHT": 3,
+    "UPPER_LEFT": 4,
+    "BOTTOM_LEFT": 5,
+    "UPPER_RIGHT": 6,
+    "BOTTOM_RIGHT": 7,
+    "ZOOM_IN": 8,
+    "ZOOM_OUT": 9,
+    "STOP": 10,
+}
+
 # Imou capabilities and their description (https://open.imoulife.com/book/en/faq/ability.html)
 IMOU_CAPABILITIES = {
     "WLAN": "Support access to wireless local area network",

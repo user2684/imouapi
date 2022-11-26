@@ -404,4 +404,26 @@ MOCK_RESPONSES = {
         },
         "id": "28",
     },
+    "devicePTZInfo_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+            "data": {"h": "0.9", "v": "0.2", "z": "0.0"},
+        },
+        "id": "d5c287b4-5b2f-4f03-baf5-8032c5c354af",
+    },
+    "controlLocationPTZ_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+        },
+        "id": "d5c287b4-5b2f-4f03-baf5-8032c5c354af",
+    },
+    "controlMovePTZ_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+        },
+        "id": "d5c287b4-5b2f-4f03-baf5-8032c5c354af",
+    },
 }

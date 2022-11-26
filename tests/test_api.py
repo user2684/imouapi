@@ -252,3 +252,27 @@ class TestApiClient:
             self.config_mock(mocked, "deviceSdcardStatus", "deviceSdcardStatus_ok")
             data = self.loop.run_until_complete(self.api_client.async_api_deviceSdcardStatus("device_id"))
             assert data["status"] == "normal"
+
+    def test_devicePTZInfo_ok(self):  # pylint: disable=invalid-name
+        """Test devicePTZInfo: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "devicePTZInfo", "devicePTZInfo_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_devicePTZInfo("device_id"))
+            assert data["h"] == "0.9"
+
+    def test_controlLocationPTZ_ok(self):  # pylint: disable=invalid-name
+        """Test controlLocationPTZ: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "controlLocationPTZ", "controlLocationPTZ_ok")
+            self.loop.run_until_complete(self.api_client.async_api_controlLocationPTZ("device_id", "0", "0", "0"))
+            assert True is True
+
+    def test_controlMovePTZ_ok(self):  # pylint: disable=invalid-name
+        """Test controlMovePTZ: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "controlMovePTZ", "controlMovePTZ_ok")
+            self.loop.run_until_complete(self.api_client.async_api_controlMovePTZ("device_id", "up", "1000"))
+            assert True is True
