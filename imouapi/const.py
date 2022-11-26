@@ -303,3 +303,8 @@ BUTTONS = {
 SIRENS = {
     "siren": "Activate siren",
 }
+
+# cameras supported by this library
+CAMERAS = {
+    "camera": "Camera",
+}

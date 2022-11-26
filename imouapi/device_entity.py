@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
+from .const import BINARY_SENSORS, BUTTONS, CAMERAS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
 from .exceptions import APIError, InvalidResponse
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -462,3 +462,61 @@ class ImouSiren(ImouEntity):
             await self.async_turn_off()
         else:
             await self.async_turn_on()
+
+
+class ImouCamera(ImouEntity):
+    """A representation of a camera within an IMOU Device."""
+
+    def __init__(
+        self,
+        api_client: ImouAPIClient,
+        device_id: str,
+        device_name: str,
+        sensor_type: str,
+    ) -> None:
+        """
+        Initialize the instance.
+
+        Parameters:
+            api_client: an instance ofthe API client
+            device_id: the device id
+            device_name: the device name
+            sensor_type: the sensor type (from the CAMERAS constant)
+        """
+        super().__init__(api_client, device_id, device_name, sensor_type, CAMERAS[sensor_type])
+        self._state = False
+
+    async def async_update(self, **kwargs):
+        """Update the entity."""
+        if not self._enabled:
+            return
+
+    async def async_service_ptz_location(self, horizontal: float, vertical: float, zoom: float) -> dict:
+        """Perform PTZ location action."""
+        _LOGGER.debug(
+            "[%s] invoked PTZ location action horizontal:%f, vertical:%f, zoom:%f",
+            self._device_name,
+            horizontal,
+            vertical,
+            zoom,
+        )
+        return await self.api_client.async_api_controlLocationPTZ(
+            self._device_id,
+            horizontal,
+            vertical,
+            zoom,
+        )
+
+    async def async_service_ptz_move(self, operation: str, duration: int) -> dict:
+        """Perform PTZ move action."""
+        _LOGGER.debug(
+            "[%s] invoked PTZ move action. operation:%s, duration:%i",
+            self._device_name,
+            operation,
+            duration,
+        )
+        return await self.api_client.async_api_controlMovePTZ(
+            self._device_id,
+            operation,
+            duration,
+        )

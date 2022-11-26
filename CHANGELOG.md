@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.9] (2022-11-26)
+### Added
+- `ImouCamera` class exposing `async_service_ptz_location()` and `async_service_ptz_move()`
+### Changed
+- Usage page of the documentation
+
 ## [1.0.8] (2022-11-26)
 ### Added
 - Support for `devicePTZInfo`, `controlLocationPTZ`, `controlMovePTZ` Imou APIs through  ``async_api_devicePTZInfo()`, `async_api_controlLocationPTZ()`, `async_api_controlMovePTZ()` and CLI commands
