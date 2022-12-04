@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.10] (2022-12-03)
+### Added
+- Support for `setDeviceSnapEnhanced`, `bindDeviceLive`, `queryLiveStatus`, `liveList`, `unbindLive` Imou APIs through  ``async_api_setDeviceSnapEnhanced()`, `async_api_bindDeviceLive()`, `async_api_getLiveStreamInfo()`, `async_apiliveList()`, `async_api_unbindLive()` and CLI commands
+- `async_get_image()` and `async_get_stream_url()` to `ImouCamera` class and CLI commands `get_camera_image` and `get_camera_stream`
+
 ## [1.0.9] (2022-11-26)
 ### Added
 - `ImouCamera` class exposing `async_service_ptz_location()` and `async_service_ptz_move()`

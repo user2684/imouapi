@@ -613,3 +613,98 @@ class TestCli:
             self.cli.run_command()
             captured = capsys.readouterr()
             assert "{}" in captured.out
+
+    def test_api_setDeviceSnapEnhanced(self, capsys):  # pylint: disable=invalid-name
+        """Test setDeviceSnapEnhanced: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "setDeviceSnapEnhanced", "setDeviceSnapEnhanced_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_setDeviceSnapEnhanced",
+                "device_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "Expires" in captured.out
+
+    def test_api_bindDeviceLive(self, capsys):  # pylint: disable=invalid-name
+        """Test bindDeviceLive: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "bindDeviceLive", "bindDeviceLive_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_bindDeviceLive",
+                "device_id",
+                "HD",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "MEGREZ0000001842" in captured.out
+
+    def test_api_getLiveStreamInfo(self, capsys):  # pylint: disable=invalid-name
+        """Test getLiveStreamInfo: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "getLiveStreamInfo", "getLiveStreamInfo_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_getLiveStreamInfo",
+                "device_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "liveToken" in captured.out
+
+    def test_api_liveList(self, capsys):  # pylint: disable=invalid-name
+        """Test liveList: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "liveList", "liveList_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_liveList",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "liveToken" in captured.out
+
+    def test_api_unbindLive(self, capsys):  # pylint: disable=invalid-name
+        """Test unbindLive: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "unbindLive", "unbindLive_ok")
+            self.cli.argv = [
+                "cli",
+                "--app-id",
+                "app_id",
+                "--app-secret",
+                "app_secret",
+                "api_unbindLive",
+                "live_id",
+            ]
+            self.cli.parse_command_line()
+            self.cli.run_command()
+            captured = capsys.readouterr()
+            assert "{}" in captured.out

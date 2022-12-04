@@ -1,12 +1,13 @@
 """Classes for representing entities beloging to an Imou device."""
+import asyncio
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, CAMERAS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
-from .exceptions import APIError, InvalidResponse
+from .const import BINARY_SENSORS, BUTTONS, CAMERA_WAIT_BEFORE_DOWNLOAD, CAMERAS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
+from .exceptions import APIError, InvalidResponse, NotConnected
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -473,6 +474,7 @@ class ImouCamera(ImouEntity):
         device_id: str,
         device_name: str,
         sensor_type: str,
+        profile: str,
     ) -> None:
         """
         Initialize the instance.
@@ -485,11 +487,126 @@ class ImouCamera(ImouEntity):
         """
         super().__init__(api_client, device_id, device_name, sensor_type, CAMERAS[sensor_type])
         self._state = False
+        self._profile = profile
 
     async def async_update(self, **kwargs):
         """Update the entity."""
         if not self._enabled:
             return
+
+    async def async_get_image(self) -> bytes:
+        """Get image snapshot."""
+        _LOGGER.debug(
+            "[%s] requested an image snapshot",
+            self._device_name,
+        )
+        # request a snapshot and get the url
+        data = await self.api_client.async_api_setDeviceSnapEnhanced(self._device_id)
+        if "url" not in data:
+            raise InvalidResponse(f"url not found in {data}")
+        url = data["url"]
+        # wait for the image to be available
+        await asyncio.sleep(CAMERA_WAIT_BEFORE_DOWNLOAD)
+        # retrieve the image from the url
+        session = self.api_client.get_session()
+        if session is None:
+            raise NotConnected()
+        try:
+            response = await session.request("GET", url, timeout=self.api_client.get_timeout())
+            if response.status != 200:
+                raise InvalidResponse(f"status code {response.status}")
+            image = await response.read()
+        except Exception as exception:
+            raise InvalidResponse(f"unable to retrieve image from {url}: {exception}") from exception
+        return image
+
+    async def async_open_stream(self) -> None:
+        """Open a new stream."""
+        _LOGGER.debug(
+            "[%s] opening a new live stream",
+            self._device_name,
+        )
+        # Create a device live broadcast address for profile
+        try:
+            data = await self.api_client.async_api_bindDeviceLive(self._device_id, self._profile)
+            if "streams" not in data or "hls" not in data["streams"][0] or "liveToken" not in data:
+                raise InvalidResponse(f"streams, hls or liveToken not found in {data}")
+        except APIError as exception:
+            # The video live already exists
+            if "LV1001" in exception.to_string():
+                pass
+            else:
+                raise APIError from exception
+
+    async def async_get_existing_stream(self) -> dict:
+        """Get existing streams if any and return a data structure with url and token."""
+        existing_stream = {
+            "url": None,
+            "token": None,
+        }
+        data = {}
+        # request existing live streaming information for the device
+        try:
+            data = await self.api_client.async_api_getLiveStreamInfo(self._device_id)
+        except APIError as exception:
+            # The video live does not exist
+            if "LV1002" in exception.to_string():
+                pass
+            else:
+                raise APIError from exception
+        # streams already available, find the right one
+        if "streams" in data:
+            for stream in data["streams"]:
+                if (
+                    "streamId" not in stream
+                    or "status" not in stream
+                    or "hls" not in stream
+                    or "liveToken" not in stream
+                ):
+                    raise InvalidResponse(f"streamId, status, liveToken, hls not found in {stream}")
+                # identify the right stream for this profile
+                if (
+                    (
+                        (self._profile == "HD" and stream["streamId"] == 0)
+                        or (self._profile == "SD" and stream["streamId"] == 1)
+                    )
+                    and stream["hls"].startswith("https://")
+                    and stream["status"] == "1"
+                ):
+                    existing_stream["url"] = stream["hls"]
+                    existing_stream["token"] = stream["liveToken"]
+                    break
+            if existing_stream["url"] is None or existing_stream["token"] is None:
+                raise InvalidResponse(f"stream not found in {data}")
+        # return a data structure containing the url and the token
+        return existing_stream
+
+    async def async_close_stream(self) -> None:
+        """Close a live stream."""
+        # get the existing stream if any
+        existing_stream = await self.async_get_existing_stream()
+        if existing_stream["token"] is not None:
+            await self.api_client.async_api_unbindLive(existing_stream["token"])
+            _LOGGER.debug(
+                "[%s] closing live stream",
+                self._device_name,
+            )
+
+    async def async_get_stream_url(self) -> dict:
+        """Get a live stream URL, taking care of creating a stream if needed."""
+        # get the existing stream if any
+        existing_stream = await self.async_get_existing_stream()
+        if existing_stream["url"] is not None:
+            return existing_stream["url"]
+        else:
+            # otherwise open the stream
+            await self.async_open_stream()
+            # get the right stream url and return it
+            existing_stream = await self.async_get_existing_stream()
+            if existing_stream["url"] is None:
+                raise APIError("unable to get live streaming")
+            _LOGGER.debug("[%s] live streaming url: %s", self._device_name, existing_stream["url"])
+            return existing_stream["url"]
 
     async def async_service_ptz_location(self, horizontal: float, vertical: float, zoom: float) -> dict:
         """Perform PTZ location action."""

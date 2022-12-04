@@ -10,7 +10,7 @@ import aiohttp
 from .api import ImouAPIClient
 from .const import IMOU_CAPABILITIES, IMOU_SWITCHES
 from .device import ImouDevice, ImouDiscoverService
-from .device_entity import ImouBinarySensor, ImouButton, ImouSelect, ImouSensor, ImouSiren, ImouSwitch
+from .device_entity import ImouBinarySensor, ImouButton, ImouCamera, ImouSelect, ImouSensor, ImouSiren, ImouSwitch
 from .exceptions import ImouException
 
 
@@ -41,6 +41,8 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             "get_siren",
             "set_siren",
             "get_diagnostics",
+            "get_camera_image",
+            "get_camera_stream",
         ]:
             device_id = args[0]
             device = ImouDevice(api_client, device_id)
@@ -146,6 +148,22 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
 
             elif command == "get_diagnostics":
                 print(device.get_diagnostics())
+
+            elif command == "get_camera_image":
+                sensor_name = args[1]
+                camera: ImouCamera = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if camera is not None:
+                    print(await camera.async_get_image())
+                else:
+                    print(f"sensor {sensor_name} not found")
+
+            elif command == "get_camera_stream":
+                sensor_name = args[1]
+                camera: ImouCamera = device.get_sensor_by_name(sensor_name)  # type: ignore
+                if camera is not None:
+                    print(await camera.async_get_stream_url())
+                else:
+                    print(f"sensor {sensor_name} not found")
 
         elif command == "get_device_raw":
             device_id = args[0]
@@ -259,6 +277,31 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             operation = args[1]
             duration = int(args[2])
             data = await api_client.async_api_controlMovePTZ(device_id, operation, duration)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_setDeviceSnapEnhanced":
+            device_id = args[0]
+            data = await api_client.async_api_setDeviceSnapEnhanced(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_bindDeviceLive":
+            device_id = args[0]
+            profile = args[1]
+            data = await api_client.async_api_bindDeviceLive(device_id, profile)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_getLiveStreamInfo":
+            device_id = args[0]
+            data = await api_client.async_api_getLiveStreamInfo(device_id)
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_liveList":
+            data = await api_client.async_api_liveList()
+            print(json.dumps(data, indent=4))
+
+        elif command == "api_unbindLive":
+            live_token = args[0]
+            data = await api_client.async_api_unbindLive(live_token)
             print(json.dumps(data, indent=4))
 
         else:
@@ -423,6 +466,18 @@ class ImouCli:
             else:
                 print("ERROR: provide device id")
 
+        elif self.command == "get_camera_image":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device id, sensor_name")
+
+        elif self.command == "get_camera_stream":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device id, sensor_name")
+
         elif self.command == "api_deviceBaseList":
             asyncio.run(async_run_command(self.command, api_client, self.args))
 
@@ -525,6 +580,33 @@ class ImouCli:
             else:
                 print("ERROR: provide device_id, operation, duration")
 
+        elif self.command == "api_setDeviceSnapEnhanced":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_bindDeviceLive":
+            if len(self.args) == 2:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id, profile")
+
+        elif self.command == "api_getLiveStreamInfo":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
+        elif self.command == "api_liveList":
+            asyncio.run(async_run_command(self.command, api_client, self.args))
+
+        elif self.command == "api_unbindLive":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide live_token")
+
         else:
             self.print_usage()
 
@@ -561,10 +643,13 @@ class ImouCli:
         print("  set_select <device_id> <sensor_name> <value>                        Set the state of a select sensor")
         print("  press_button <device_id> <sensor_name>                              Press a button")
         print("  get_siren <device_id> <sensor_name>                                 Get the state of a siren sensor")
-        print("  set_siren <device_id> <sensor_name> <value>                        Set the state of a siren sensor")
+        print("  set_siren <device_id> <sensor_name> <value>                         Set the state of a siren sensor")
         print(
             "  get_diagnostics <device_id>                                         Get diagnostics information of the device id"  # noqa: E501
         )
+        print("  get_camera_image <device_id> <sensor_name>                          Get a snapshot from the camera")
+        print("  get_camera_stream <device_id> <sensor_name>                         Get streaming url for the camera")
+        print("")
         print(
             "  api_deviceBaseList                                                  Return the list of registered devices by calling directly the API"  # noqa: E501
         )
@@ -617,6 +702,21 @@ class ImouCli:
         )
         print(
             "  api_controlMovePTZ <device_id> <operation> <duration>               Move by performing the PTZ_OPERATIONS for the duration provided"  # noqa: E501
+        )
+        print(
+            "  api_setDeviceSnapEnhanced <device_id>                               Capture a snapshot, returns image url"  # noqa: E501
+        )
+        print(
+            "  api_bindDeviceLive <device_id> [HD|SD]                              Create live stream with the device for the given profile. Returns HLS stream and live token"  # noqa: E501
+        )
+        print(
+            "  api_getLiveStreamInfo <device_id>                                   Obtain the live broadcast address for a given device"  # noqa: E501
+        )
+        print(
+            "  api_liveList                                                        Get live streams status for the entire account"  # noqa: E501
+        )
+        print(
+            "  api_unbindLive <live_token>                                         Delete the live stream for the given live token"  # noqa: E501
         )
 
 

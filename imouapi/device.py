@@ -256,13 +256,23 @@ class ImouDevice:
                         "siren",
                     )
                 )
-            # add camera
+            # add cameras
             self._sensor_instances["camera"].append(
                 ImouCamera(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "camera",
+                    "HD",
+                )
+            )
+            self._sensor_instances["camera"].append(
+                ImouCamera(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "cameraSD",
+                    "SD",
                 )
             )
         except Exception as exception:
@@ -451,29 +461,47 @@ class ImouDevice:
         for capability in data['capabilities']:
             dump = dump + f"        - {capability['description']}\n"
         dump = dump + "    Switches: \n"
-        for switch in data['switches']:
-            dump = dump + f"        - {switch['description']}: {switch['state']} {switch['attributes']}\n"
-        dump = dump + "    Sensors: \n"
-        for sensor in data['sensors']:
-            dump = dump + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes']}\n"
-        dump = dump + "    Binary Sensors: \n"
-        for binary_sensor in data['binary_sensors']:
+        for sensor in data['switches']:
             dump = (
                 dump
-                + f"        - {binary_sensor['description']}: {binary_sensor['state']} {binary_sensor['attributes']}\n"
+                + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
+        dump = dump + "    Sensors: \n"
+        for sensor in data['sensors']:
+            dump = (
+                dump
+                + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
+        dump = dump + "    Binary Sensors: \n"
+        for sensor in data['binary_sensors']:
+            dump = (
+                dump
+                + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Select: \n"
-        for select in data['selects']:
-            dump = dump + f"        - {select['description']}: {select['current_option']} {select['attributes']}\n"
+        for sensor in data['selects']:
+            dump = (
+                dump
+                + f"        - {sensor['description']}: {sensor['current_option']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
         dump = dump + "    Buttons: \n"
-        for button in data['buttons']:
-            dump = dump + f"        - {button['description']} {button['attributes']}\n"
+        for sensor in data['buttons']:
+            dump = (
+                dump
+                + f"        - {sensor['description']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
         dump = dump + "    Sirens: \n"
-        for siren in data['sirens']:
-            dump = dump + f"        - {siren['description']}: {siren['state']} {siren['attributes']}\n"
+        for sensor in data['sirens']:
+            dump = (
+                dump
+                + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
         dump = dump + "    Cameras: \n"
-        for camera in data['cameras']:
-            dump = dump + f"        - {camera['description']}: {camera['attributes']}\n"
+        for sensor in data['cameras']:
+            dump = (
+                dump
+                + f"        - {sensor['description']}: {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
+            )
         return dump
 
 

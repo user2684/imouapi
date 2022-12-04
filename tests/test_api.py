@@ -276,3 +276,43 @@ class TestApiClient:
             self.config_mock(mocked, "controlMovePTZ", "controlMovePTZ_ok")
             self.loop.run_until_complete(self.api_client.async_api_controlMovePTZ("device_id", "up", "1000"))
             assert True is True
+
+    def test_setDeviceSnapEnhanced_ok(self):  # pylint: disable=invalid-name
+        """Test setDeviceSnapEnhanced: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "setDeviceSnapEnhanced", "setDeviceSnapEnhanced_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_setDeviceSnapEnhanced("device_id"))
+            assert "Expires" in data["url"]
+
+    def test_bindDeviceLive_ok(self):  # pylint: disable=invalid-name
+        """Test bindDeviceLive: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "bindDeviceLive", "bindDeviceLive_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_bindDeviceLive("device_id", "HD"))
+            assert data["deviceId"] == "MEGREZ0000001842"
+
+    def test_getLiveStreamInfo_ok(self):  # pylint: disable=invalid-name
+        """Test getLiveStreamInfo: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "getLiveStreamInfo", "getLiveStreamInfo_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_getLiveStreamInfo("device_id"))
+            assert len(data["streams"]) == 4
+
+    def test_liveList_ok(self):  # pylint: disable=invalid-name
+        """Test liveList: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "liveList", "liveList_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_liveList())
+            assert len(data["lives"]) == 4
+
+    def test_unbindLive_ok(self):  # pylint: disable=invalid-name
+        """Test unbindLive: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "unbindLive", "unbindLive_ok")
+            self.loop.run_until_complete(self.api_client.async_api_unbindLive("123uq7adshgkjashdkl"))
+            assert True is True

@@ -9,6 +9,9 @@ DEFAULT_TIMEOUT = 10
 # max api retries
 MAX_RETRIES = 3
 
+# how long to wait in seconds for the image to be available before downloading it
+CAMERA_WAIT_BEFORE_DOWNLOAD = 1.5
+
 # PTZ operation mapping
 PTZ_OPERATIONS = {
     "UP": 0,
@@ -306,5 +309,6 @@ SIRENS = {
 
 # cameras supported by this library
 CAMERAS = {
-    "camera": "Camera",
+    "camera": "Camera (HD)",
+    "cameraSD": "Camera (SD)",
 }

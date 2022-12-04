@@ -426,4 +426,214 @@ MOCK_RESPONSES = {
         },
         "id": "d5c287b4-5b2f-4f03-baf5-8032c5c354af",
     },
+    "setDeviceSnapEnhanced_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+            "data": {
+                "url": "https://lechangecloud.oss-cn-hangzhou.aliyuncs.com/lechange/MEGREZ0000001842_img/Alarm/0/956fe604722b45fba0e098ba6eae3178.jpg?Expires=1603974760&OSSAccessKeyId=LTAIP4igXeEjYBoG&Signature=gtfNjV7MJI%2BC%2By6cciWYXiDv4LI%3D"  # noqa: E501
+            },
+        },
+        "id": "ad9a278f-bedd-4c06-ad4a-ea0a971836d1",
+    },
+    "bindDeviceLive_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+            "data": {
+                "liveType": 1,
+                "coverUpdate": 90,
+                "streams": [
+                    {
+                        "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.jpg",  # noqa: E501
+                        "streamId": 1,
+                        "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8",  # noqa: E501
+                    }
+                ],
+                "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                "job": [{"period": "always", "status": True}],
+                "deviceId": "MEGREZ0000001842",
+                "liveStatus": 1,
+                "channelId": "0",
+            },
+        },
+        "id": "a25f887f-33f0-44ef-9ed3-f60f83193482",
+    },
+    "getLiveStreamInfo_ok": {
+        "result": {
+            "msg": "The operation was successful.",
+            "code": "0",
+            "data": {
+                "streams": [
+                    {
+                        "streamId": 1,
+                        "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                        "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8",  # noqa: E501
+                        "status": "0",
+                    },
+                    {
+                        "streamId": 0,
+                        "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                        "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001842/0/0/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8",  # noqa: E501
+                        "status": "0",
+                    },
+                    {
+                        "streamId": 1,
+                        "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                        "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8?proto=https",  # noqa: E501
+                        "status": "0",
+                    },
+                    {
+                        "streamId": 0,
+                        "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                        "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001842/0/0/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8?proto=https",  # noqa: E501
+                        "status": "0",
+                    },
+                ]
+            },
+        },
+        "id": "051824b1-9655-4755-9cc2-adcc9ab5fef1",
+    },
+    "liveList_ok": {
+        "result": {
+            "msg": "successful operation。",
+            "code": "0",
+            "data": {
+                "lives": [
+                    {
+                        "liveType": 2,
+                        "coverUpdate": 90,
+                        "streams": [
+                            {
+                                "coverUrl": "http://alhlscdn.lechange.cn/LCO/3f35d2d41758dc707e614c2999f8b922/20190429155036/stream_20190429155036_71e53mz34pcaprgb.jpg",  # noqa: E501
+                                "hls": "http://alhlsgw.lechange.com:9001/LCO/3f35d2d41758dc707e614c2999f8b922/20190429155036/stream_20190429155036_71e53mz34pcaprgb.m3u8",  # noqa: E501
+                            }
+                        ],
+                        "liveToken": "stream_20190429155036_71e53mz34pcaprgb",
+                        "job": [{"period": "always", "status": True}],
+                        "liveStatus": 1,
+                    },
+                    {
+                        "liveType": 2,
+                        "coverUpdate": 90,
+                        "streams": [
+                            {
+                                "coverUrl": "http://alhlscdn.lechange.cn/LCO/aaf71e228f1da90232c0ac87803ce4b6/20191023171615/stream_20191023171615_qahzm4ml2bk93l72.jpg",  # noqa: E501
+                                "hls": "http://alhlsgw.lechange.com:9001/LCO/aaf71e228f1da90232c0ac87803ce4b6/20191023171615/stream_20191023171615_qahzm4ml2bk93l72.m3u8",  # noqa: E501
+                            }
+                        ],
+                        "liveToken": "stream_20191023171615_qahzm4ml2bk93l72",
+                        "job": [{"period": "always", "status": True}],
+                        "liveStatus": 1,
+                    },
+                    {
+                        "liveType": 1,
+                        "coverUpdate": 90,
+                        "streams": [
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.jpg",  # noqa: E501
+                                "streamId": 0,
+                                "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.m3u8?proto=https",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.jpg",  # noqa: E501
+                                "streamId": 1,
+                                "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001375/0/1/20200907T032254/dev_MEGREZ0000001375_20200907T032254.m3u8?proto=https",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.jpg",  # noqa: E501
+                                "streamId": 0,
+                                "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.m3u8",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001375/0/0/20200907T032254/dev_MEGREZ0000001375_20200907T032254.jpg",  # noqa: E501
+                                "streamId": 1,
+                                "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001375/0/1/20200907T032254/dev_MEGREZ0000001375_20200907T032254.m3u8",  # noqa: E501
+                            },
+                        ],
+                        "liveToken": "63813c4aa4b442069748437c1bd0b749",
+                        "job": [{"period": "always", "status": True}],
+                        "deviceId": "MEGREZ0000001375",
+                        "liveStatus": 1,
+                        "channelId": "0",
+                    },
+                    {
+                        "liveType": 1,
+                        "coverUpdate": 90,
+                        "streams": [
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.jpg",  # noqa: E501
+                                "streamId": 1,
+                                "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.jpg",  # noqa: E501
+                                "streamId": 0,
+                                "hls": "http://cmgw-vpc.lechange.com:8888/LCO/MEGREZ0000001842/0/0/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.jpg",  # noqa: E501
+                                "streamId": 1,
+                                "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8?proto=https",  # noqa: E501
+                            },
+                            {
+                                "coverUrl": "http://livecloudpic.lechange.cn/LCO/MEGREZ0000001842/0/1/20201022T113914/dev_MEGREZ0000001842_20201022T113914.jpg",  # noqa: E501
+                                "streamId": 0,
+                                "hls": "https://cmgw-vpc.lechange.com:8890/LCO/MEGREZ0000001842/0/0/20201022T113914/dev_MEGREZ0000001842_20201022T113914.m3u8?proto=https",  # noqa: E501
+                            },
+                        ],
+                        "liveToken": "57877dd6774f4cbeb657568be0b7a621",
+                        "job": [{"period": "always", "status": True}],
+                        "deviceId": "MEGREZ0000001842",
+                        "liveStatus": 1,
+                        "channelId": "0",
+                    },
+                ],
+                "count": 4,
+            },
+        },
+        "id": "1cd43fdb-810b-44f4-8652-9d232dd95f1b",
+    },
+    "unbindLive_ok": {
+        "id": "78d81c6a-3968-40dc-8854-ccaee5d6ab03",
+        "result": {
+            "code": "0",
+            "msg": "The operation was successful",
+        },
+    },
+    "asdasd": {
+        "result": {
+            "msg": "Operation is successful.",
+            "code": "0",
+            "data": {
+                "streams": [
+                    {
+                        "streamId": 1,
+                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
+                        "hls": "http://cmgw-online-fk.easy4ipcloud.com:8888/LCO/8G04EACRAZ3CF77/0/1/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8",  # noqa: E501
+                        "status": "1",
+                    },
+                    {
+                        "streamId": 0,
+                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
+                        "hls": "http://cmgw-online-fk.easy4ipcloud.com:8888/LCO/8G04EACRAZ3CF77/0/0/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8",  # noqa: E501
+                        "status": "1",
+                    },
+                    {
+                        "streamId": 1,
+                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
+                        "hls": "https://cmgw-online-fk.easy4ipcloud.com:8890/LCO/8G04EACRAZ3CF77/0/1/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8?proto=https",  # noqa: E501
+                        "status": "1",
+                    },
+                    {
+                        "streamId": 0,
+                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
+                        "hls": "https://cmgw-online-fk.easy4ipcloud.com:8890/LCO/8G04EACRAZ3CF77/0/0/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8?proto=https",  # noqa: E501
+                        "status": "1",
+                    },
+                ]
+            },
+        },
+        "id": "32",
+    },
 }

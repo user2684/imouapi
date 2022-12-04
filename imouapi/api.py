@@ -86,6 +86,10 @@ class ImouAPIClient:
         """Set an aiohttp client session."""
         self._session = value
 
+    def get_session(self) -> ClientSession:
+        """Return the aiohttp client session."""
+        return self._session
+
     def set_log_http_requests(self, value: bool) -> None:
         """Set to true if you want in debug logs also HTTP requests and responses."""
         self._log_http_requests_enabled = value
@@ -519,5 +523,76 @@ class ImouAPIClient:
             "operation": str(PTZ_OPERATIONS[operation]),
             "duration": str(duration),
         }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_setDeviceSnapEnhanced(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Capture pictures, supports the capture frequency of 1 time per second. \
+            (https://open.imoulife.com/book/en/http/device/operate/setDeviceSnapEnhanced.html)."""
+        # define the api endpoint
+        api = "setDeviceSnapEnhanced"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_bindDeviceLive(self, device_id: str, profile: str) -> dict:  # pylint: disable=invalid-name
+        """Create device source live broadcast address for profile (HD or SD). \
+            (https://open.imoulife.com/book/en/http/device/live/bindDeviceLive.html)."""
+        # define the api endpoint
+        api = "bindDeviceLive"
+        # prepare the payload
+        profile = profile.upper()
+        stream_id = 0
+        if profile == "HD":
+            stream_id = 0
+        elif profile == "SD":
+            stream_id = 1
+        else:
+            raise APIError("profile must one of HD, SD")
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+            # streamId, 0: HD main stream; 1: SD auxiliary stream
+            "streamId": stream_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_getLiveStreamInfo(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Obtain the live broadcast address. \
+            (https://open.imoulife.com/book/en/http/device/live/getLiveStreamInfo.html)."""
+        # define the api endpoint
+        api = "getLiveStreamInfo"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+            "channelId": "0",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_liveList(self) -> dict:  # pylint: disable=invalid-name
+        """Get the live broadcast details list created under the developer's current account. \
+            https://open.imoulife.com/book/en/http/device/live/liveList.html)."""
+        # define the api endpoint
+        api = "liveList"
+        # prepare the payload
+        payload = {
+            "queryRange": "1-20",
+        }
+        # call the api
+        return await self._async_call_api(api, payload)
+
+    async def async_api_unbindLive(self, live_token: str) -> dict:  # pylint: disable=invalid-name
+        """Delete the live broadcast address. \
+            (https://open.imoulife.com/book/en/http/device/live/unbindLive.html)."""
+        # define the api endpoint
+        api = "unbindLive"
+        # prepare the payload
+        payload = {"liveToken": live_token}
         # call the api
         return await self._async_call_api(api, payload)
