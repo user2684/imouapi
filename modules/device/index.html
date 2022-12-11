@@ -1890,7 +1890,7 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="c1"># if the device is already online, return</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_refresh_status</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">ONLINE_STATUS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Olnline&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ONLINE_STATUS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Online&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="c1"># wake up the device</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] waking up the dormant device&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
@@ -2802,7 +2802,7 @@
         <span class="k">return</span> <span class="kc">True</span>
     <span class="c1"># if the device is already online, return</span>
     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_refresh_status</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">ONLINE_STATUS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Olnline&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ONLINE_STATUS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Online&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="c1"># wake up the device</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">] waking up the dormant device&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
