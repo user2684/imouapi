@@ -28,6 +28,7 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
                 print(f"  - Model: {device.get_model()}")
                 print(f"  - Device ID: {device.get_device_id()}")
                 print(f"  - Firmware: {device.get_firmware()}")
+                print(f"  - Sleepable: {device.get_sleepable()}")
 
         elif command in [
             "get_device",

@@ -6,7 +6,17 @@ from datetime import datetime
 from typing import Optional, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, CAMERA_WAIT_BEFORE_DOWNLOAD, CAMERAS, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
+from .const import (
+    BINARY_SENSORS,
+    BUTTONS,
+    CAMERA_WAIT_BEFORE_DOWNLOAD,
+    CAMERAS,
+    IMOU_SWITCHES,
+    ONLINE_STATUS,
+    SELECT,
+    SENSORS,
+    SIRENS,
+)
 from .exceptions import APIError, InvalidResponse, NotConnected
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -66,6 +76,19 @@ class ImouEntity(ABC):
         """Entity attributes."""
         return self._attributes
 
+    async def _async_is_ready(self) -> bool:
+        """Check if the sensor is fully ready."""
+        # check if the sensor is enabled
+        if not self._enabled:
+            return False
+        # wake up the device if a dormant device and sleeping
+        if self._device_instance is not None:
+            awake = await self._device_instance.async_wakeup()
+            if awake:
+                return True
+            return False
+        return True
+
     @abstractmethod
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -96,7 +119,7 @@ class ImouSensor(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
 
         # storageUsed sensor
@@ -120,6 +143,17 @@ class ImouSensor(ImouEntity):
             if "callbackUrl" not in data:
                 raise InvalidResponse(f"callbackUrl not found in {data}")
             self._state = data["callbackUrl"]
+
+        # status sensor
+        if self._name == "status":
+            # get the device status
+            data = await self.api_client.async_api_deviceOnline(self._device_id)
+            if "onLine" not in data:
+                raise InvalidResponse(f"onLine not found in {data}")
+            if data["onLine"] in ONLINE_STATUS:
+                self._state = ONLINE_STATUS[data["onLine"]]
+            else:
+                self._state = ONLINE_STATUS["UNKNOWN"]
 
         _LOGGER.debug(
             "[%s] updating %s, value is %s %s",
@@ -161,16 +195,15 @@ class ImouBinarySensor(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
 
         # online sensor
         if self._name == "online":
-            # get the online status
-            data = await self.api_client.async_api_deviceOnline(self._device_id)
-            if "onLine" not in data:
-                raise InvalidResponse(f"onLine not found in {data}")
-            self._state = data["onLine"] == "1"
+            # get the device status
+            if self._device_instance is not None:
+                await self._device_instance.async_refresh_status()
+                self._state = self._device_instance.is_online()
 
         # motionAlarm sensor
         if self._name == "motionAlarm":
@@ -235,11 +268,13 @@ class ImouSwitch(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         # pushNotifications sensor
         if self._name == "pushNotifications":
             data = await self.api_client.async_api_getMessageCallback()
+
         # all the other dynamically created sensors
         else:
             data = await self.api_client.async_api_getDeviceCameraStatus(self._device_id, self._name)
@@ -260,8 +295,9 @@ class ImouSwitch(ImouEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the entity on."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
         # pushNotifications sensor
         if self._name == "pushNotifications":
@@ -275,8 +311,9 @@ class ImouSwitch(ImouEntity):
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
         if self._name == "pushNotifications":
             await self.api_client.async_api_setMessageCallbackOff()
@@ -287,8 +324,9 @@ class ImouSwitch(ImouEntity):
 
     async def async_toggle(self, **kwargs):
         """Toggle the entity."""
-        if not self._enabled or not self._updated:
+        if not await self._async_is_ready():
             return
+
         if self._state:
             await self.async_turn_off()
         else:
@@ -321,8 +359,9 @@ class ImouSelect(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         if self._name == "nightVisionMode":
             # get the night vision mode option selected
             data = await self.api_client.async_api_getNightVisionMode(self._device_id)
@@ -350,8 +389,9 @@ class ImouSelect(ImouEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         _LOGGER.debug("[%s] %s setting to %s", self._device_name, self._description, option)
         if self._name == "nightVisionMode":
             await self.api_client.async_api_setNightVisionMode(self._device_id, option)
@@ -381,8 +421,9 @@ class ImouButton(ImouEntity):
 
     async def async_press(self) -> None:
         """Press action."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         if self._name == "restartDevice":
             # restart the device
             await self.api_client.async_api_restartDevice(self._device_id)
@@ -424,8 +465,9 @@ class ImouSiren(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
+
         # siren sensor
         if self._name == "siren":
             # async_api_getDeviceCameraStatus() does not return the current state of the siren, do nothing here
@@ -437,7 +479,7 @@ class ImouSiren(ImouEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the entity on."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
         _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
         # siren sensor
@@ -447,7 +489,7 @@ class ImouSiren(ImouEntity):
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
         _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
         # siren sensor
@@ -457,7 +499,7 @@ class ImouSiren(ImouEntity):
 
     async def async_toggle(self, **kwargs):
         """Toggle the entity."""
-        if not self._enabled or not self._updated:
+        if not await self._async_is_ready():
             return
         if self._state:
             await self.async_turn_off()
@@ -491,11 +533,13 @@ class ImouCamera(ImouEntity):
 
     async def async_update(self, **kwargs):
         """Update the entity."""
-        if not self._enabled:
+        if not await self._async_is_ready():
             return
 
-    async def async_get_image(self) -> bytes:
+    async def async_get_image(self) -> Union[bytes, None]:
         """Get image snapshot."""
+        if not await self._async_is_ready():
+            return None
         _LOGGER.debug(
             "[%s] requested an image snapshot",
             self._device_name,
@@ -506,7 +550,10 @@ class ImouCamera(ImouEntity):
             raise InvalidResponse(f"url not found in {data}")
         url = data["url"]
         # wait for the image to be available
-        await asyncio.sleep(CAMERA_WAIT_BEFORE_DOWNLOAD)
+        camera_wait_before_download = CAMERA_WAIT_BEFORE_DOWNLOAD
+        if self._device_instance is not None:
+            self._device_instance.get_camera_wait_before_download()
+        await asyncio.sleep(camera_wait_before_download)
         # retrieve the image from the url
         session = self.api_client.get_session()
         if session is None:
@@ -522,6 +569,8 @@ class ImouCamera(ImouEntity):
 
     async def async_open_stream(self) -> None:
         """Open a new stream."""
+        if not await self._async_is_ready():
+            return
         _LOGGER.debug(
             "[%s] opening a new live stream",
             self._device_name,

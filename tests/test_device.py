@@ -81,7 +81,6 @@ class TestDevice:
             self.loop.run_until_complete(device.async_initialize())
             assert device.get_device_id() == "8L0DF93PAZ55FD2"
             assert device.get_firmware() == "2.680.0000000.25.R.220527"
-            assert device.is_online() is True
             self.loop.run_until_complete(device.async_get_data())
             assert device.get_sensor_by_name("online").is_on() is True
             assert device.get_sensor_by_name("breathingLight").is_on() is True
@@ -130,7 +129,7 @@ class TestDevice:
             self.config_mock(mocked, "getMessageCallback", "getMessageCallback_ok", repeat=True)
             with pytest.raises(Exception) as exception:
                 self.loop.run_until_complete(device.async_get_data())
-            assert "InvalidResponse" in str(exception) and "onLine not found" in str(exception)
+            assert "InvalidResponse" in str(exception) and "onLine not valid" in str(exception)
 
     def test_set_status_ok(self):
         """Test set status: ok."""

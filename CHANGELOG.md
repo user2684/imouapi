@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.11] (2022-12-11)
+### Added
+- `sleepable`, `status` attributes and `get_sleepable()`, `get_status()`, `async_refresh_status()`, `async_wakeup()` functions to `ImouDevice`
+- `status` sensor
+- `get_api_client()` `set_wait_after_wakeup()`, `get_wait_after_wakeup()`, `set_camera_wait_before_download()`, `get_camera_wait_before_download()` to `ImouDevice`
+### Changed
+- Device is now marked online if either online or dormant
+
 ## [1.0.10] (2022-12-03)
 ### Added
 - Support for `setDeviceSnapEnhanced`, `bindDeviceLive`, `queryLiveStatus`, `liveList`, `unbindLive` Imou APIs through  ``async_api_setDeviceSnapEnhanced()`, `async_api_bindDeviceLive()`, `async_api_getLiveStreamInfo()`, `async_apiliveList()`, `async_api_unbindLive()` and CLI commands

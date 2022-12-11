@@ -1,10 +1,23 @@
 """High level API to discover and interacting with Imou devices and their sensors."""
+import asyncio
 import logging
 import re
 from typing import Any, Union
 
 from .api import ImouAPIClient
-from .const import BINARY_SENSORS, BUTTONS, CAMERAS, IMOU_CAPABILITIES, IMOU_SWITCHES, SELECT, SENSORS, SIRENS
+from .const import (
+    BINARY_SENSORS,
+    BUTTONS,
+    CAMERA_WAIT_BEFORE_DOWNLOAD,
+    CAMERAS,
+    IMOU_CAPABILITIES,
+    IMOU_SWITCHES,
+    ONLINE_STATUS,
+    SELECT,
+    SENSORS,
+    SIRENS,
+    WAIT_AFTER_WAKE_UP,
+)
 from .device_entity import (
     ImouBinarySensor,
     ImouButton,
@@ -44,7 +57,7 @@ class ImouDevice:
         self._given_name = ""
         self._device_model = "N.A."
         self._manufacturer = "Imou"
-        self._online = False
+        self._status = "UNKNOWN"
         self._capabilities: list[str] = []
         self._switches: list[str] = []
         self._sensor_instances: dict[str, list] = {
@@ -56,13 +69,19 @@ class ImouDevice:
             "siren": [],
             "camera": [],
         }
-
         self._initialized = False
         self._enabled = True
+        self._sleepable = False
+        self._wait_after_wakeup = WAIT_AFTER_WAKE_UP
+        self._camera_wait_before_download = CAMERA_WAIT_BEFORE_DOWNLOAD
 
     def get_device_id(self) -> str:
         """Get device id."""
         return self._device_id
+
+    def get_api_client(self) -> ImouAPIClient:
+        """Get api client."""
+        return self._api_client
 
     def get_name(self) -> str:
         """Get device name."""
@@ -86,9 +105,17 @@ class ImouDevice:
         """Get firmware."""
         return self._firmware
 
+    def get_status(self) -> str:
+        """Get status."""
+        return self._status
+
     def is_online(self) -> bool:
-        """Get online."""
-        return self._online
+        """Get online status."""
+        return ONLINE_STATUS[self._status] == "Online" or ONLINE_STATUS[self._status] == "Dormant"
+
+    def get_sleepable(self) -> bool:
+        """Get sleepable."""
+        return self._sleepable
 
     def get_all_sensors(self) -> list[ImouEntity]:
         """Get all the sensor instances."""
@@ -128,6 +155,27 @@ class ImouDevice:
         """Is enabled."""
         return self._enabled
 
+    def set_wait_after_wakeup(self, value: float) -> None:
+        """Set wait after wakeup."""
+        self._wait_after_wakeup = value
+
+    def get_wait_after_wakeup(self) -> float:
+        """Get wait after wakeup."""
+        return self._wait_after_wakeup
+
+    def set_camera_wait_before_download(self, value: float) -> None:
+        """Set camera wait before download."""
+        self._camera_wait_before_download = value
+
+    def get_camera_wait_before_download(self) -> float:
+        """Get camera wait before download."""
+        return self._camera_wait_before_download
+
+    def _add_sensor_instance(self, platform, instance):
+        """Add a sensor instance."""
+        instance.set_device(self)
+        self._sensor_instances[platform].append(instance)
+
     async def async_initialize(self) -> None:
         """Initialize the instance by retrieving the device details and associated sensors."""
         # get the details for this device from the API
@@ -142,7 +190,6 @@ class ImouDevice:
             self._firmware = device_data["version"]
             self._name = device_data["name"]
             self._device_model = device_data["deviceModel"]
-            self._online = device_data["status"] == "online"
             # get device capabilities
             self._capabilities = device_data["ability"].split(",")
             # Add undocumented capabilities or capabilities inherited from other capabilities
@@ -162,118 +209,144 @@ class ImouDevice:
                     if switch_type.lower() == capability and switch_type.lower() not in self._switches:
                         self._switches.append(switch_type)
                         # create an instance and save it
-                        switch_instance = ImouSwitch(
-                            self._api_client,
-                            self._device_id,
-                            self.get_name(),
-                            switch_type,
+                        self._add_sensor_instance(
+                            "switch",
+                            ImouSwitch(
+                                self._api_client,
+                                self._device_id,
+                                self.get_name(),
+                                switch_type,
+                            ),
                         )
-                        self._sensor_instances["switch"].append(switch_instance)
                         break
+            # identify sleepable devices
+            if "Dormant" in self._capabilities:
+                self._sleepable = True
             # add storageUsed sensor
             if "LocalStorage" in self._capabilities:
-                self._sensor_instances["sensor"].append(
+                self._add_sensor_instance(
+                    "sensor",
                     ImouSensor(
                         self._api_client,
                         self._device_id,
                         self.get_name(),
                         "storageUsed",
-                    )
+                    ),
                 )
             # add callbackUrl sensor
-            self._sensor_instances["sensor"].append(
+            self._add_sensor_instance(
+                "sensor",
                 ImouSensor(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "callbackUrl",
-                )
+                ),
+            )
+            # add status sensor
+            self._add_sensor_instance(
+                "sensor",
+                ImouSensor(
+                    self._api_client,
+                    self._device_id,
+                    self.get_name(),
+                    "status",
+                ),
             )
             # add online binary sensor
             if "WLAN" in self._capabilities:
-                self._sensor_instances["binary_sensor"].append(
+                self._add_sensor_instance(
+                    "binary_sensor",
                     ImouBinarySensor(
                         self._api_client,
                         self._device_id,
                         self.get_name(),
                         "online",
-                    )
+                    ),
                 )
             # add motionAlarm binary sensor
             if "AlarmMD" in self._capabilities:
-                self._sensor_instances["binary_sensor"].append(
+                self._add_sensor_instance(
+                    "binary_sensor",
                     ImouBinarySensor(
                         self._api_client,
                         self._device_id,
                         self.get_name(),
                         "motionAlarm",
-                    )
+                    ),
                 )
             # add nightVisionMode select
             if "NVM" in self._capabilities:
-                self._sensor_instances["select"].append(
+                self._add_sensor_instance(
+                    "select",
                     ImouSelect(
                         self._api_client,
                         self._device_id,
                         self.get_name(),
                         "nightVisionMode",
-                    )
+                    ),
                 )
             # add restartDevice button
-            self._sensor_instances["button"].append(
+            self._add_sensor_instance(
+                "button",
                 ImouButton(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "restartDevice",
-                )
+                ),
             )
             # add refreshData button
-            self._sensor_instances["button"].append(
+            self._add_sensor_instance(
+                "button",
                 ImouButton(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "refreshData",
-                )
+                ),
             )
             # add refreshAlarm button
-            self._sensor_instances["button"].append(
+            self._add_sensor_instance(
+                "button",
                 ImouButton(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "refreshAlarm",
-                )
+                ),
             )
             # add siren siren
             if "Siren" in self._capabilities:
-                self._sensor_instances["siren"].append(
+                self._add_sensor_instance(
+                    "siren",
                     ImouSiren(
                         self._api_client,
                         self._device_id,
                         self.get_name(),
                         "siren",
-                    )
+                    ),
                 )
             # add cameras
-            self._sensor_instances["camera"].append(
+            self._add_sensor_instance(
+                "camera",
                 ImouCamera(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "camera",
                     "HD",
-                )
+                ),
             )
-            self._sensor_instances["camera"].append(
+            self._add_sensor_instance(
+                "camera",
                 ImouCamera(
                     self._api_client,
                     self._device_id,
                     self.get_name(),
                     "cameraSD",
                     "SD",
-                )
+                ),
             )
         except Exception as exception:
             raise InvalidResponse(f" missing parameter or error parsing in {device_data}") from exception
@@ -282,6 +355,35 @@ class ImouDevice:
         # keep track that we have already asked for the device details
         self._initialized = True
 
+    async def async_refresh_status(self) -> None:
+        """Refresh status attribute."""
+        data = await self._api_client.async_api_deviceOnline(self._device_id)
+        if "onLine" not in data or data["onLine"] not in ONLINE_STATUS:
+            raise InvalidResponse(f"onLine not valid in {data}")
+        self._status = data["onLine"]
+
+    async def async_wakeup(self) -> bool:
+        """Wake up a dormant device."""
+        # if this is a regular device, just return
+        if not self._sleepable:
+            return True
+        # if the device is already online, return
+        await self.async_refresh_status()
+        if ONLINE_STATUS[self._status] == "Olnline":
+            return True
+        # wake up the device
+        _LOGGER.debug("[%s] waking up the dormant device", self.get_name())
+        await self._api_client.async_api_setDeviceCameraStatus(self._device_id, "closeDormant", True)
+        # wait for the device to be fully up
+        await asyncio.sleep(self._wait_after_wakeup)
+        # ensure the device is up
+        await self.async_refresh_status()
+        if ONLINE_STATUS[self._status] == "Online":
+            _LOGGER.debug("[%s] device is now online", self.get_name())
+            return True
+        _LOGGER.warning("[%s] failed to wake up dormant device", self.get_name())
+        return False
+
     async def async_get_data(self) -> bool:
         """Update device properties and its sensors."""
         if not self._enabled:
@@ -289,16 +391,13 @@ class ImouDevice:
         if not self._initialized:
             # get the details of the device first
             await self.async_initialize()
+        _LOGGER.debug("[%s] update requested", self.get_name())
 
         # check if the device is online
-        _LOGGER.debug("[%s] update requested", self.get_name())
-        data = await self._api_client.async_api_deviceOnline(self._device_id)
-        if "onLine" not in data:
-            raise InvalidResponse(f"onLine not found in {data}")
-        self._online = data["onLine"] == "1"
+        await self.async_refresh_status()
 
         # update the status of all the sensors (if the device is online)
-        if self._online:
+        if self.is_online():
             for (
                 platform,  # pylint: disable=unused-variable
                 sensor_instances_array,
@@ -313,7 +412,6 @@ class ImouDevice:
 
     def get_diagnostics(self) -> dict[str, Any]:
         """Return diagnostics for the device."""
-        online = "yes" if self._online else "no"
         # prepare capabilities
         capabilities = []
         for capability_name in self._capabilities:
@@ -433,7 +531,8 @@ class ImouDevice:
                 "model": self._device_model,
                 "firmware": self._firmware,
                 "manufacturer": self._manufacturer,
-                "online": online,
+                "status": self._status,
+                "sleepable": self._sleepable,
             },
             "capabilities": capabilities,
             "switches": switches,
@@ -455,7 +554,8 @@ class ImouDevice:
             + f"    Catalog: {data['device']['catalog']}\n"
             + f"    Model: {data['device']['model']}\n"
             + f"    Firmware: {data['device']['firmware']}\n"
-            + f"    Online: {data['device']['online']}\n"
+            + f"    Status: {ONLINE_STATUS[data['device']['status']]}\n"
+            + f"    Sleepable: {data['device']['sleepable']}\n"
         )
         dump = dump + "    Capabilities: \n"
         for capability in data['capabilities']:

@@ -12,6 +12,9 @@ MAX_RETRIES = 3
 # how long to wait in seconds for the image to be available before downloading it
 CAMERA_WAIT_BEFORE_DOWNLOAD = 1.5
 
+# for dormant devices for how long to wait in seconds after waking the device up
+WAIT_AFTER_WAKE_UP = 4.0
+
 # PTZ operation mapping
 PTZ_OPERATIONS = {
     "UP": 0,
@@ -25,6 +28,14 @@ PTZ_OPERATIONS = {
     "ZOOM_IN": 8,
     "ZOOM_OUT": 9,
     "STOP": 10,
+}
+
+# Device online status mapping
+ONLINE_STATUS = {
+    "0": "Offline",
+    "1": "Online",
+    "4": "Dormant",
+    "UNKNOWN": "Unknown",
 }
 
 # Imou capabilities and their description (https://open.imoulife.com/book/en/faq/ability.html)
@@ -275,6 +286,7 @@ IMOU_SWITCHES = {
     "ccss": "Privacy Plan",
     "inll": "Indicator light linkage",
     "ledsw": "Fill light",
+    # derived or custom switches
     "pushNotifications": "Push notifications",
 }
 
@@ -282,6 +294,7 @@ IMOU_SWITCHES = {
 SENSORS = {
     "storageUsed": "Storage used",
     "callbackUrl": "Callback url",
+    "status": "Status",
 }
 
 # sensors supported by this library
