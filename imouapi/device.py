@@ -369,7 +369,7 @@ class ImouDevice:
             return True
         # if the device is already online, return
         await self.async_refresh_status()
-        if ONLINE_STATUS[self._status] == "Olnline":
+        if ONLINE_STATUS[self._status] == "Online":
             return True
         # wake up the device
         _LOGGER.debug("[%s] waking up the dormant device", self.get_name())
