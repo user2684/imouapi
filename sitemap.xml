@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://user2684.github.io/imouapi/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/changelog/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/contributing/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/installation/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/requirements/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/usage/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/modules/api/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/modules/device/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/modules/device_entity/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://user2684.github.io/imouapi/modules/exceptions/</loc>
-         <lastmod>2022-12-04</lastmod>
+         <lastmod>2022-12-11</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
