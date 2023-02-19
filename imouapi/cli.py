@@ -305,6 +305,11 @@ async def async_run_command(command: str, api_client: ImouAPIClient, args: list[
             data = await api_client.async_api_unbindLive(live_token)
             print(json.dumps(data, indent=4))
 
+        elif command == "api_getDevicePowerInfo":
+            device_id = args[0]
+            data = await api_client.async_api_getDevicePowerInfo(device_id)
+            print(json.dumps(data, indent=4))
+
         else:
             print("invalid command provided")
 
@@ -608,6 +613,12 @@ class ImouCli:
             else:
                 print("ERROR: provide live_token")
 
+        elif self.command == "api_getDevicePowerInfo":
+            if len(self.args) == 1:
+                asyncio.run(async_run_command(self.command, api_client, self.args))
+            else:
+                print("ERROR: provide device_id")
+
         else:
             self.print_usage()
 
@@ -718,6 +729,9 @@ class ImouCli:
         )
         print(
             "  api_unbindLive <live_token>                                         Delete the live stream for the given live token"  # noqa: E501
+        )
+        print(
+            "  api_getDevicePowerInfo <device_id>                                  Get battery power information"  # noqa: E501
         )
 
 

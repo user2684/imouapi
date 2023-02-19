@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.13] (2023-02-19)
+### Added
+- Support for`getDevicePowerInfo` Imou API through `async_api_getDevicePowerInfo()` and CLI commands
+### Changed
+- Motion Detect sensor added regardless of the capabilities
+
 ## [1.0.12] (2022-12-11)
 ### Fixed
 - Dormant device logic

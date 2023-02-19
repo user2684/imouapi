@@ -316,3 +316,11 @@ class TestApiClient:
             self.config_mock(mocked, "unbindLive", "unbindLive_ok")
             self.loop.run_until_complete(self.api_client.async_api_unbindLive("123uq7adshgkjashdkl"))
             assert True is True
+
+    def test_getDevicePowerInfo_ok(self):  # pylint: disable=invalid-name
+        """Test getDevicePowerInfo: ok."""
+        with aioresponses() as mocked:
+            self.config_mock(mocked, "accessToken", "accessToken_ok")
+            self.config_mock(mocked, "getDevicePowerInfo", "getDevicePowerInfo_ok")
+            data = self.loop.run_until_complete(self.api_client.async_api_getDevicePowerInfo("device_id"))
+            assert "electric" in data["electricitys"][0]

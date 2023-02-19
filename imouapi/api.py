@@ -596,3 +596,15 @@ class ImouAPIClient:
         payload = {"liveToken": live_token}
         # call the api
         return await self._async_call_api(api, payload)
+
+    async def async_api_getDevicePowerInfo(self, device_id: str) -> dict:  # pylint: disable=invalid-name
+        """Obtain battery power information. \
+            (https://open.imoulife.com/book/en/http/door/getDevicePowerInfo.html)."""
+        # define the api endpoint
+        api = "getDevicePowerInfo"
+        # prepare the payload
+        payload = {
+            "deviceId": device_id,
+        }
+        # call the api
+        return await self._async_call_api(api, payload)

@@ -601,39 +601,21 @@ MOCK_RESPONSES = {
             "msg": "The operation was successful",
         },
     },
-    "asdasd": {
+    "getDevicePowerInfo_ok": {
+        "id": "b8f45dbb-79ad-4a7e-8b24-7eb618c5191f",
         "result": {
-            "msg": "Operation is successful.",
             "code": "0",
+            "msg": "The operation was successful",
             "data": {
-                "streams": [
+                "electricitys": [
                     {
-                        "streamId": 1,
-                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
-                        "hls": "http://cmgw-online-fk.easy4ipcloud.com:8888/LCO/8G04EACRAZ3CF77/0/1/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8",  # noqa: E501
-                        "status": "1",
-                    },
-                    {
-                        "streamId": 0,
-                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
-                        "hls": "http://cmgw-online-fk.easy4ipcloud.com:8888/LCO/8G04EACRAZ3CF77/0/0/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8",  # noqa: E501
-                        "status": "1",
-                    },
-                    {
-                        "streamId": 1,
-                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
-                        "hls": "https://cmgw-online-fk.easy4ipcloud.com:8890/LCO/8G04EACRAZ3CF77/0/1/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8?proto=https",  # noqa: E501
-                        "status": "1",
-                    },
-                    {
-                        "streamId": 0,
-                        "liveToken": "8G04EACRAZ3CF77755502c5-34b3-4161-9b0b-28aa3259b579",
-                        "hls": "https://cmgw-online-fk.easy4ipcloud.com:8890/LCO/8G04EACRAZ3CF77/0/0/20221203T140242/49857806d77a2c965d1eba3fdf6a873f.m3u8?proto=https",  # noqa: E501
-                        "status": "1",
-                    },
+                        "alkElec": "90",
+                        "litElec": "90",
+                        "electric": "89",
+                        "type": "battery",
+                    }
                 ]
             },
         },
-        "id": "32",
     },
 }

@@ -155,6 +155,20 @@ class ImouSensor(ImouEntity):
             else:
                 self._state = ONLINE_STATUS["UNKNOWN"]
 
+        # battery sensor
+        elif self._name == "battery":
+            data = await self.api_client.async_api_getDevicePowerInfo(self._device_id)
+            if (
+                "electricitys" not in data
+                or (not hasattr(data["electricitys"], '__len__'))
+                or len(data["electricitys"]) == 0
+                or "type" not in data["electricitys"][0]
+                or "electric" not in data["electricitys"][0]
+            ):
+                raise InvalidResponse(f"electricitys not found in {data}")
+            percentage = data["electricitys"][0]["electric"]
+            self._state = percentage
+
         _LOGGER.debug(
             "[%s] updating %s, value is %s %s",
             self._device_name,
@@ -653,7 +667,7 @@ class ImouCamera(ImouEntity):
             # get the right stream url and return it
             existing_stream = await self.async_get_existing_stream()
             if existing_stream["url"] is None:
-                raise APIError("unable to get live streaming")
+                raise APIError(f"unable to get live streaming, url not found in {existing_stream}")
             _LOGGER.debug("[%s] live streaming url: %s", self._device_name, existing_stream["url"])
             return existing_stream["url"]
 

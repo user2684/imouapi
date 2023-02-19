@@ -193,8 +193,7 @@ class ImouDevice:
             # get device capabilities
             self._capabilities = device_data["ability"].split(",")
             # Add undocumented capabilities or capabilities inherited from other capabilities
-            if "AlarmMD" in self._capabilities:
-                self._capabilities.append("MotionDetect")
+            self._capabilities.append("MotionDetect")
             if "WLM" in self._capabilities:
                 self._capabilities.append("Linkagewhitelight")
             if "WLAN" in self._capabilities:
@@ -222,6 +221,15 @@ class ImouDevice:
             # identify sleepable devices
             if "Dormant" in self._capabilities:
                 self._sleepable = True
+                self._add_sensor_instance(
+                    "sensor",
+                    ImouSensor(
+                        self._api_client,
+                        self._device_id,
+                        self.get_name(),
+                        "battery",
+                    ),
+                )
             # add storageUsed sensor
             if "LocalStorage" in self._capabilities:
                 self._add_sensor_instance(

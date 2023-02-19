@@ -295,6 +295,7 @@ SENSORS = {
     "storageUsed": "Storage used",
     "callbackUrl": "Callback url",
     "status": "Status",
+    "battery": "Battery",
 }
 
 # sensors supported by this library
