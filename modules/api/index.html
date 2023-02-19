@@ -484,6 +484,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_getDevicePowerInfo" class="md-nav__link">
+    async_api_getDevicePowerInfo()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_getLiveStreamInfo" class="md-nav__link">
     async_api_getLiveStreamInfo()
   </a>
@@ -848,6 +855,13 @@
           <li class="md-nav__item">
   <a href="#imouapi.api.ImouAPIClient.async_api_getDeviceCameraStatus" class="md-nav__link">
     async_api_getDeviceCameraStatus()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imouapi.api.ImouAPIClient.async_api_getDevicePowerInfo" class="md-nav__link">
+    async_api_getDevicePowerInfo()
   </a>
   
 </li>
@@ -1656,7 +1670,19 @@
 <span class="normal">595</span>
 <span class="normal">596</span>
 <span class="normal">597</span>
-<span class="normal">598</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ImouAPIClient</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Interact with IMOU API.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -2226,6 +2252,18 @@
         <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;unbindLive&quot;</span>
         <span class="c1"># prepare the payload</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;liveToken&quot;</span><span class="p">:</span> <span class="n">live_token</span><span class="p">}</span>
+        <span class="c1"># call the api</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_getDevicePowerInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="sd">&quot;&quot;&quot;Obtain battery power information. \</span>
+<span class="sd">            (https://open.imoulife.com/book/en/http/door/getDevicePowerInfo.html).&quot;&quot;&quot;</span>
+        <span class="c1"># define the api endpoint</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;getDevicePowerInfo&quot;</span>
+        <span class="c1"># prepare the payload</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="c1"># call the api</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3084,6 +3122,53 @@
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
         <span class="s2">&quot;enableType&quot;</span><span class="p">:</span> <span class="n">enable_type</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="c1"># call the api</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="imouapi.api.ImouAPIClient.async_api_getDevicePowerInfo" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">async_api_getDevicePowerInfo</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#imouapi.api.ImouAPIClient.async_api_getDevicePowerInfo" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Obtain battery power information.             (https://open.imoulife.com/book/en/http/door/getDevicePowerInfo.html).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>imouapi/api.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">async_api_getDevicePowerInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+    <span class="sd">&quot;&quot;&quot;Obtain battery power information. \</span>
+<span class="sd">        (https://open.imoulife.com/book/en/http/door/getDevicePowerInfo.html).&quot;&quot;&quot;</span>
+    <span class="c1"># define the api endpoint</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="s2">&quot;getDevicePowerInfo&quot;</span>
+    <span class="c1"># prepare the payload</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;deviceId&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="c1"># call the api</span>
     <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_call_api</span><span class="p">(</span><span class="n">api</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
