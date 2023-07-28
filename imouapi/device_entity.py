@@ -3,7 +3,7 @@ import asyncio
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional, Union
+from typing import Dict, List, Optional, Union
 
 from .api import ImouAPIClient
 from .const import (
@@ -42,7 +42,7 @@ class ImouEntity(ABC):
         self._enabled = True
         self._updated = False
         self._device_instance = None
-        self._attributes: dict[str, str] = {}
+        self._attributes: Dict[str, str] = {}
 
     def get_device_id(self) -> str:
         """Get device id."""
@@ -369,7 +369,7 @@ class ImouSelect(ImouEntity):
         super().__init__(api_client, device_id, device_name, sensor_type, SELECT[sensor_type])
         # keep track of the status of the sensor
         self._current_option: Union[str, None] = None
-        self._available_options: list[str] = []
+        self._available_options: List[str] = []
 
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -397,7 +397,7 @@ class ImouSelect(ImouEntity):
         """Return the current option."""
         return self._current_option
 
-    def get_available_options(self) -> list[str]:
+    def get_available_options(self) -> List[str]:
         """Return the available options."""
         return self._available_options
 

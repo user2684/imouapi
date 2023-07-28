@@ -7,6 +7,7 @@ import re
 import secrets
 import time
 from datetime import datetime, timedelta
+from typing import List
 
 from aiohttp import ClientSession
 
@@ -249,7 +250,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_deviceBaseDetailList(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_deviceBaseDetailList(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Return the details of the requested devices \
             (https://open.imoulife.com/book/http/device/manage/query/deviceBaseDetailList.html)."""
         # define the api endpoint
@@ -267,7 +268,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_deviceOpenDetailList(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_deviceOpenDetailList(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Return the details of the requested devices (Open) \
             (https://open.imoulife.com/book/http/device/manage/query/deviceOpenDetailList.html)."""
         # define the api endpoint
@@ -285,7 +286,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_listDeviceAbility(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_listDeviceAbility(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Ability to obtain multiple devices, channels, and accessories in batches \
             (https://open.imoulife.com/book/http/device/manage/query/listDeviceAbility.html)."""
         # define the api endpoint

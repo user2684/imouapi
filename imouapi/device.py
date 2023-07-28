@@ -2,7 +2,7 @@
 import asyncio
 import logging
 import re
-from typing import Any, Union
+from typing import Any, Dict, List, Union
 
 from .api import ImouAPIClient
 from .const import (
@@ -58,9 +58,9 @@ class ImouDevice:
         self._device_model = "N.A."
         self._manufacturer = "Imou"
         self._status = "UNKNOWN"
-        self._capabilities: list[str] = []
-        self._switches: list[str] = []
-        self._sensor_instances: dict[str, list] = {
+        self._capabilities: List[str] = []
+        self._switches: List[str] = []
+        self._sensor_instances: Dict[str, list] = {
             "switch": [],
             "sensor": [],
             "binary_sensor": [],
@@ -117,7 +117,7 @@ class ImouDevice:
         """Get sleepable."""
         return self._sleepable
 
-    def get_all_sensors(self) -> list[ImouEntity]:
+    def get_all_sensors(self) -> List[ImouEntity]:
         """Get all the sensor instances."""
         sensors = []
         for (
@@ -128,7 +128,7 @@ class ImouDevice:
                 sensors.append(sensor_instance)
         return sensors
 
-    def get_sensors_by_platform(self, platform: str) -> list[ImouEntity]:
+    def get_sensors_by_platform(self, platform: str) -> List[ImouEntity]:
         """Get sensor instances associated to a given platform."""
         if platform not in self._sensor_instances:
             return []
@@ -418,7 +418,7 @@ class ImouDevice:
         """Return the object as a string."""
         return f"{self._name} ({self._device_model}, serial {self._device_id})"
 
-    def get_diagnostics(self) -> dict[str, Any]:
+    def get_diagnostics(self) -> Dict[str, Any]:
         """Return diagnostics for the device."""
         # prepare capabilities
         capabilities = []
@@ -525,7 +525,7 @@ class ImouDevice:
             sensor["attributes"] = sensor_instance.get_attributes()
             cameras.append(sensor)
         # prepare data structure to return
-        data: dict[str, Any] = {
+        data: Dict[str, Any] = {
             "api": {
                 "base_url": self._api_client.get_base_url(),
                 "timeout": self._api_client.get_timeout(),

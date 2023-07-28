@@ -4,6 +4,7 @@ import json
 import logging
 import re
 import sys
+from typing import List
 
 import aiohttp
 
@@ -14,7 +15,7 @@ from .device_entity import ImouBinarySensor, ImouButton, ImouCamera, ImouSelect,
 from .exceptions import ImouException
 
 
-async def async_run_command(command: str, api_client: ImouAPIClient, args: list[str]):  # noqa: C901
+async def async_run_command(command: str, api_client: ImouAPIClient, args: List[str]):  # noqa: C901
     """Run a command."""
     session = aiohttp.ClientSession()
     api_client.set_session(session)
