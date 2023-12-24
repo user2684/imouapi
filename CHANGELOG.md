@@ -4,6 +4,7 @@
 ### Changed
 - Added channelId in the payload when calling `async_api_setDeviceCameraStatus()`
 - `async_discover_devices()` now ignores with a warning unrecognized/unsupported devices instead of throwing an exception
+- Updated dependencies and upgraded to Python 3.11
 ### Fixed
 - Type errors
 
