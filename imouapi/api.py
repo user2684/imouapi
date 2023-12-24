@@ -7,6 +7,7 @@ import re
 import secrets
 import time
 from datetime import datetime, timedelta
+from typing import List
 
 from aiohttp import ClientSession
 
@@ -55,8 +56,16 @@ class ImouAPIClient:
         """Redact log messages to remove sensitive information."""
         if not self._redact_log_message_enabled:
             return data
-        for keyword in ("appId", "sign", "token", "accessToken", "playToken", "thumbUrl", "picUrl"):
-            for tick in ('\"', "'"):
+        for keyword in (
+            "appId",
+            "sign",
+            "token",
+            "accessToken",
+            "playToken",
+            "thumbUrl",
+            "picUrl",
+        ):
+            for tick in ('"', "'"):
                 data = re.sub(
                     f"{tick}{keyword}{tick}:\\s*{tick}[^{tick}]+{tick}",
                     f"{tick}{keyword}{tick}: {tick}XXXXXXXXX{tick}",
@@ -186,7 +195,9 @@ class ImouAPIClient:
         response_status = response.status
         if self._log_http_requests_enabled:
             _LOGGER.debug(
-                "[HTTP_RESPONSE] %s: %s", response_status, self._redact_log_message(str(await response.text()))
+                "[HTTP_RESPONSE] %s: %s",
+                response_status,
+                self._redact_log_message(str(await response.text())),
             )
         if response_status != 200:
             raise APIError(f"status code {response.status}")
@@ -249,7 +260,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_deviceBaseDetailList(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_deviceBaseDetailList(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Return the details of the requested devices \
             (https://open.imoulife.com/book/http/device/manage/query/deviceBaseDetailList.html)."""
         # define the api endpoint
@@ -267,7 +278,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_deviceOpenDetailList(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_deviceOpenDetailList(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Return the details of the requested devices (Open) \
             (https://open.imoulife.com/book/http/device/manage/query/deviceOpenDetailList.html)."""
         # define the api endpoint
@@ -285,7 +296,7 @@ class ImouAPIClient:
         # call the api
         return await self._async_call_api(api, payload)
 
-    async def async_api_listDeviceAbility(self, devices: list[str]) -> dict:  # pylint: disable=invalid-name
+    async def async_api_listDeviceAbility(self, devices: List[str]) -> dict:  # pylint: disable=invalid-name
         """Ability to obtain multiple devices, channels, and accessories in batches \
             (https://open.imoulife.com/book/http/device/manage/query/listDeviceAbility.html)."""
         # define the api endpoint
@@ -338,6 +349,7 @@ class ImouAPIClient:
         payload = {
             "deviceId": device_id,
             "enableType": enable_type,
+            "channelId": "0",
         }
         # call the api
         return await self._async_call_api(api, payload)
@@ -354,6 +366,7 @@ class ImouAPIClient:
             "deviceId": device_id,
             "enableType": enable_type,
             "enable": value,
+            "channelId": "0",
         }
         # call the api
         return await self._async_call_api(api, payload)

@@ -3,7 +3,7 @@ import asyncio
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional, Union
+from typing import Dict, List, Optional, Union
 
 from .api import ImouAPIClient
 from .const import (
@@ -42,7 +42,7 @@ class ImouEntity(ABC):
         self._enabled = True
         self._updated = False
         self._device_instance = None
-        self._attributes: dict[str, str] = {}
+        self._attributes: Dict[str, str] = {}
 
     def get_device_id(self) -> str:
         """Get device id."""
@@ -160,7 +160,7 @@ class ImouSensor(ImouEntity):
             data = await self.api_client.async_api_getDevicePowerInfo(self._device_id)
             if (
                 "electricitys" not in data
-                or (not hasattr(data["electricitys"], '__len__'))
+                or (not hasattr(data["electricitys"], "__len__"))
                 or len(data["electricitys"]) == 0
                 or "type" not in data["electricitys"][0]
                 or "electric" not in data["electricitys"][0]
@@ -312,7 +312,12 @@ class ImouSwitch(ImouEntity):
         if not await self._async_is_ready():
             return
 
-        _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
+        _LOGGER.debug(
+            "[%s] %s requested to turn ON (%s)",
+            self._device_name,
+            self._description,
+            kwargs,
+        )
         # pushNotifications sensor
         if self._name == "pushNotifications":
             if "url" not in kwargs:
@@ -328,7 +333,12 @@ class ImouSwitch(ImouEntity):
         if not await self._async_is_ready():
             return
 
-        _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
+        _LOGGER.debug(
+            "[%s] %s requested to turn OFF (%s)",
+            self._device_name,
+            self._description,
+            kwargs,
+        )
         if self._name == "pushNotifications":
             await self.api_client.async_api_setMessageCallbackOff()
         # all the other dynamically created sensors
@@ -369,7 +379,7 @@ class ImouSelect(ImouEntity):
         super().__init__(api_client, device_id, device_name, sensor_type, SELECT[sensor_type])
         # keep track of the status of the sensor
         self._current_option: Union[str, None] = None
-        self._available_options: list[str] = []
+        self._available_options: List[str] = []
 
     async def async_update(self, **kwargs):
         """Update the entity."""
@@ -397,7 +407,7 @@ class ImouSelect(ImouEntity):
         """Return the current option."""
         return self._current_option
 
-    def get_available_options(self) -> list[str]:
+    def get_available_options(self) -> List[str]:
         """Return the available options."""
         return self._available_options
 
@@ -495,7 +505,12 @@ class ImouSiren(ImouEntity):
         """Turn the entity on."""
         if not await self._async_is_ready():
             return
-        _LOGGER.debug("[%s] %s requested to turn ON (%s)", self._device_name, self._description, kwargs)
+        _LOGGER.debug(
+            "[%s] %s requested to turn ON (%s)",
+            self._device_name,
+            self._description,
+            kwargs,
+        )
         # siren sensor
         if self._name == "siren":
             await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, True)
@@ -505,7 +520,12 @@ class ImouSiren(ImouEntity):
         """Turn the entity off."""
         if not await self._async_is_ready():
             return
-        _LOGGER.debug("[%s] %s requested to turn OFF (%s)", self._device_name, self._description, kwargs)
+        _LOGGER.debug(
+            "[%s] %s requested to turn OFF (%s)",
+            self._device_name,
+            self._description,
+            kwargs,
+        )
         # siren sensor
         if self._name == "siren":
             await self.api_client.async_api_setDeviceCameraStatus(self._device_id, self._name, False)

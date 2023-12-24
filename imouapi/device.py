@@ -2,7 +2,7 @@
 import asyncio
 import logging
 import re
-from typing import Any, Union
+from typing import Any, Dict, List, Union
 
 from .api import ImouAPIClient
 from .const import (
@@ -58,9 +58,9 @@ class ImouDevice:
         self._device_model = "N.A."
         self._manufacturer = "Imou"
         self._status = "UNKNOWN"
-        self._capabilities: list[str] = []
-        self._switches: list[str] = []
-        self._sensor_instances: dict[str, list] = {
+        self._capabilities: List[str] = []
+        self._switches: List[str] = []
+        self._sensor_instances: Dict[str, list] = {
             "switch": [],
             "sensor": [],
             "binary_sensor": [],
@@ -117,7 +117,7 @@ class ImouDevice:
         """Get sleepable."""
         return self._sleepable
 
-    def get_all_sensors(self) -> list[ImouEntity]:
+    def get_all_sensors(self) -> List[ImouEntity]:
         """Get all the sensor instances."""
         sensors = []
         for (
@@ -128,7 +128,7 @@ class ImouDevice:
                 sensors.append(sensor_instance)
         return sensors
 
-    def get_sensors_by_platform(self, platform: str) -> list[ImouEntity]:
+    def get_sensors_by_platform(self, platform: str) -> List[ImouEntity]:
         """Get sensor instances associated to a given platform."""
         if platform not in self._sensor_instances:
             return []
@@ -204,7 +204,7 @@ class ImouDevice:
             for switch_type in switches_keys:
                 for capability in self._capabilities:
                     capability = capability.lower()
-                    capability = re.sub("v\\d$", '', capability)
+                    capability = re.sub("v\\d$", "", capability)
                     if switch_type.lower() == capability and switch_type.lower() not in self._switches:
                         self._switches.append(switch_type)
                         # create an instance and save it
@@ -418,7 +418,7 @@ class ImouDevice:
         """Return the object as a string."""
         return f"{self._name} ({self._device_model}, serial {self._device_id})"
 
-    def get_diagnostics(self) -> dict[str, Any]:
+    def get_diagnostics(self) -> Dict[str, Any]:
         """Return diagnostics for the device."""
         # prepare capabilities
         capabilities = []
@@ -525,7 +525,7 @@ class ImouDevice:
             sensor["attributes"] = sensor_instance.get_attributes()
             cameras.append(sensor)
         # prepare data structure to return
-        data: dict[str, Any] = {
+        data: Dict[str, Any] = {
             "api": {
                 "base_url": self._api_client.get_base_url(),
                 "timeout": self._api_client.get_timeout(),
@@ -566,46 +566,46 @@ class ImouDevice:
             + f"    Sleepable: {data['device']['sleepable']}\n"
         )
         dump = dump + "    Capabilities: \n"
-        for capability in data['capabilities']:
+        for capability in data["capabilities"]:
             dump = dump + f"        - {capability['description']}\n"
         dump = dump + "    Switches: \n"
-        for sensor in data['switches']:
+        for sensor in data["switches"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Sensors: \n"
-        for sensor in data['sensors']:
+        for sensor in data["sensors"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Binary Sensors: \n"
-        for sensor in data['binary_sensors']:
+        for sensor in data["binary_sensors"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Select: \n"
-        for sensor in data['selects']:
+        for sensor in data["selects"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['current_option']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Buttons: \n"
-        for sensor in data['buttons']:
+        for sensor in data["buttons"]:
             dump = (
                 dump
                 + f"        - {sensor['description']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Sirens: \n"
-        for sensor in data['sirens']:
+        for sensor in data["sirens"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['state']} {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
             )
         dump = dump + "    Cameras: \n"
-        for sensor in data['cameras']:
+        for sensor in data["cameras"]:
             dump = (
                 dump
                 + f"        - {sensor['description']}: {sensor['attributes'] if len(sensor['attributes']) > 0 else ''}\n"  # noqa: E501
@@ -638,8 +638,14 @@ class ImouDiscoverService:
         for device_data in devices_data["deviceList"]:
             # create a a device instance from the device id and initialize it
             device = ImouDevice(self._api_client, device_data["deviceId"])
-            await device.async_initialize()
-            _LOGGER.debug("   - %s", device.to_string())
-            devices[f"{device.get_name()}"] = device
+            try:
+                await device.async_initialize()
+                _LOGGER.debug("   - %s", device.to_string())
+                devices[f"{device.get_name()}"] = device
+            except InvalidResponse as exception:
+                _LOGGER.warning(
+                    "skipping unrecognized or unsupported device: ",
+                    exception.to_string(),
+                )
         # return a dict with device name -> device instance
         return devices

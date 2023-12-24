@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.14] (2023-12-24)
+### Changed
+- Added channelId in the payload when calling `async_api_setDeviceCameraStatus()`
+- `async_discover_devices()` now ignores with a warning unrecognized/unsupported devices instead of throwing an exception
+### Fixed
+- Type errors
+
 ## [1.0.13] (2023-02-19)
 ### Added
 - Support for`getDevicePowerInfo` Imou API through `async_api_getDevicePowerInfo()` and CLI commands
