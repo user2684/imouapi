@@ -52,7 +52,7 @@ mypy-extensions = "^1.0.0"
 pyproject-api = "^1.6.1"
 snowballstemmer = "^2.2.0"
 pydocstyle = "^6.3.0"
-sqlalchemy = "^2.0.23"
+sqlalchemy = "^2.0.22"
 
 [tool.poetry.extras]
 test = [

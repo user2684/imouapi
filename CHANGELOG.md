@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.15] (2024-01-27)
+### Fixed
+- sqlalchemy dependency causing HACS failing the installation of the library
+
 ## [1.0.14] (2023-12-24)
 ### Changed
 - Added channelId in the payload when calling `async_api_setDeviceCameraStatus()`
